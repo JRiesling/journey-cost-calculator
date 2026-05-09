@@ -650,6 +650,38 @@ function fmtDelta(val, type) {
   return `<span class="${cls}">${formatted} (${label})</span>`;
 }
 
+// ─── CO2 helpers ──────────────────────────────────────────────────────────────
+// kg of CO2 per litre of fuel burned (well-to-wheel)
+const CO2_PER_LITRE = { petrol: 2.31, diesel: 2.68 };
+
+function calcCO2(litres) {
+  const kgPerLitre = CO2_PER_LITRE[fuelType] || 2.31;
+  return litres * kgPerLitre;
+}
+
+function co2Equivalents(kg) {
+  // Relatable real-world equivalents
+  const trees = (kg / 21.77).toFixed(2);          // avg tree absorbs 21.77kg CO2/year
+  const smartphoneCharges = Math.round(kg / 0.008); // ~8g CO2 per smartphone charge
+  const kmDriven = Math.round(kg / 0.271);          // avg car emits 271g/km (EU avg)
+  const kettleBoils = Math.round(kg / 0.015);        // ~15g CO2 per kettle boil
+  return { trees, smartphoneCharges, kmDriven, kettleBoils };
+}
+
+function fmtCO2(kg) {
+  if (kg >= 1) return `${kg.toFixed(2)} kg`;
+  return `${Math.round(kg * 1000)} g`;
+}
+
+function co2DeltaHtml(yoursCO2, otherCO2, label) {
+  const diff = yoursCO2 - otherCO2;
+  if (Math.abs(diff) < 0.01) return `<div class="delta-row"><span>${label}</span><span class="delta-neutral">No difference</span></div>`;
+  const saves = diff > 0;
+  const cls = saves ? 'delta-save' : 'delta-more';
+  const sign = saves ? '−' : '+';
+  return `<div class="delta-row"><span>${label}</span><span class="${cls}">${sign}${fmtCO2(Math.abs(diff))} CO₂ (${saves?'less':'more'} emissions)</span></div>`;
+}
+
 function computeCost() {
   const dist = distanceMiles || parseFloat(document.getElementById('manual-dist')?.value);
   if (!dist || dist <= 0) {
@@ -670,6 +702,19 @@ function computeCost() {
   const yours = calcScenario(mpg, dist, routeLegs, speedA, speedM);
   const limit = calcScenario(mpg, dist, routeLegs, limitA, limitM);
   const slow  = calcScenario(mpg, dist, routeLegs, slowA, slowM);
+
+  // CO2 calculations
+  const yoursCO2 = calcCO2(yours.litres);
+  const limitCO2 = calcCO2(limit.litres);
+  const slowCO2  = calcCO2(slow.litres);
+  const eq = co2Equivalents(yoursCO2);
+  const limitSaving = yoursCO2 - limitCO2;
+  const slowSaving  = yoursCO2 - slowCO2;
+
+  // Best CO2 saving equivalent for the insight line
+  const bestSavingKg = Math.max(limitSaving, slowSaving);
+  const insightSpeed = limitSaving >= slowSaving ? `${limitA}/${limitM} ${co.speedUnit}` : `${slowA}/${slowM} ${co.speedUnit}`;
+  const insightLabel = limitSaving >= slowSaving ? 'driving at the speed limit' : 'driving 10 mph below the limit';
 
   document.getElementById('results-panel').innerHTML = `
     <div class="results">
@@ -697,16 +742,79 @@ function computeCost() {
           ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(slow.cost/passengers)} / person</div>`:''}
         </div>
       </div>
+
       <div style="margin-bottom:1rem;">
         <div class="delta-row"><span>At speed limits vs your speed — cost</span><span>${fmtDelta(limit.cost-yours.cost,'cost')}</span></div>
         <div class="delta-row"><span>At speed limits vs your speed — time</span><span>${fmtDelta(limit.totalMins-yours.totalMins,'time')}</span></div>
         <div class="delta-row"><span>10 ${co.speedUnit} below limit vs your speed — cost</span><span>${fmtDelta(slow.cost-yours.cost,'cost')}</span></div>
         <div class="delta-row"><span>10 ${co.speedUnit} below limit vs your speed — time</span><span>${fmtDelta(slow.totalMins-yours.totalMins,'time')}</span></div>
       </div>
+
+      <!-- CO2 Section -->
+      <div style="background:var(--success-bg);border:0.5px solid var(--success-border);border-radius:var(--radius);padding:14px;margin-bottom:1rem;">
+        <div class="section-title" style="margin-bottom:10px;color:var(--success-text);">
+          <i class="ti ti-leaf" aria-hidden="true"></i> Environmental impact
+        </div>
+
+        <!-- CO2 comparison grid -->
+        <div class="comparison-grid" style="margin-bottom:10px;">
+          <div style="background:var(--card);border-radius:var(--radius);padding:10px;text-align:center;border:0.5px solid var(--success-border);">
+            <div style="font-size:11px;color:var(--success-text);font-weight:500;margin-bottom:4px;">Your speed</div>
+            <div style="font-size:20px;font-weight:600;color:var(--text);">${fmtCO2(yoursCO2)}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">CO₂ emitted</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:10px;text-align:center;border:0.5px solid var(--success-border);">
+            <div style="font-size:11px;color:var(--success-text);font-weight:500;margin-bottom:4px;">At speed limits</div>
+            <div style="font-size:20px;font-weight:600;color:var(--text);">${fmtCO2(limitCO2)}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">CO₂ emitted</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:10px;text-align:center;border:0.5px solid var(--success-border);">
+            <div style="font-size:11px;color:var(--success-text);font-weight:500;margin-bottom:4px;">10 ${co.speedUnit} below</div>
+            <div style="font-size:20px;font-weight:600;color:var(--text);">${fmtCO2(slowCO2)}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px;">CO₂ emitted</div>
+          </div>
+        </div>
+
+        ${co2DeltaHtml(yoursCO2, limitCO2, 'At speed limits vs your speed — CO₂')}
+        ${co2DeltaHtml(yoursCO2, slowCO2, '10 ${co.speedUnit} below limit vs your speed — CO₂')}
+
+        <!-- Relatable equivalents -->
+        <div style="margin-top:12px;padding-top:10px;border-top:0.5px solid var(--success-border);">
+          <div style="font-size:12px;color:var(--success-text);font-weight:500;margin-bottom:8px;">Your journey emits ${fmtCO2(yoursCO2)} of CO₂ — equivalent to:</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:var(--card);border-radius:var(--radius);padding:10px;border:0.5px solid var(--success-border);">
+              <div style="font-size:18px;margin-bottom:2px;">🌳</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">${eq.trees} trees</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">needed to absorb this in a year</div>
+            </div>
+            <div style="background:var(--card);border-radius:var(--radius);padding:10px;border:0.5px solid var(--success-border);">
+              <div style="font-size:18px;margin-bottom:2px;">📱</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">${eq.smartphoneCharges.toLocaleString()} charges</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">equivalent smartphone charges</div>
+            </div>
+            <div style="background:var(--card);border-radius:var(--radius);padding:10px;border:0.5px solid var(--success-border);">
+              <div style="font-size:18px;margin-bottom:2px;">🚗</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">${eq.kmDriven} km</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">average car driving equivalent</div>
+            </div>
+            <div style="background:var(--card);border-radius:var(--radius);padding:10px;border:0.5px solid var(--success-border);">
+              <div style="font-size:18px;margin-bottom:2px;">☕</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">${eq.kettleBoils.toLocaleString()} boils</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">equivalent kettle boils</div>
+            </div>
+          </div>
+          ${bestSavingKg > 0.05 ? `
+          <div style="margin-top:10px;padding:10px;background:var(--card);border-radius:var(--radius);border:0.5px solid var(--success-border);font-size:13px;color:var(--success-text);">
+            <i class="ti ti-bulb" aria-hidden="true"></i> <strong>Did you know?</strong> By ${insightLabel} on this journey you'd save <strong>${fmtCO2(bestSavingKg)}</strong> of CO₂ — the equivalent of ${Math.round(bestSavingKg/0.008).toLocaleString()} smartphone charges or ${(bestSavingKg/21.77*365).toFixed(1)} days of a tree's annual absorption.
+          </div>` : ''}
+        </div>
+      </div>
+
       <div class="breakdown">
         <div class="section-title" style="margin-bottom:8px;">Your speed — full breakdown</div>
         <div class="breakdown-row"><span>Distance</span><span>${dist.toFixed(1)} ${co.distUnit}</span></div>
         <div class="breakdown-row"><span>Total fuel</span><span>${yours.litres.toFixed(2)} litres</span></div>
+        <div class="breakdown-row"><span>CO₂ emitted</span><span>${fmtCO2(yoursCO2)} (${fuelType} @ ${CO2_PER_LITRE[fuelType]}kg/L)</span></div>
         <div class="breakdown-row"><span>Fuel price</span><span>${parseFloat(document.getElementById('fuel-price').value).toFixed(2)} ${co.fuelPriceNote}</span></div>
         <div class="breakdown-row" style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border);">
           <span>Urban (${Math.round(routeLegs.urban*100)}% · ~${co.urbanFixed} ${co.speedUnit})</span><span>${yours.uL.toFixed(2)}L</span>
