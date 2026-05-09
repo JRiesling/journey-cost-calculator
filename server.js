@@ -98,10 +98,34 @@ app.post('/api/fuel-prices', async (req, res) => {
   }
 });
 
-// 2. Route calculation (cached per origin+destination, 24 hours)
+// ─── Helper: infer road type from a Google Routes API step instruction ────────
+// Google returns HTML navigation instructions like "Take the <b>M1</b>"
+// We parse these to classify each step as urban / aroad / motorway
+function inferRoadType(instruction = '', distance_m = 0) {
+  const text = instruction.replace(/<[^>]+>/g, '').toLowerCase();
+
+  // Motorway patterns (UK M-roads, US Interstates, EU Autobahn etc.)
+  if (/\bm\d+\b/.test(text)) return 'motorway';           // M1, M25 etc
+  if (/\ba\d+\(m\)/.test(text)) return 'motorway';        // A1(M)
+  if (/motorway|freeway|interstate|autobahn|autoroute|autopista|autostrada|snelweg|motorvej|motorväg|autosnelweg|otoyol/.test(text)) return 'motorway';
+  if (/\bi-\d+\b/.test(text)) return 'motorway';          // I-95 (US interstates)
+
+  // A-road / highway patterns
+  if (/\ba\d+\b/.test(text)) return 'aroad';              // A1, A303 etc
+  if (/\bb\d+\b/.test(text)) return 'aroad';              // B roads
+  if (/highway|dual carriageway|trunk road|national route|state route|route nationale|bundesstra|rijksweg|riksväg|riksvei|landevej|carretera|estrada nacional/.test(text)) return 'aroad';
+
+  // Long steps on unnamed roads are likely A-roads
+  if (distance_m > 10000) return 'aroad';
+
+  // Default: urban
+  return 'urban';
+}
+
+// 2. Route calculation using Google Routes API (cached 24 hours)
 app.post('/api/route', async (req, res) => {
   try {
-    const { origin, destination, country, distUnit, aroadLabel, motorwayLabel } = req.body;
+    const { origin, destination, distUnit } = req.body;
     if (!origin || !destination) return res.status(400).json({ error: 'Origin and destination are required' });
 
     const cacheKey = `${origin.toLowerCase().trim()}|${destination.toLowerCase().trim()}|${distUnit}`;
@@ -110,18 +134,103 @@ app.post('/api/route', async (req, res) => {
       return res.json({ ...cached.data, cached: true });
     }
 
-    const result = await callClaude(
-      `You are a driving route expert. Estimate driving distance in ${distUnit} and road type split for a journey. The three proportions (urban, aroad, motorway) must sum to exactly 1.0. Reply ONLY with valid JSON — no preamble, no markdown: {"distance":175.2,"typical_route":"via M6, M1","urban":0.15,"aroad":0.25,"motorway":0.60} If the route cannot be found: {"error":"Cannot find route"}. Be realistic about road splits — long journeys are motorway-heavy, short town-to-town journeys are A-road heavy, city journeys are urban-heavy.`,
-      `From: "${origin}" To: "${destination}" Country context: ${country}. Distance unit: ${distUnit}. Road types: urban / ${aroadLabel} / ${motorwayLabel}.`
-    );
-
-    if (!result.error) {
-      routeCache.set(cacheKey, { data: result, timestamp: Date.now() });
+    if (!process.env.GOOGLE_MAPS_API_KEY) {
+      throw new Error('GOOGLE_MAPS_API_KEY is not set');
     }
+
+    // Call Google Routes API
+    const googleRes = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
+        'X-Goog-FieldMask': 'routes.distanceMeters,routes.duration,routes.legs.steps,routes.description',
+      },
+      body: JSON.stringify({
+        origin: { address: origin },
+        destination: { address: destination },
+        travelMode: 'DRIVE',
+        routingPreference: 'TRAFFIC_UNAWARE',
+        computeAlternativeRoutes: false,
+        routeModifiers: { avoidFerries: true },
+      }),
+    });
+
+    if (!googleRes.ok) {
+      const errText = await googleRes.text();
+      throw new Error(`Google Routes API error: ${googleRes.status} — ${errText}`);
+    }
+
+    const googleData = await googleRes.json();
+
+    if (!googleData.routes || googleData.routes.length === 0) {
+      return res.json({ error: 'Cannot find route. Try more specific locations.' });
+    }
+
+    const route = googleData.routes[0];
+    const distanceMetres = route.distanceMeters;
+    const distanceKm = distanceMetres / 1000;
+    const distanceMiles = distanceKm * 0.621371;
+    const distance = distUnit === 'miles' ? distanceMiles : distanceKm;
+
+    // Parse duration (Google returns "3600s" format)
+    const durationSeconds = parseInt((route.duration || '0s').replace('s', ''));
+    const durationMins = Math.round(durationSeconds / 60);
+
+    // Build a readable route description from the route description or steps
+    const typical_route = route.description || `${origin} to ${destination}`;
+
+    // Classify each step by road type and accumulate distances
+    let urbanMetres = 0, aroadMetres = 0, motorwayMetres = 0;
+    const steps = route.legs?.[0]?.steps || [];
+
+    steps.forEach(step => {
+      const dist = step.distanceMeters || 0;
+      const instruction = step.navigationInstruction?.instructions || '';
+      const type = inferRoadType(instruction, dist);
+      if (type === 'motorway') motorwayMetres += dist;
+      else if (type === 'aroad') aroadMetres += dist;
+      else urbanMetres += dist;
+    });
+
+    const total = urbanMetres + aroadMetres + motorwayMetres || distanceMetres;
+    const urban    = Math.round((urbanMetres / total) * 100) / 100;
+    const aroad    = Math.round((aroadMetres / total) * 100) / 100;
+    const motorway = Math.round((1 - urban - aroad) * 100) / 100; // ensures sum = 1.0
+
+    const result = {
+      distance: Math.round(distance * 10) / 10,
+      distanceKm: Math.round(distanceKm * 10) / 10,
+      distanceMiles: Math.round(distanceMiles * 10) / 10,
+      durationMins,
+      typical_route,
+      urban,
+      aroad,
+      motorway,
+      source: 'google',
+    };
+
+    routeCache.set(cacheKey, { data: result, timestamp: Date.now() });
     res.json(result);
+
   } catch (err) {
     console.error('Route error:', err.message);
-    res.status(500).json({ error: 'Could not calculate route. Please enter distance manually.' });
+
+    // Fallback to Claude AI estimation if Google fails
+    console.log('Falling back to AI route estimation...');
+    try {
+      const { origin, destination, country, distUnit, aroadLabel, motorwayLabel } = req.body;
+      const result = await callClaude(
+        `You are a driving route expert. Estimate driving distance in ${distUnit} and road type split. Proportions must sum to 1.0. Reply ONLY JSON: {"distance":175.2,"typical_route":"via M6","urban":0.15,"aroad":0.25,"motorway":0.60} If unknown: {"error":"Cannot find route"}.`,
+        `From: "${origin}" To: "${destination}" Country: ${country}`
+      );
+      if (!result.error) {
+        routeCache.set(`${origin}|${destination}|${distUnit}`, { data: { ...result, source: 'ai' }, timestamp: Date.now() });
+      }
+      res.json({ ...result, source: 'ai' });
+    } catch (fallbackErr) {
+      res.status(500).json({ error: 'Could not calculate route. Please enter distance manually.' });
+    }
   }
 });
 
@@ -175,5 +284,8 @@ app.listen(PORT, () => {
   console.log(`Journey Cost Calculator running on port ${PORT}`);
   if (!process.env.ANTHROPIC_API_KEY) {
     console.warn('WARNING: ANTHROPIC_API_KEY environment variable is not set!');
+  }
+  if (!process.env.GOOGLE_MAPS_API_KEY) {
+    console.warn('WARNING: GOOGLE_MAPS_API_KEY is not set — route calculation will fall back to AI estimation.');
   }
 });
