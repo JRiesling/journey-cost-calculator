@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block API endpoints from being indexed
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://fuel-smarter.com/sitemap.xml
