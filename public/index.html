@@ -220,6 +220,23 @@
     .breakdown-sub span:first-child { color: var(--text-tertiary); }
 
     footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
+    footer a { color: inherit; text-decoration: none; }
+    .hero { padding: 2rem 0 1rem; text-align: center; }
+    .hero h2 { font-size: 26px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+    .hero p { font-size: 15px; color: var(--text-secondary); max-width: 520px; margin: 0 auto 1.25rem; }
+    .hero-features { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .hero-feature { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+    .hero-feature i { color: var(--success-text); }
+    .affiliate-bar { background: var(--warning-bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .affiliate-bar p { font-size: 13px; color: var(--warning-text); margin: 0; }
+    .affiliate-bar a { font-size: 13px; font-weight: 500; color: var(--warning-text); text-decoration: underline; white-space: nowrap; }
+    .affiliate-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1rem 0; }
+    .affiliate-link { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; text-decoration: none; display: flex; align-items: center; gap: 10px; transition: border-color 0.15s; }
+    .affiliate-link:hover { border-color: var(--border-hover); }
+    .affiliate-link-icon { font-size: 20px; flex-shrink: 0; }
+    .affiliate-link-text { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+    .affiliate-link-text strong { display: block; color: var(--text); font-size: 14px; margin-bottom: 1px; }
+    .affiliate-disclosure { font-size: 11px; color: var(--text-tertiary); text-align: center; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -236,6 +253,18 @@
 </header>
 
 <main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h2>How much will your journey cost in fuel?</h2>
+    <p>Enter your route, your car, and how fast you drive. We calculate the exact fuel cost — plus your CO₂ emissions and how much you'd save at the speed limit.</p>
+    <div class="hero-features">
+      <span class="hero-feature"><i class="ti ti-check" aria-hidden="true"></i> Real Google Maps distances</span>
+      <span class="hero-feature"><i class="ti ti-check" aria-hidden="true"></i> Live fuel prices</span>
+      <span class="hero-feature"><i class="ti ti-check" aria-hidden="true"></i> 30+ countries</span>
+      <span class="hero-feature"><i class="ti ti-check" aria-hidden="true"></i> Free, no signup</span>
+    </div>
+  </div>
 
   <!-- Country -->
   <div class="card">
@@ -376,11 +405,35 @@
 
   <div id="results-panel"></div>
 
+  <!-- Affiliate links -->
+  <div style="margin-top:2rem;">
+    <div class="section-title" style="margin-bottom:10px;">Useful links</div>
+    <div class="affiliate-links">
+      <a href="https://www.confused.com/petrol-prices" target="_blank" rel="noopener sponsored" class="affiliate-link">
+        <span class="affiliate-link-icon">⛽</span>
+        <span class="affiliate-link-text"><strong>Find cheapest fuel near you</strong>Compare live petrol prices at stations near you</span>
+      </a>
+      <a href="https://www.confused.com/car-insurance" target="_blank" rel="noopener sponsored" class="affiliate-link">
+        <span class="affiliate-link-icon">🚗</span>
+        <span class="affiliate-link-text"><strong>Compare car insurance</strong>Could you be paying less for your cover?</span>
+      </a>
+      <a href="https://www.theaa.com/breakdown-cover" target="_blank" rel="noopener sponsored" class="affiliate-link">
+        <span class="affiliate-link-icon">🔧</span>
+        <span class="affiliate-link-text"><strong>AA Breakdown Cover</strong>From £6.75/month — roadside assistance across the UK</span>
+      </a>
+      <a href="https://www.rac.co.uk/breakdown-cover" target="_blank" rel="noopener sponsored" class="affiliate-link">
+        <span class="affiliate-link-icon">🛡️</span>
+        <span class="affiliate-link-text"><strong>RAC Breakdown Cover</strong>Join over 8 million members — get protected today</span>
+      </a>
+    </div>
+    <p class="affiliate-disclosure">Fuel Smarter may earn a commission if you click these links. This does not affect our editorial content or the price you pay.</p>
+  </div>
+
 </main>
 
 <footer>
   <p>Fuel prices and MPG figures are estimates. Always check current pump prices before travelling.</p>
-  <p style="margin-top:4px;">© 2026 Fuel Smarter · <a href="/privacy" style="color:inherit;">Privacy Policy</a> · <a href="/about" style="color:inherit;">About</a></p>
+  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Calculator</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/uk">UK Guide</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
 </footer>
 
 <script>
