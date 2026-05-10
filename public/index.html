@@ -160,6 +160,8 @@
       top: 0;
       z-index: 100;
       box-shadow: 0 1px 0 var(--border), var(--shadow);
+      width: 100%;
+      overflow-x: hidden;
     }
     .logo-mark {
       width: 34px; height: 34px;
@@ -170,16 +172,22 @@
       flex-shrink: 0;
       box-shadow: 0 2px 8px rgba(45,106,79,0.3);
     }
-    .logo-text { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); text-decoration: none; }
+    .logo-text { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); text-decoration: none; white-space: nowrap; }
     .logo-text span { color: var(--accent); }
-    header nav { margin-left: auto; display: flex; gap: 0; }
+    header nav { margin-left: auto; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; flex-shrink: 1; }
+    header nav::-webkit-scrollbar { display: none; }
     header nav a {
       text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500;
-      padding: 0 12px; height: 60px; display: flex; align-items: center;
-      border-bottom: 2px solid transparent; transition: all 0.15s;
+      padding: 0 10px; height: 60px; display: flex; align-items: center;
+      border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
     }
     header nav a:hover { color: var(--text); }
     header nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+    @media (max-width: 600px) {
+      header { padding: 0 1rem; }
+      header nav a { padding: 0 8px; font-size: 12px; }
+      .logo-text { font-size: 15px; }
+    }
 
     /* ── Layout ─────────────────────────────────────────── */
     main { max-width: 700px; margin: 0 auto; padding: 2rem 1rem 5rem; }
