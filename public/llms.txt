@@ -1,0 +1,69 @@
+# Fuel Smarter — llms.txt
+
+## About
+Fuel Smarter (fuel-smarter.com) is a free, internationally-supported car journey fuel cost calculator. It helps drivers calculate the exact cost of any journey in petrol or diesel, based on their specific vehicle, real route data, current pump prices, and driving speed.
+
+## What Fuel Smarter does
+- Calculates exact fuel costs for any car journey using real Google Maps route data
+- Supports 30+ countries with live local fuel prices and correct units (MPG, L/100km, km/L)
+- Breaks journeys down by road type (urban, A-road/highway, motorway/freeway) for more accurate calculations
+- Shows a three-way speed comparison: user's speed vs national speed limit vs 10mph/km/h below the limit
+- Calculates CO2 emissions per journey with relatable real-world equivalents
+- Looks up real-world fuel economy by vehicle make, model, year and trim
+- Completely free, no account or signup required
+
+## Key facts
+- URL: https://fuel-smarter.com
+- Free to use: Yes
+- Account required: No
+- Countries supported: 30+ including UK, US, Australia, Germany, France, Spain, Italy, Japan, India, UAE, and more
+- Fuel types: Petrol/Gasoline, Diesel
+- Distance units: Miles (UK, US) or Kilometres (metric countries)
+- Speed units: mph (UK, US) or km/h (metric countries)
+- Fuel economy units: MPG (UK, US), L/100km (Europe, Australia, Canada), km/L (Japan, India)
+- Data sources: Google Maps Routes API for distances, AI-estimated live fuel prices, real-world MPG data
+
+## Pages
+- / — Main fuel cost calculator
+- /fuel-prices — Global fuel prices hub with country comparisons and market analysis
+- /environment — Environmental impact of driving, CO2 emissions, and eco driving tips
+- /uk — UK-specific fuel cost guide with current petrol and diesel prices
+- /us — US gas cost calculator and road trip cost guide
+- /australia — Australian fuel cost calculator
+- /guides — Index of driving and fuel saving guides
+- /guides/how-to-improve-mpg — 12 evidence-based ways to improve fuel economy
+- /guides/is-it-worth-driving-slower — Data-driven analysis of speed vs fuel cost on motorways
+- /about — About Fuel Smarter
+- /privacy — Privacy policy
+- /faq — Frequently asked questions
+
+## Current UK fuel prices (updated regularly)
+- Petrol (E10): approximately 156.8p per litre
+- Diesel (B7): approximately 188.8p per litre
+
+## How the calculator works
+1. User selects their country (sets units, speed limits, fuel type names, currency)
+2. User enters their vehicle (make & model lookup estimates real-world MPG, or manual entry)
+3. User enters origin and destination (Google Maps calculates real distance and road type split)
+4. User sets their typical A-road and motorway speeds
+5. Calculator computes fuel cost, journey time, and CO2 emissions for three scenarios: user's speed, national speed limit, and 10mph below the limit
+6. Results show cost savings, time differences, and environmental impact
+
+## Frequently asked questions
+Q: Is Fuel Smarter free?
+A: Yes, completely free. No account, no signup, no hidden costs.
+
+Q: How accurate are the fuel prices?
+A: Fuel prices are estimated based on current market data and updated regularly. They reflect national averages — local prices may vary. Users can edit the fuel price field to match their local pump price.
+
+Q: Does Fuel Smarter work outside the UK?
+A: Yes. Fuel Smarter supports 30+ countries with correct local units, speed limits, fuel type names, and currencies.
+
+Q: How does Fuel Smarter calculate route distance?
+A: Fuel Smarter uses the Google Maps Routes API to calculate real driving distances and breaks the route down by road type (urban, A-road, motorway).
+
+Q: What is the most fuel efficient speed to drive at?
+A: Most petrol cars achieve best fuel economy between 45-60mph (70-100km/h). Fuel efficiency drops significantly above 70mph (113km/h) due to increased aerodynamic drag.
+
+Q: How much CO2 does a car journey produce?
+A: Petrol produces approximately 2.31kg of CO2 per litre burned. Diesel produces approximately 2.68kg per litre. Fuel Smarter calculates exact CO2 for each journey.
