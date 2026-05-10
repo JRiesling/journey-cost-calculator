@@ -282,31 +282,16 @@
   <!-- Vehicle -->
   <div class="card">
     <div class="section-title">Your vehicle</div>
-    <div class="method-toggle">
-      <button class="method-btn active" id="method-plate" onclick="setMethod('plate')">
-        <i class="ti ti-license" aria-hidden="true"></i><br>Number plate
-      </button>
-      <button class="method-btn" id="method-model" onclick="setMethod('model')">
+    <div class="method-toggle" style="grid-template-columns:1fr 1fr;">
+      <button class="method-btn active" id="method-model" onclick="setMethod('model')">
         <i class="ti ti-car" aria-hidden="true"></i><br>Make &amp; model
       </button>
       <button class="method-btn" id="method-manual" onclick="setMethod('manual')">
-        <i class="ti ti-pencil" aria-hidden="true"></i><br>Enter MPG/L
+        <i class="ti ti-pencil" aria-hidden="true"></i><br>Enter MPG manually
       </button>
     </div>
 
-    <div id="section-plate">
-      <div class="field" style="margin-bottom:8px;">
-        <label>Number plate / license plate</label>
-        <div class="plate-row">
-          <input class="plate-input" type="text" id="plate" placeholder="AB12 CDE" maxlength="10" oninput="this.value=this.value.toUpperCase()" aria-label="Number plate" />
-          <button class="lookup-btn" onclick="lookupPlate()"><i class="ti ti-search" aria-hidden="true"></i> Look up</button>
-        </div>
-      </div>
-      <p class="tip">We'll estimate your vehicle's real-world fuel economy from the plate</p>
-      <div id="plate-result"></div>
-    </div>
-
-    <div id="section-model" class="hidden">
+    <div id="section-model">
       <div class="field-row" style="margin-bottom:10px;">
         <div class="field" style="margin-bottom:0;"><label>Make</label><input type="text" id="car-make" placeholder="e.g. Ford" /></div>
         <div class="field" style="margin-bottom:0;"><label>Model</label><input type="text" id="car-model" placeholder="e.g. Focus" /></div>
@@ -577,7 +562,7 @@ function setFuel(type) {
 }
 
 function setMethod(m) {
-  ['plate','model','manual'].forEach(x => {
+  ['model','manual'].forEach(x => {
     document.getElementById('section-'+x).classList.toggle('hidden', x !== m);
     document.getElementById('method-'+x).classList.toggle('active', x === m);
   });
@@ -937,6 +922,7 @@ function computeCost() {
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
+setMethod('model');
 onCountryChange();
 </script>
 
