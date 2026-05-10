@@ -276,6 +276,9 @@ app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime
 
 // ─── Named page routes ────────────────────────────────────────────────────────
 app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
+app.get('/fuel-prices', (req, res) => res.sendFile(path.join(__dirname, 'public', 'fuel-prices.html')));
+app.get('/environment', (req, res) => res.sendFile(path.join(__dirname, 'public', 'environment.html')));
+app.get('/uk', (req, res) => res.sendFile(path.join(__dirname, 'public', 'uk.html')));
 app.get('/privacy', (req, res) => res.sendFile(path.join(__dirname, 'public', 'privacy.html')));
 app.get('/sitemap.xml', (req, res) => {
   res.setHeader('Content-Type', 'application/xml');
