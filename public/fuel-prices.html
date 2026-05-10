@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Fuel Prices 2026 — Petrol & Diesel Prices by Country | Fuel Smarter</title>
+  <meta name="description" content="Live and updated global fuel prices for 2026. Compare petrol and diesel prices by country, understand what's driving costs up, and find out how to spend less at the pump." />
+  <meta name="keywords" content="global fuel prices 2026, petrol prices by country, diesel prices worldwide, cheapest petrol in the world, UK fuel prices 2026, fuel price comparison" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/fuel-prices" />
+  <meta property="og:title" content="Global Fuel Prices 2026 — Compare Petrol & Diesel Prices by Country" />
+  <meta property="og:description" content="Compare petrol and diesel prices across 30+ countries. Updated regularly with the latest pump prices and the factors driving them." />
+  <meta property="og:url" content="https://fuel-smarter.com/fuel-prices" />
+  <meta property="og:type" content="article" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Global Fuel Prices 2026 — Petrol & Diesel Prices by Country",
+    "description": "Compare petrol and diesel prices across 30+ countries. Updated regularly with the latest pump prices and the factors driving them.",
+    "url": "https://fuel-smarter.com/fuel-prices",
+    "publisher": { "@type": "Organization", "name": "Fuel Smarter", "url": "https://fuel-smarter.com" },
+    "dateModified": "2026-05-10"
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1); --border-hover: rgba(0,0,0,0.2);
+      --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97;
+      --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a;
+      --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c;
+      --warning-bg: #faeeda; --warning-text: #633806;
+      --danger-bg: #fdeaea; --danger-text: #791f1f;
+      --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; --warning-bg: #412402; --warning-text: #fac775; --danger-bg: #3a0f0f; --danger-text: #f09595; }
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
+    header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
+    header .logo { text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    nav { margin-left: auto; display: flex; gap: 1.5rem; }
+    nav a { text-decoration: none; color: var(--text-secondary); font-size: 14px; }
+    nav a:hover, nav a.active { color: var(--text); }
+    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+    h2 { font-size: 22px; font-weight: 600; margin: 2.5rem 0 1rem; }
+    h3 { font-size: 17px; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    p { color: var(--text-secondary); margin-bottom: 1rem; }
+    .meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2rem; }
+    .highlight { background: var(--warning-bg); border-left: 3px solid var(--warning-text); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 1.5rem 0; }
+    .highlight p { color: var(--warning-text); margin: 0; font-size: 14px; }
+    .price-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 14px; }
+    .price-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-secondary); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 0.5px solid var(--border); }
+    .price-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
+    .price-table tr:last-child td { border-bottom: none; }
+    .price-table td:first-child { color: var(--text); font-weight: 500; }
+    .price-table .cheap { color: var(--success-text); font-weight: 600; }
+    .price-table .expensive { color: var(--danger-text); font-weight: 600; }
+    .factor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0 2rem; }
+    .factor { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .factor-icon { font-size: 24px; margin-bottom: 8px; }
+    .factor-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .factor-desc { font-size: 13px; color: var(--text-tertiary); line-height: 1.5; }
+    .tip-box { background: var(--success-bg); border: 0.5px solid var(--success-border); border-radius: var(--radius-lg); padding: 1.25rem; margin: 1.5rem 0; }
+    .tip-box h3 { color: var(--success-text); margin-top: 0; }
+    .tip-box p { color: var(--success-text); margin-bottom: 0.5rem; }
+    .tip-box p:last-child { margin-bottom: 0; }
+    .cta { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 14px; font-weight: 500; margin-top: 2.5rem; font-size: 15px; }
+    .cta:hover { opacity: 0.9; }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 600px) { .factor-grid { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo"><i class="ti ti-car" aria-hidden="true"></i> Fuel Smarter</a>
+  <nav>
+    <a href="/">Calculator</a>
+    <a href="/fuel-prices" class="active">Fuel Prices</a>
+    <a href="/environment">Environment</a>
+    <a href="/uk">UK Guide</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Global Fuel Prices 2026</h1>
+  <p class="meta">Last updated: May 2026 · Prices shown are approximate national averages</p>
+
+  <p>Fuel prices vary enormously around the world — from under 10p per litre in some oil-producing nations to well over 200p in high-tax European countries. Understanding why prices differ, and what's currently driving them up or down, can help you plan journeys, budget more accurately, and make smarter decisions at the pump.</p>
+
+  <div class="highlight">
+    <p><strong>May 2026 update:</strong> UK petrol is currently averaging 156.8p/litre and diesel 188.8p/litre, following a spike in March driven by Middle East tensions that pushed Brent crude above $85 per barrel. Prices have eased slightly since but remain above early 2026 levels.</p>
+  </div>
+
+  <h2>Petrol prices by country — May 2026</h2>
+  <p>Prices below are approximate national averages in local currency per litre (or per gallon for the US). They include all local taxes.</p>
+
+  <table class="price-table" aria-label="Petrol prices by country May 2026">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Petrol price</th>
+        <th>Diesel price</th>
+        <th>vs UK</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>🇸🇦 Saudi Arabia</td><td class="cheap">0.78 SAR/L (~17p)</td><td class="cheap">0.33 SAR/L (~7p)</td><td class="cheap">~88% cheaper</td></tr>
+      <tr><td>🇦🇪 UAE</td><td class="cheap">2.49 AED/L (~54p)</td><td>2.76 AED/L (~60p)</td><td class="cheap">~65% cheaper</td></tr>
+      <tr><td>🇺🇸 United States</td><td class="cheap">$3.50/gallon (~66p/L)</td><td>$3.80/gallon (~72p/L)</td><td class="cheap">~58% cheaper</td></tr>
+      <tr><td>🇲🇽 Mexico</td><td>23 MXN/L (~97p)</td><td>24 MXN/L (~102p)</td><td>~38% cheaper</td></tr>
+      <tr><td>🇦🇺 Australia</td><td>A$1.90/L (~97p)</td><td>A$2.00/L (~102p)</td><td>~38% cheaper</td></tr>
+      <tr><td>🇳🇿 New Zealand</td><td>NZ$2.30/L (~106p)</td><td>NZ$1.95/L (~90p)</td><td>~33% cheaper</td></tr>
+      <tr><td>🇨🇦 Canada</td><td>CA$1.65/L (~95p)</td><td>CA$1.80/L (~103p)</td><td>~39% cheaper</td></tr>
+      <tr><td>🇵🇱 Poland</td><td>6.20 zł/L (~122p)</td><td>6.00 zł/L (~118p)</td><td>~22% cheaper</td></tr>
+      <tr><td>🇪🇸 Spain</td><td>€1.65/L (~140p)</td><td>€1.55/L (~132p)</td><td>~11% cheaper</td></tr>
+      <tr><td>🇦🇹 Austria</td><td>€1.60/L (~136p)</td><td>€1.55/L (~132p)</td><td>~13% cheaper</td></tr>
+      <tr><td>🇩🇪 Germany</td><td>€1.75/L (~149p)</td><td>€1.70/L (~145p)</td><td>~5% cheaper</td></tr>
+      <tr><td>🇫🇷 France</td><td>€1.78/L (~151p)</td><td>€1.72/L (~146p)</td><td>~4% cheaper</td></tr>
+      <tr><td>🇮🇪 Ireland</td><td>€1.78/L (~151p)</td><td>€1.72/L (~146p)</td><td>~4% cheaper</td></tr>
+      <tr><td>🇬🇧 United Kingdom</td><td>156.8p/L</td><td>188.8p/L</td><td>—</td></tr>
+      <tr><td>🇧🇪 Belgium</td><td>€1.80/L (~153p)</td><td>€1.68/L (~143p)</td><td>~2% more expensive</td></tr>
+      <tr><td>🇮🇹 Italy</td><td class="expensive">€1.82/L (~155p)</td><td>€1.74/L (~148p)</td><td class="expensive">~1% more expensive</td></tr>
+      <tr><td>🇨🇭 Switzerland</td><td class="expensive">CHF 1.90/L (~169p)</td><td>CHF 1.95/L (~174p)</td><td class="expensive">~8% more expensive</td></tr>
+      <tr><td>🇳🇱 Netherlands</td><td class="expensive">€1.95/L (~166p)</td><td>€1.80/L (~153p)</td><td class="expensive">~6% more expensive</td></tr>
+      <tr><td>🇸🇪 Sweden</td><td class="expensive">18.50 kr/L (~137p)</td><td>19.00 kr/L (~141p)</td><td>~13% cheaper</td></tr>
+      <tr><td>🇳🇴 Norway</td><td class="expensive">21.00 kr/L (~153p)</td><td>20.00 kr/L (~146p)</td><td>~2% more expensive</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What's driving fuel prices in 2026?</h2>
+  <p>Fuel prices are determined by a complex mix of global and local factors. Here are the main ones affecting what you pay at the pump right now.</p>
+
+  <div class="factor-grid">
+    <div class="factor">
+      <div class="factor-icon">🛢️</div>
+      <div class="factor-title">Crude oil prices</div>
+      <div class="factor-desc">The biggest single driver of pump prices globally. Brent crude rose above $85/barrel in March 2026 following Middle East tensions, pushing prices up sharply before easing slightly in April and May.</div>
+    </div>
+    <div class="factor">
+      <div class="factor-icon">⚔️</div>
+      <div class="factor-title">Geopolitical tensions</div>
+      <div class="factor-desc">Conflict in the Middle East in early 2026 disrupted shipping through the Strait of Hormuz — a route carrying roughly 20% of global oil supplies — causing a sharp spike in crude prices that fed quickly into pump prices.</div>
+    </div>
+    <div class="factor">
+      <div class="factor-icon">🏛️</div>
+      <div class="factor-title">Fuel duty and tax</div>
+      <div class="factor-desc">In the UK, fuel duty alone is 52.95p per litre, plus VAT on top. Tax makes up around 55-60% of the pump price. Countries like the US and Saudi Arabia tax fuel far less, which is why their prices are so much lower.</div>
+    </div>
+    <div class="factor">
+      <div class="factor-icon">💱</div>
+      <div class="factor-title">Exchange rates</div>
+      <div class="factor-desc">Oil is priced in US dollars globally. When the pound weakens against the dollar, UK fuel prices rise even if crude oil prices stay flat — because the same amount of oil costs more in sterling.</div>
+    </div>
+    <div class="factor">
+      <div class="factor-icon">🏪</div>
+      <div class="factor-title">Retail margins</div>
+      <div class="factor-desc">The CMA found in 2023 that UK fuel retailer margins had risen significantly and competition was weakening. The government's Fuel Finder scheme — mandatory from February 2026 — is designed to improve price transparency and competition.</div>
+    </div>
+    <div class="factor">
+      <div class="factor-icon">📦</div>
+      <div class="factor-title">Supply and demand</div>
+      <div class="factor-desc">Seasonal demand (summer driving, winter heating), refinery capacity, and OPEC production decisions all influence how much fuel costs at any given time. Supermarkets typically offer 5-6p per litre less than branded forecourts.</div>
+    </div>
+  </div>
+
+  <h2>Why is diesel more expensive than petrol in the UK?</h2>
+  <p>Diesel has historically been cheaper to produce than petrol, but UK pump prices tell a different story. Diesel is currently around 32p per litre more expensive than petrol in the UK — one of the largest gaps in Europe.</p>
+  <p>The CMA found evidence of "rocket and feather" pricing in diesel — prices rise quickly when wholesale costs increase but fall much more slowly when costs come down. The Fuel Finder scheme is partly designed to address this by making price movements more transparent and easier to compare.</p>
+
+  <h2>Which country has the cheapest fuel in the world?</h2>
+  <p>Oil-producing nations typically have the cheapest fuel because they subsidise it heavily for their populations. Saudi Arabia, Venezuela, Iran, and Libya consistently have some of the world's lowest pump prices — often equivalent to just a few pence per litre in UK terms. The UAE is also significantly cheaper than the UK despite being a major tourist destination.</p>
+  <p>In contrast, the most expensive fuel is typically found in small island nations with high import costs, and in high-tax European countries like Norway, the Netherlands, and Denmark.</p>
+
+  <h2>How to spend less on fuel — practical tips</h2>
+  <div class="tip-box">
+    <h3>🌿 Drive smarter, spend less</h3>
+    <p><strong>Slow down on motorways.</strong> Driving at 70mph instead of 80mph can save 10-15% on fuel costs — often £3-5 on a typical motorway journey. Use our calculator to see the exact saving for your car and route.</p>
+    <p><strong>Use supermarket forecourts.</strong> Supermarket petrol is on average 5p per litre cheaper than branded forecourts — that's around £2.50 saved on a full 50-litre tank.</p>
+    <p><strong>Check prices before you fill up.</strong> The UK Government's Fuel Finder scheme means all major forecourts must publish live prices. Apps like Fuel Finder UK show the cheapest stations near you in real time.</p>
+    <p><strong>Fill up mid-week.</strong> Prices tend to be lower on Tuesday and Wednesday and higher on Thursday and Friday ahead of the weekend.</p>
+    <p><strong>Keep your tyres inflated.</strong> Under-inflated tyres increase rolling resistance and can reduce fuel economy by up to 3%.</p>
+  </div>
+
+  <a href="/" class="cta"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate the fuel cost of your next journey</a>
+</main>
+
+<footer>
+  <p>Prices are approximate national averages and may vary by region and retailer. Updated May 2026.</p>
+  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Home</a> · <a href="/about">About</a> · <a href="/privacy">Privacy Policy</a></p>
+</footer>
+
+</body>
+</html>

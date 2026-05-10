@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuel Cost Calculator UK 2026 — Petrol & Diesel Journey Costs | Fuel Smarter</title>
+  <meta name="description" content="Free UK fuel cost calculator for 2026. Calculate exactly how much your petrol or diesel journey will cost, based on your car's MPG, current UK pump prices, and your driving speed." />
+  <meta name="keywords" content="fuel cost calculator UK, petrol cost calculator UK, how much will my journey cost UK, MPG calculator UK, diesel cost calculator, UK driving cost 2026, journey cost calculator" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/uk" />
+  <meta property="og:title" content="Fuel Cost Calculator UK 2026 — How Much Will Your Journey Cost?" />
+  <meta property="og:description" content="Free UK fuel cost calculator. Enter your route and car to instantly see petrol or diesel costs, CO2 emissions, and how much you'd save by driving at the speed limit." />
+  <meta property="og:url" content="https://fuel-smarter.com/uk" />
+  <meta property="og:type" content="article" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Fuel Cost Calculator UK 2026",
+    "description": "Free UK fuel cost calculator. Calculate petrol and diesel journey costs based on your car, route, and driving speed.",
+    "url": "https://fuel-smarter.com/uk",
+    "publisher": { "@type": "Organization", "name": "Fuel Smarter", "url": "https://fuel-smarter.com" },
+    "dateModified": "2026-05-10",
+    "about": { "@type": "Thing", "name": "UK Fuel Prices" }
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1);
+      --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97;
+      --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a;
+      --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c;
+      --warning-bg: #faeeda; --warning-text: #633806;
+      --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; --warning-bg: #412402; --warning-text: #fac775; }
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
+    header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
+    header .logo { text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    nav { margin-left: auto; display: flex; gap: 1.5rem; }
+    nav a { text-decoration: none; color: var(--text-secondary); font-size: 14px; }
+    nav a:hover, nav a.active { color: var(--text); }
+    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+    h2 { font-size: 22px; font-weight: 600; margin: 2.5rem 0 1rem; }
+    h3 { font-size: 17px; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    p { color: var(--text-secondary); margin-bottom: 1rem; }
+    .meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2rem; }
+    .price-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.5rem 0; }
+    .price-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
+    .price-card .fuel-type { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .price-card .price { font-size: 36px; font-weight: 700; color: var(--text); }
+    .price-card .unit { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .price-card .change { font-size: 12px; margin-top: 6px; }
+    .journey-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 14px; }
+    .journey-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-secondary); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 0.5px solid var(--border); }
+    .journey-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
+    .journey-table tr:last-child td { border-bottom: none; }
+    .journey-table td:first-child { color: var(--text); font-weight: 500; }
+    .faq { margin: 1rem 0; }
+    .faq-item { border-bottom: 0.5px solid var(--border); padding: 1rem 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; color: var(--text); margin-bottom: 0.5rem; font-size: 15px; }
+    .faq-a { color: var(--text-secondary); font-size: 14px; margin: 0; }
+    .tip-box { background: var(--success-bg); border: 0.5px solid var(--success-border); border-radius: var(--radius-lg); padding: 1.25rem; margin: 1.5rem 0; }
+    .tip-box p { color: var(--success-text); margin-bottom: 0.5rem; }
+    .tip-box p:last-child { margin-bottom: 0; }
+    .highlight { background: var(--warning-bg); border-left: 3px solid var(--warning-text); border-radius: 0 var(--radius) var(--radius) 0; padding: 12px 16px; margin: 1.5rem 0; }
+    .highlight p { color: var(--warning-text); margin: 0; font-size: 14px; }
+    .cta-primary { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 16px; font-weight: 600; margin: 1.5rem 0; font-size: 16px; }
+    .cta-primary:hover { opacity: 0.9; }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 600px) { .price-box { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo"><i class="ti ti-car" aria-hidden="true"></i> Fuel Smarter</a>
+  <nav>
+    <a href="/">Calculator</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/environment">Environment</a>
+    <a href="/uk" class="active">UK Guide</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Fuel Cost Calculator UK</h1>
+  <p class="meta">UK petrol & diesel prices, journey costs, and driving tips — updated May 2026</p>
+
+  <p>Working out how much a car journey costs in the UK involves more than just distance. Your vehicle's fuel economy (MPG), the current price of petrol or diesel, your driving speed, and the types of roads you're on all affect the final figure. Fuel Smarter calculates all of this automatically — giving you an accurate cost for your specific car and route.</p>
+
+  <a href="/" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate the cost of your journey now</a>
+
+  <h2>Current UK fuel prices — May 2026</h2>
+  <div class="price-box">
+    <div class="price-card">
+      <div class="fuel-type">Unleaded petrol (E10)</div>
+      <div class="price">156.8p</div>
+      <div class="unit">per litre · UK average</div>
+      <div class="change" style="color:var(--success-text);">▼ −0.17p vs last week</div>
+    </div>
+    <div class="price-card">
+      <div class="fuel-type">Diesel (B7)</div>
+      <div class="price">188.8p</div>
+      <div class="unit">per litre · UK average</div>
+      <div class="change" style="color:var(--success-text);">▼ −1.02p vs last week</div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p><strong>Why are prices high in May 2026?</strong> UK fuel prices spiked sharply in March 2026 following conflict in the Middle East, which disrupted oil shipping through the Strait of Hormuz. Prices have eased since but remain above early 2026 levels. Supermarkets currently offer petrol around 5p per litre cheaper than branded forecourts.</p>
+  </div>
+
+  <h2>How much does a typical UK journey cost?</h2>
+  <p>Based on the UK average petrol price of 156.8p/litre and a typical family car achieving 40 MPG in real-world driving:</p>
+
+  <table class="journey-table" aria-label="Typical UK journey fuel costs">
+    <thead>
+      <tr>
+        <th>Journey</th>
+        <th>Distance</th>
+        <th>Petrol cost</th>
+        <th>Diesel cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>London to Manchester</td><td>209 miles</td><td>~£18.60</td><td>~£25.80</td></tr>
+      <tr><td>London to Edinburgh</td><td>414 miles</td><td>~£36.80</td><td>~£51.10</td></tr>
+      <tr><td>Birmingham to Bristol</td><td>87 miles</td><td>~£7.75</td><td>~£10.75</td></tr>
+      <tr><td>Manchester to Leeds</td><td>44 miles</td><td>~£3.90</td><td>~£5.45</td></tr>
+      <tr><td>London to Brighton</td><td>53 miles</td><td>~£4.70</td><td>~£6.55</td></tr>
+      <tr><td>Glasgow to Edinburgh</td><td>47 miles</td><td>~£4.20</td><td>~£5.80</td></tr>
+      <tr><td>London to Cardiff</td><td>155 miles</td><td>~£13.80</td><td>~£19.10</td></tr>
+      <tr><td>Bristol to Exeter</td><td>75 miles</td><td>~£6.65</td><td>~£9.25</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--text-tertiary);">Figures based on 40 MPG petrol, 30 MPG diesel, at current UK average pump prices. Use our calculator for your specific vehicle.</p>
+
+  <h2>UK speed limits and fuel costs</h2>
+  <p>UK national speed limits are 60 mph on A-roads and 70 mph on motorways. Driving above these limits doesn't just risk a fine — it significantly increases your fuel costs and CO2 emissions.</p>
+
+  <div class="tip-box">
+    <p><strong>On a typical 200-mile motorway journey:</strong></p>
+    <p>Driving at 80 mph instead of 70 mph costs around £2-3 more in fuel and produces roughly 4 kg more CO2 — but only saves around 14 minutes. For most drivers, that's not a trade-off worth making.</p>
+    <p>Driving at 60 mph saves around £1-2 compared to 70 mph, but adds around 17 minutes. Good for long journeys where time isn't critical.</p>
+  </div>
+
+  <h2>How to calculate your exact fuel cost</h2>
+  <p>For an accurate figure, you need to know three things: your journey distance, your car's real-world MPG, and the current fuel price. Our calculator handles all of this automatically:</p>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">1. Enter your start and end point</div>
+      <div class="faq-a">We use Google Maps to calculate the real driving distance and automatically split it by road type — urban, A-road, and motorway — since each affects fuel consumption differently.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">2. Enter your vehicle</div>
+      <div class="faq-a">Enter your number plate and we'll estimate your car's real-world MPG automatically. Or search by make and model, or enter your MPG manually if you know it.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">3. Set your speed</div>
+      <div class="faq-a">Use the sliders to set your typical A-road and motorway speed. We apply an efficiency adjustment based on speed — so driving at 80mph correctly shows higher fuel use than 70mph.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">4. See your results</div>
+      <div class="faq-a">You'll get your journey cost, CO2 emissions, and a three-way speed comparison showing what you'd save at the speed limit and 10mph below it.</div>
+    </div>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">How much does it cost to drive per mile in the UK?</div>
+      <div class="faq-a">At current petrol prices (156.8p/litre) and an average of 40 MPG, fuel costs approximately 8.9p per mile. For diesel (188.8p/litre) at 45 MPG, it's around 9.5p per mile. These figures exclude insurance, tax, and maintenance.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is it cheaper to drive or take the train?</div>
+      <div class="faq-a">For solo travel, driving is often cheaper than the train, especially with advance booking. With passengers, driving becomes significantly cheaper per person. For journeys into central London, the train is usually more cost-effective when you factor in parking.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why is diesel so much more expensive than petrol in the UK?</div>
+      <div class="faq-a">Diesel is currently around 32p per litre more expensive than petrol — one of the largest gaps in Europe. The CMA has found evidence of "rocket and feather" pricing in diesel, where prices rise quickly but fall slowly. The government's Fuel Finder scheme is designed to improve transparency.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the most fuel-efficient speed to drive at in the UK?</div>
+      <div class="faq-a">Most petrol cars achieve their best fuel economy between 45-60 mph. At 70 mph efficiency drops around 5%, and at 80 mph it drops around 13% compared to 60 mph. The exact figures vary by vehicle — newer, more aerodynamic cars handle higher speeds more efficiently.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I find the cheapest petrol near me?</div>
+      <div class="faq-a">The UK Government's Fuel Finder scheme (mandatory since February 2026) requires all forecourts to report prices within 30 minutes of any change. Apps like Fuel Finder UK and PetrolPrices use this data to show live prices near you. Supermarkets typically offer the best prices — around 5p per litre cheaper than branded forecourts on average.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How much is fuel duty in the UK?</div>
+      <div class="faq-a">Fuel duty is currently 52.95p per litre for both petrol and diesel. It was cut by 5p per litre in March 2022 in response to rising prices following Russia's invasion of Ukraine, and has been frozen since. VAT at 20% is also charged on the full pump price including the duty.</div>
+    </div>
+  </div>
+
+  <a href="/" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your journey cost — free, no signup needed</a>
+</main>
+
+<footer>
+  <p>Fuel prices sourced from UK Government CMA Road Fuel Prices Scheme data. Updated May 2026.</p>
+  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Home</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/about">About</a> · <a href="/privacy">Privacy Policy</a></p>
+</footer>
+
+</body>
+</html>
