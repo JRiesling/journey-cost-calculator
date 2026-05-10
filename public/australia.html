@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuel Cost Calculator Australia 2026 — Petrol & Diesel Journey Costs | Fuel Smarter</title>
+  <meta name="description" content="Free Australian fuel cost calculator for 2026. Calculate exactly how much your petrol or diesel journey will cost based on your car's fuel consumption, current Australian pump prices, and your driving speed." />
+  <meta name="keywords" content="fuel cost calculator Australia, petrol cost calculator Australia, how much will my journey cost Australia, L/100km calculator, fuel cost road trip Australia 2026" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/australia" />
+  <meta property="og:title" content="Fuel Cost Calculator Australia 2026 — How Much Will Your Journey Cost?" />
+  <meta property="og:description" content="Free Australian fuel cost calculator. Enter your route and car to instantly see petrol or diesel costs and CO2 emissions." />
+  <meta property="og:url" content="https://fuel-smarter.com/australia" />
+  <meta property="og:type" content="article" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Fuel Cost Calculator Australia 2026",
+    "description": "Free Australian fuel cost calculator for petrol and diesel journey costs.",
+    "url": "https://fuel-smarter.com/australia",
+    "publisher": { "@type": "Organization", "name": "Fuel Smarter", "url": "https://fuel-smarter.com" },
+    "dateModified": "2026-05-10"
+  }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1); --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97; --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a; --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c; --warning-bg: #faeeda; --warning-text: #633806; --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; --warning-bg: #412402; --warning-text: #fac775; } }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
+    header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
+    header .logo { text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    nav { margin-left: auto; display: flex; gap: 1.5rem; }
+    nav a { text-decoration: none; color: var(--text-secondary); font-size: 14px; }
+    nav a:hover { color: var(--text); }
+    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+    h2 { font-size: 22px; font-weight: 600; margin: 2.5rem 0 1rem; }
+    p { color: var(--text-secondary); margin-bottom: 1rem; }
+    .meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2rem; }
+    .price-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.5rem 0; }
+    .price-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
+    .price-card .fuel-type { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .price-card .price { font-size: 36px; font-weight: 700; color: var(--text); }
+    .price-card .unit { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .journey-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 14px; }
+    .journey-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-secondary); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 0.5px solid var(--border); }
+    .journey-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
+    .journey-table tr:last-child td { border-bottom: none; }
+    .journey-table td:first-child { color: var(--text); font-weight: 500; }
+    .faq { margin: 1rem 0; }
+    .faq-item { border-bottom: 0.5px solid var(--border); padding: 1rem 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; color: var(--text); margin-bottom: 0.5rem; font-size: 15px; }
+    .faq-a { color: var(--text-secondary); font-size: 14px; margin: 0; }
+    .tip-box { background: var(--success-bg); border: 0.5px solid var(--success-border); border-radius: var(--radius-lg); padding: 1.25rem; margin: 1.5rem 0; }
+    .tip-box p { color: var(--success-text); margin-bottom: 0.5rem; }
+    .tip-box p:last-child { margin-bottom: 0; }
+    .cta-primary { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 16px; font-weight: 600; margin: 1.5rem 0; font-size: 16px; }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
+    footer a { color: inherit; text-decoration: none; }
+    @media (max-width: 600px) { .price-box { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+<header>
+  <a href="/" class="logo"><i class="ti ti-car" aria-hidden="true"></i> Fuel Smarter</a>
+  <nav>
+    <a href="/">Calculator</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/environment">Environment</a>
+    <a href="/uk">UK Guide</a>
+  </nav>
+</header>
+<main>
+  <h1>Fuel Cost Calculator Australia 🇦🇺</h1>
+  <p class="meta">Australian petrol & diesel prices, journey costs, and fuel saving tips — updated May 2026</p>
+
+  <p>Whether you're planning a road trip across the outback or just want to know what your daily commute costs, Fuel Smarter calculates your exact fuel cost based on your car's real-world fuel consumption (L/100km), current Australian pump prices, and how you drive. We use real route data to break your journey down by road type — urban, state roads, and motorways — since each affects fuel use differently.</p>
+
+  <a href="/?country=AU" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your fuel cost now</a>
+
+  <h2>Current Australian fuel prices — May 2026</h2>
+  <div class="price-box">
+    <div class="price-card">
+      <div class="fuel-type">Unleaded (ULP 91)</div>
+      <div class="price">A$1.90</div>
+      <div class="unit">per litre · national average</div>
+    </div>
+    <div class="price-card">
+      <div class="fuel-type">Diesel</div>
+      <div class="price">A$2.00</div>
+      <div class="unit">per litre · national average</div>
+    </div>
+  </div>
+
+  <p>Australian fuel prices follow a well-known weekly cycle in major cities — prices typically rise sharply on Thursdays and Fridays before falling back through the following week. Filling up on a Tuesday or Wednesday generally gives you the lowest price of the cycle. Regional and remote areas often pay significantly more than city averages due to transport costs.</p>
+
+  <h2>How much does a typical Australian journey cost?</h2>
+  <p>Based on A$1.90/litre and a typical Australian car consuming 10L/100km:</p>
+
+  <table class="journey-table" aria-label="Typical Australian journey fuel costs">
+    <thead>
+      <tr><th>Journey</th><th>Distance</th><th>Fuel cost (10L/100km)</th><th>Fuel cost (8L/100km)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Sydney to Melbourne</td><td>877 km</td><td>~A$166.60</td><td>~A$133.30</td></tr>
+      <tr><td>Melbourne to Adelaide</td><td>728 km</td><td>~A$138.30</td><td>~A$110.60</td></tr>
+      <tr><td>Sydney to Brisbane</td><td>924 km</td><td>~A$175.60</td><td>~A$140.45</td></tr>
+      <tr><td>Perth to Fremantle</td><td>19 km</td><td>~A$3.60</td><td>~A$2.90</td></tr>
+      <tr><td>Brisbane to Gold Coast</td><td>78 km</td><td>~A$14.80</td><td>~A$11.85</td></tr>
+      <tr><td>Adelaide to Melbourne</td><td>728 km</td><td>~A$138.30</td><td>~A$110.60</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--text-tertiary);">Based on A$1.90/litre national average. Use our calculator for your specific vehicle and local price.</p>
+
+  <h2>Understanding L/100km — Australia's fuel economy measure</h2>
+  <p>Australia uses litres per 100 kilometres (L/100km) to measure fuel economy — unlike the UK and US which use miles per gallon (MPG). A lower L/100km number means better fuel economy. A typical Australian family car uses around 9-11L/100km in combined driving, while fuel-efficient small cars can achieve 6-7L/100km and larger SUVs and utes may use 12-15L/100km.</p>
+
+  <div class="tip-box">
+    <p><strong>Converting L/100km to MPG:</strong> Divide 282.5 by your L/100km figure. So 10L/100km ≈ 28 MPG, 8L/100km ≈ 35 MPG, 6L/100km ≈ 47 MPG.</p>
+    <p><strong>Speed limits in Australia</strong> are 100 km/h on most state roads and 110 km/h on motorways in most states. Driving at 110 km/h uses noticeably more fuel than 100 km/h — our calculator shows you exactly how much on your specific journey.</p>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q">How do I calculate fuel cost for a road trip in Australia?</div>
+      <div class="faq-a">Multiply your trip distance (in km) by your car's fuel consumption (L/100km), then divide by 100 to get litres used. Multiply by the fuel price to get the cost. For example: 500km × 10L/100km ÷ 100 = 50 litres × A$1.90 = A$95. Our calculator does this automatically with road type adjustments.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Why do Australian fuel prices change so much each week?</div>
+      <div class="faq-a">Major Australian cities experience a regular weekly fuel price cycle driven by competition between retailers. Prices typically peak on Thursday or Friday and are lowest mid-week. This cycle is most pronounced in Sydney, Melbourne, Brisbane, and Adelaide.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the most fuel-efficient speed to drive in Australia?</div>
+      <div class="faq-a">Most cars achieve best fuel economy between 80-100 km/h. At 110 km/h, efficiency typically drops by 10-15% compared to 100 km/h. On long outback drives where speed limits allow higher speeds, sticking to 100 km/h can save meaningful amounts of fuel over hundreds of kilometres.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How much does fuel cost per km in Australia?</div>
+      <div class="faq-a">At A$1.90/litre and 10L/100km, fuel costs approximately A$0.19 per km (19 cents per km). At 8L/100km it drops to about A$0.152 per km. These are fuel-only figures and don't include other running costs.</div>
+    </div>
+  </div>
+
+  <a href="/?country=AU" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your Australian journey cost — free</a>
+</main>
+<footer>
+  <p>Fuel prices are approximate national averages. Prices vary by city, region, and day of the week. Updated May 2026.</p>
+  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Home</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/about">About</a> · <a href="/privacy">Privacy Policy</a></p>
+</footer>
+</body>
+</html>
