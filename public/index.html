@@ -285,11 +285,22 @@
     .swap-btn:hover { box-shadow: var(--shadow-hover); color: var(--text); }
 
     /* ── Sliders ─────────────────────────────────────────── */
-    .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
-    .slider-row label { font-size: 13px; font-weight: 500; color: var(--text-secondary); min-width: 120px; }
-    .slider-row input[type=range] { flex: 1; accent-color: var(--accent); }
-    .slider-val { font-size: 14px; font-weight: 600; color: var(--text); min-width: 70px; text-align: right; }
-    .speed-note { font-size: 12px; color: var(--text-tertiary); margin-bottom: 14px; padding-left: 132px; }
+    .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+    .slider-row label { font-size: 13px; font-weight: 500; color: var(--text-secondary); min-width: 100px; flex-shrink: 0; }
+    .slider-row input[type=range] { flex: 1; min-width: 80px; accent-color: var(--accent); }
+    .slider-val { font-size: 14px; font-weight: 600; color: var(--text); min-width: 60px; text-align: right; flex-shrink: 0; }
+    .speed-note { font-size: 12px; color: var(--text-tertiary); margin-bottom: 14px; padding-left: 110px; }
+    @media (max-width: 480px) {
+      .slider-row label { min-width: 90px; font-size: 12px; }
+      .speed-note { padding-left: 0; }
+      .slider-val { min-width: 52px; }
+      .tip[style*="padding-left"] { padding-left: 0 !important; }
+      .hero h2 { font-size: 24px; }
+      .comparison-grid { grid-template-columns: 1fr; gap: 8px; }
+      .affiliate-links { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; }
+      header nav a { padding: 0 8px; font-size: 12px; }
+    }
 
     /* ── Road bar ────────────────────────────────────────── */
     .road-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 12px 0 8px; }
@@ -568,7 +579,7 @@
       <input type="range" id="passengers" min="1" max="5" value="1" step="1" oninput="updatePassengers()" />
       <span class="slider-val" id="pass-label">1</span>
     </div>
-    <p class="tip" style="padding-left:120px;margin-top:-4px;">Split cost between passengers</p>
+    <p class="tip" style="margin-top:-4px;">Split cost between passengers</p>
     <button class="calc-btn primary" style="margin-top:14px;" onclick="computeCost()"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate journey cost</button>
   </div>
 
