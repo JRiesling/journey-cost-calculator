@@ -23,6 +23,34 @@
     footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
     footer a { color: inherit; }
   </style>
+  <!-- Google Consent Mode v2 — must load before GA -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+
+    // Set default consent state — denied until user accepts
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+
+    // Check if user has already consented
+    (function() {
+      var consent = localStorage.getItem('fs_cookie_consent');
+      if (consent === 'accepted') {
+        gtag('consent', 'update', {
+          'analytics_storage': 'granted',
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        });
+      }
+    })();
+  </script>
+
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
   <script>
@@ -56,8 +84,11 @@
   <p><strong>Google Maps</strong> — we use Google's Routes API to calculate driving distances and road types. Google's privacy policy applies to this data: policies.google.com/privacy</p>
   <p><strong>Anthropic</strong> — we use Anthropic's Claude API to look up vehicle fuel economy and fuel prices. Anthropic's privacy policy applies: anthropic.com/privacy</p>
 
-  <h3>Cookies</h3>
-  <p>Fuel Smarter does not use cookies for tracking or advertising. Your country and settings are stored temporarily in your browser's memory only for the duration of your visit.</p>
+  <h3>Cookies &amp; consent</h3>
+  <p>Fuel Smarter uses cookies for two purposes: to remember your cookie consent preference, and (if you accept) to run Google Analytics so we can understand how the site is used.</p>
+  <p>When you first visit the site, we ask for your consent before setting any analytics cookies. If you decline, no analytics cookies are set and Google Analytics runs in a limited anonymous mode. If you accept, Google Analytics cookies are set to help us understand traffic and improve the site.</p>
+  <p>Your consent preference is stored in your browser's local storage under the key <code>fs_cookie_consent</code>. You can withdraw consent at any time by clearing your browser's local storage or cookies for fuel-smarter.com.</p>
+  <p>Your country selection and other settings are stored temporarily in your browser's memory only for the duration of your visit and are not sent to any third party.</p>
 
   <h3>Your rights</h3>
   <p>Under UK GDPR, you have the right to access, correct, or delete any personal data we hold about you. As we collect minimal data and do not store it against identifiable profiles, there is typically nothing to access or delete. If you have questions, contact us below.</p>
@@ -71,5 +102,46 @@
 <footer>
   <p>© 2026 Fuel Smarter · <a href="/">Home</a> · <a href="/about">About</a></p>
 </footer>
+  <!-- Cookie consent banner -->
+  <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+    <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
+        We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
+      </p>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">
+          Decline
+        </button>
+        <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">
+          Accept cookies
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show banner if no consent decision yet
+    (function() {
+      if (!localStorage.getItem('fs_cookie_consent')) {
+        document.getElementById('cookie-banner').style.display = 'block';
+      }
+    })();
+
+    function handleConsent(decision) {
+      localStorage.setItem('fs_cookie_consent', decision);
+      document.getElementById('cookie-banner').style.display = 'none';
+
+      if (decision === 'accepted') {
+        gtag('consent', 'update', {
+          'analytics_storage': 'granted',
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        });
+        // Fire a page view now that consent is granted
+        gtag('event', 'page_view');
+      }
+    }
+  </script>
 </body>
 </html>
