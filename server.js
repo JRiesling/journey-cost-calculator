@@ -284,6 +284,7 @@ app.get('/australia', (req, res) => res.sendFile(path.join(__dirname, 'public', 
 app.get('/guides/how-to-improve-mpg', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'how-to-improve-mpg.html')));
 app.get('/guides/is-it-worth-driving-slower', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'is-it-worth-driving-slower.html')));
 app.get('/guides', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'index.html')));
+app.get('/guides/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'index.html')));
 app.get('/privacy', (req, res) => res.sendFile(path.join(__dirname, 'public', 'privacy.html')));
 app.get('/sitemap.xml', (req, res) => {
   res.setHeader('Content-Type', 'application/xml');
