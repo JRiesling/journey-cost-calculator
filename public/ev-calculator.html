@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electric Car Cost Calculator UK 2026 — EV Journey Cost | Fuel Smarter</title>
+  <meta name="description" content="Free electric car cost calculator for the UK. Calculate exactly how much your EV journey will cost based on your car's efficiency, charging type, and driving speed. Compare home vs public charging costs." />
+  <meta name="keywords" content="electric car cost calculator UK, EV journey cost calculator, how much does it cost to drive electric, electric car running costs UK 2026, EV charging cost calculator" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/ev-calculator" />
+  <meta property="og:title" content="Electric Car Cost Calculator UK 2026 — How Much Does Your EV Journey Cost?" />
+  <meta property="og:description" content="Free EV journey cost calculator. Enter your route, electric car, and charging type to see exactly what your journey costs — and how it compares to petrol." />
+  <meta property="og:url" content="https://fuel-smarter.com/ev-calculator" />
+  <meta property="og:type" content="article" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"How much does it cost to drive an electric car per mile in the UK?","acceptedAnswer":{"@type":"Answer","text":"At home charging rates of around 24p/kWh and a typical EV efficiency of 3.5 miles/kWh, driving electric costs approximately 6.9p per mile. At public rapid charging rates of 75p/kWh, this rises to around 21p per mile — more expensive than petrol for many drivers."}},
+      {"@type":"Question","name":"Is it cheaper to drive electric or petrol?","acceptedAnswer":{"@type":"Answer","text":"If you charge primarily at home, electric is significantly cheaper — typically 6-8p per mile vs 9-12p per mile for petrol. However if you rely on public rapid charging, the cost difference narrows considerably and can sometimes be more expensive than petrol."}},
+      {"@type":"Question","name":"How much does it cost to charge an electric car at home?","acceptedAnswer":{"@type":"Answer","text":"The UK average electricity rate is around 24p/kWh. A typical EV with a 60kWh battery costs around £14.40 for a full charge from empty at home rates. On an EV-specific tariff like Octopus Go, off-peak rates can be as low as 7-10p/kWh, reducing this to around £4-6 for a full charge."}},
+      {"@type":"Question","name":"How does speed affect electric car efficiency?","acceptedAnswer":{"@type":"Answer","text":"Like petrol cars, EVs become less efficient at high speeds due to aerodynamic drag. However EVs have an advantage in urban driving — regenerative braking recovers energy when slowing down, making stop-start city driving much more efficient than in a petrol car. At motorway speeds above 70mph, EV range drops noticeably."}},
+      {"@type":"Question","name":"What is the cheapest way to charge an electric car?","acceptedAnswer":{"@type":"Answer","text":"Home charging on a standard tariff (around 24p/kWh) is the cheapest option for most drivers. EV-specific electricity tariffs like Octopus Go offer off-peak rates of 7-10p/kWh for overnight charging. Public rapid chargers (50-150kW) typically cost 50-79p/kWh — making them the most expensive option."}}
+    ]
+  }
+  </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-MPGYCEEDJQ');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #F4F1EA; --card: #FDFCFA; --border: rgba(0,0,0,0.08); --text: #1C1917; --text-secondary: #6B6560; --text-tertiary: #A8A29E; --accent: #2D6A4F; --accent-light: #EAF4EE; --accent-border: #95C9A8; --accent-text: #1A4731; --info-bg: #EAF4EE; --info-border: #95C9A8; --info-text: #1A4731; --warning-bg: #FEF3C7; --warning-text: #78350F; --radius: 10px; --radius-lg: 16px; --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04); --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #171512; --card: #1F1E1B; --border: rgba(255,255,255,0.08); --text: #E8E4DC; --text-secondary: #9B9690; --text-tertiary: #6B6560; --accent: #40916C; --accent-light: #1A2E22; --accent-border: #2D6A4F; --accent-text: #95C9A8; --info-bg: #1A2E22; --info-border: #2D6A4F; --info-text: #95C9A8; --warning-bg: #2D1F0A; --warning-text: #FCD34D; } }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 60px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+    .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .logo-text { font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .logo-text span { color: var(--accent); }
+    nav { margin-left: auto; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    nav::-webkit-scrollbar { display: none; }
+    nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; padding: 0 12px; height: 60px; display: flex; align-items: center; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+    main { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    h1 { font-size: 32px; font-weight: 800; margin-bottom: 0.75rem; line-height: 1.2; letter-spacing: -0.5px; }
+    h2 { font-size: 22px; font-weight: 700; margin: 2.5rem 0 1rem; letter-spacing: -0.3px; }
+    h3 { font-size: 17px; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+    p { color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.7; }
+    .meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+    .highlight { background: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 16px; margin: 1.5rem 0; }
+    .highlight p { color: var(--accent-text); margin: 0; font-size: 14px; }
+    .cost-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 14px; }
+    .cost-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-secondary); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+    .cost-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
+    .cost-table tr:last-child td { border-bottom: none; }
+    .cost-table td:first-child { color: var(--text); font-weight: 500; }
+    .cost-table .best { color: var(--accent-text); font-weight: 600; }
+    .cost-table .worst { color: #7F1D1D; font-weight: 600; }
+    .charging-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 1rem 0 2rem; }
+    .charging-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+    .charging-card.best { border-color: var(--accent-border); background: var(--accent-light); }
+    .charging-icon { font-size: 24px; margin-bottom: 8px; }
+    .charging-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .charging-price { font-size: 22px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .charging-desc { font-size: 12px; color: var(--text-tertiary); line-height: 1.4; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; color: var(--text); margin-bottom: 0.5rem; font-size: 15px; }
+    .faq-a { color: var(--text-secondary); font-size: 14px; margin: 0; }
+    .cta { display: block; text-align: center; background: var(--accent); color: #fff; text-decoration: none; border-radius: var(--radius); padding: 16px; font-weight: 700; margin: 2rem 0; font-size: 16px; box-shadow: 0 2px 8px rgba(45,106,79,0.3); transition: all 0.15s; }
+    .cta:hover { background: #235c42; }
+    .tip-box { background: var(--accent-light); border: 1px solid var(--accent-border); border-radius: var(--radius-lg); padding: 1.25rem; margin: 1.5rem 0; }
+    .tip-box p { color: var(--accent-text); margin-bottom: 0.5rem; }
+    .tip-box p:last-child { margin-bottom: 0; }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 1px solid var(--border); background: var(--card); }
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 600px) { h1 { font-size: 26px; } .charging-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div class="logo-mark">⛽</div>
+    <span class="logo-text">Fuel<span>Smarter</span></span>
+  </a>
+  <nav>
+    <a href="/">Calculator</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/environment">Environment</a>
+    <a href="/guides">Guides</a>
+    <a href="/faq">FAQ</a>
+    <a href="/uk">UK</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Electric Car Cost Calculator UK ⚡</h1>
+  <div class="meta">
+    <span>📅 Updated May 2026</span>
+    <span>🇬🇧 UK focused</span>
+  </div>
+
+  <p>Thinking about going electric — or already driving an EV and want to know exactly what your journeys cost? Fuel Smarter's electric car calculator works out the precise cost of any journey based on your EV's real-world efficiency, your charging type, and how fast you drive. It even breaks down the route by road type — because EVs are significantly more efficient in town (thanks to regenerative braking) than on the motorway.</p>
+
+  <a href="/?ev=true" class="cta"><i class="ti ti-bolt" aria-hidden="true"></i> Calculate your EV journey cost — free</a>
+
+  <h2>How much does it cost to drive electric in the UK?</h2>
+  <p>The answer depends heavily on where and how you charge. Home charging is by far the cheapest — but if you rely on public rapid chargers, the economics look very different.</p>
+
+  <div class="charging-grid">
+    <div class="charging-card best">
+      <div class="charging-icon">🏠</div>
+      <div class="charging-title">Home charging</div>
+      <div class="charging-price">~6-8p/mile</div>
+      <div class="charging-desc">At 24p/kWh standard rate and 3.5 miles/kWh. On Octopus Go off-peak (7p/kWh), drops to just 2p/mile.</div>
+    </div>
+    <div class="charging-card">
+      <div class="charging-icon">🔌</div>
+      <div class="charging-title">Public charging</div>
+      <div class="charging-price">~14p/mile</div>
+      <div class="charging-desc">At typical public charger rates of ~50p/kWh. Varies significantly by network and location.</div>
+    </div>
+    <div class="charging-card">
+      <div class="charging-icon">⚡</div>
+      <div class="charging-title">Rapid charging</div>
+      <div class="charging-price">~21p/mile</div>
+      <div class="charging-desc">At rapid charger rates of ~75p/kWh. Can be more expensive than petrol for frequent users.</div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p><strong>The key insight:</strong> Home charging makes electric genuinely cheap — often 3-4x cheaper per mile than petrol. But relying on public rapid chargers narrows the gap significantly and can sometimes cost more than an efficient petrol car.</p>
+  </div>
+
+  <h2>EV cost vs petrol — how do they compare?</h2>
+  <p>Based on current UK fuel and energy prices (May 2026):</p>
+
+  <table class="cost-table" aria-label="EV vs petrol cost comparison">
+    <thead>
+      <tr><th>Vehicle type</th><th>Cost per mile</th><th>Cost per 100 miles</th><th>Annual cost (12,000 miles)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>⚡ EV — home charging (Octopus Go)</td><td class="best">~2p</td><td class="best">~£2</td><td class="best">~£240</td></tr>
+      <tr><td>⚡ EV — home charging (standard)</td><td class="best">~7p</td><td class="best">~£7</td><td class="best">~£840</td></tr>
+      <tr><td>⚡ EV — mixed public/home</td><td>~11p</td><td>~£11</td><td>~£1,320</td></tr>
+      <tr><td>⛽ Petrol — 40 MPG</td><td>~9p</td><td>~£9</td><td>~£1,080</td></tr>
+      <tr><td>⛽ Petrol — 35 MPG</td><td>~10p</td><td>~£10</td><td>~£1,200</td></tr>
+      <tr><td>🛢️ Diesel — 50 MPG</td><td>~9.5p</td><td>~£9.50</td><td>~£1,140</td></tr>
+      <tr><td>⚡ EV — rapid charging only</td><td class="worst">~21p</td><td class="worst">~£21</td><td class="worst">~£2,520</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--text-tertiary);">Based on 24p/kWh home rate, 75p/kWh rapid rate, 156.8p/litre petrol, 188.8p/litre diesel. 3.5 miles/kWh EV efficiency assumed.</p>
+
+  <h2>How speed affects EV efficiency</h2>
+  <p>Speed has a significant impact on EV efficiency — but the relationship is different to petrol cars in some important ways:</p>
+
+  <h3>Where EVs have an advantage — urban driving</h3>
+  <p>In stop-start city driving, EVs recover energy through regenerative braking every time you slow down. This makes urban driving significantly more efficient for an EV than a petrol car. A petrol car wastes all that braking energy as heat — an EV puts it back in the battery.</p>
+
+  <h3>Where EVs struggle — high motorway speeds</h3>
+  <p>At speeds above 70mph, aerodynamic drag dominates — and this affects EVs just as much as petrol cars. Driving a Tesla Model 3 at 80mph instead of 70mph reduces range by around 15-20%. On a long motorway journey this can be the difference between needing a charge stop or not.</p>
+
+  <table class="cost-table" aria-label="Speed vs EV efficiency">
+    <thead>
+      <tr><th>Speed</th><th>EV efficiency vs 70mph</th><th>Impact on 200-mile journey</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Urban (30mph avg)</td><td class="best">~15% better (regen)</td><td class="best">Lower cost, shorter range needed</td></tr>
+      <tr><td>60 mph</td><td class="best">~5% better</td><td class="best">Slightly cheaper</td></tr>
+      <tr><td>70 mph</td><td>Baseline</td><td>—</td></tr>
+      <tr><td>80 mph</td><td class="worst">~15% worse</td><td class="worst">Extra ~£2-3 on a 200-mile journey</td></tr>
+      <tr><td>90 mph</td><td class="worst">~25% worse</td><td class="worst">Extra ~£4-5, may need extra charge stop</td></tr>
+    </tbody>
+  </table>
+
+  <h2>The cheapest way to charge your EV</h2>
+
+  <div class="tip-box">
+    <p><strong>🏠 Home charging on an EV tariff is by far the cheapest option.</strong></p>
+    <p>Octopus Go offers off-peak electricity at around 7p/kWh between 11:30pm and 5:30am. At that rate, charging a 60kWh battery costs just £4.20 — enough for 200+ miles in most EVs. That's around 2p per mile.</p>
+    <p>If you can charge overnight at home, an EV is dramatically cheaper to run than any petrol or diesel car.</p>
+  </div>
+
+  <p>Public charging networks vary widely in price. As of May 2026:</p>
+  <table class="cost-table" aria-label="EV charging network prices UK 2026">
+    <thead>
+      <tr><th>Network</th><th>Typical price</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Octopus Energy (home)</td><td class="best">7-24p/kWh</td><td class="best">Cheapest — requires home charger</td></tr>
+      <tr><td>Pod Point (home)</td><td class="best">~24p/kWh</td><td>Standard home rate</td></tr>
+      <tr><td>Tesla Supercharger</td><td>~45-65p/kWh</td><td>Tesla vehicles only</td></tr>
+      <tr><td>Osprey / Gridserve</td><td>~50-60p/kWh</td><td>Public rapid chargers</td></tr>
+      <tr><td>BP Pulse</td><td>~55-70p/kWh</td><td>Varies by location</td></tr>
+      <tr><td>Motorway services</td><td class="worst">~70-85p/kWh</td><td class="worst">Most expensive — convenience premium</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Frequently asked questions</h2>
+  <div style="margin-top:1rem;">
+    <div class="faq-item">
+      <div class="faq-q">How much does it cost to charge an electric car at home?</div>
+      <div class="faq-a">At the UK average rate of 24p/kWh, charging a typical 60kWh EV from empty costs around £14.40. On an EV-specific off-peak tariff (7-10p/kWh), this drops to £4.20-£6. Most EVs charge overnight in 6-10 hours on a home wallbox.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is it cheaper to drive electric or petrol in 2026?</div>
+      <div class="faq-a">For drivers who charge primarily at home — yes, significantly cheaper. Home charging at standard rates costs around 7p per mile vs 9-12p for petrol. On an off-peak EV tariff the saving is even greater. However, frequent public rapid charging can cost as much as or more than petrol.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How far can an electric car go on a full charge?</div>
+      <div class="faq-a">Real-world range varies significantly by model and conditions. Small EVs (Nissan Leaf, MG4 standard) typically achieve 150-200 miles. Mid-range EVs (Tesla Model 3, Kia EV6) achieve 250-300 miles. Premium long-range models can exceed 350 miles. Cold weather and high motorway speeds reduce range by 20-30%.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Does rapid charging cost more than petrol?</div>
+      <div class="faq-a">At typical rapid charger rates of 70-85p/kWh (motorway services), yes — it can cost more per mile than an efficient petrol car. This is why most EV owners aim to do the majority of their charging at home and use rapid chargers only for long journeys.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How much CO2 does an electric car produce?</div>
+      <div class="faq-a">EVs produce zero tailpipe emissions, but electricity generation has a carbon footprint. The UK grid currently averages around 233g CO2/kWh, meaning a typical EV journey produces around 60-70g CO2/mile — significantly less than the 180-220g/mile of an average petrol car. As the grid gets greener, EV emissions will fall further.</div>
+    </div>
+  </div>
+
+  <a href="/?ev=true" class="cta"><i class="ti ti-bolt" aria-hidden="true"></i> Calculate your EV journey cost — free, no signup</a>
+</main>
+
+<footer>
+  <p>Energy prices and efficiency figures are estimates based on current UK market data. Updated May 2026.</p>
+  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Calculator</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/guides">Guides</a> · <a href="/uk">UK Guide</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+</footer>
+
+<!-- Cookie consent -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+  <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;font-family:var(--font);">No thanks</button>
+      <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:1px solid var(--accent-border);border-radius:8px;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);">Yes, happy to help</button>
+    </div>
+  </div>
+</div>
+<script>
+  (function() { if (!localStorage.getItem('fs_cookie_consent')) document.getElementById('cookie-banner').style.display = 'block'; })();
+  function handleConsent(d) { localStorage.setItem('fs_cookie_consent', d); document.getElementById('cookie-banner').style.display = 'none'; }
+</script>
+<!-- Skimlinks -->
+<script type="text/javascript" src="https://s.skimresources.com/js/302872X1790896.skimlinks.js"></script>
+</body>
+</html>
