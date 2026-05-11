@@ -190,7 +190,11 @@
     }
 
     /* ── Layout ─────────────────────────────────────────── */
-    main { max-width: 700px; margin: 0 auto; padding: 2rem 1rem 5rem; }
+    main { max-width: 700px; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+    @media (max-width: 600px) {
+      main { padding: 1.5rem 1rem 5rem; }
+      .card { padding: 1.25rem 1rem; }
+    }
 
     /* ── Cards ──────────────────────────────────────────── */
     .card {
@@ -1195,5 +1199,7 @@ onCountryChange();
       }
     }
   </script>
+  <!-- Skimlinks affiliate tracking -->
+  <script type="text/javascript" src="https://s.skimresources.com/js/302872X1790896.skimlinks.js"></script>
 </body>
 </html>
