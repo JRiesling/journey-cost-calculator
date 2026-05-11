@@ -501,12 +501,15 @@
   <!-- Vehicle -->
   <div class="card">
     <div class="section-title">Your vehicle</div>
-    <div class="method-toggle" style="grid-template-columns:1fr 1fr;">
+    <div class="method-toggle" style="grid-template-columns:1fr 1fr 1fr;">
       <button class="method-btn active" id="method-model" onclick="setMethod('model')">
         <i class="ti ti-car" aria-hidden="true"></i><br>Make &amp; model
       </button>
       <button class="method-btn" id="method-manual" onclick="setMethod('manual')">
         <i class="ti ti-pencil" aria-hidden="true"></i><br>Enter MPG manually
+      </button>
+      <button class="method-btn" id="method-ev" onclick="setMethod('ev')">
+        <i class="ti ti-bolt" aria-hidden="true"></i><br>Electric vehicle
       </button>
     </div>
 
@@ -531,31 +534,71 @@
       <p class="tip" id="mpg-manual-tip">e.g. 40 MPG for an average petrol car</p>
     </div>
 
+    <div id="section-ev" class="hidden">
+      <div class="field-row" style="margin-bottom:10px;">
+        <div class="field" style="margin-bottom:0;"><label>EV Make</label><input type="text" id="ev-make" placeholder="e.g. Tesla" /></div>
+        <div class="field" style="margin-bottom:0;"><label>EV Model</label><input type="text" id="ev-model" placeholder="e.g. Model 3" /></div>
+      </div>
+      <div class="field-row" style="margin-bottom:10px;">
+        <div class="field" style="margin-bottom:0;"><label>Year</label><input type="number" id="ev-year" placeholder="e.g. 2023" min="2010" max="2026" /></div>
+        <div class="field" style="margin-bottom:0;"><label>Variant (optional)</label><input type="text" id="ev-variant" placeholder="e.g. Long Range AWD" /></div>
+      </div>
+      <button class="lookup-btn" style="width:100%;height:40px;" onclick="lookupEV()"><i class="ti ti-search" aria-hidden="true"></i> Look up efficiency</button>
+      <div id="ev-result"></div>
+      <div class="field" style="margin-top:12px;margin-bottom:4px;">
+        <label id="ev-efficiency-label">Efficiency (miles/kWh)</label>
+        <input type="number" id="ev-efficiency" value="3.5" min="1" max="10" step="0.1" />
+      </div>
+      <p class="tip">Typical EVs achieve 2.5-4.5 miles/kWh. Edit if you know your real-world figure.</p>
+    </div>
+
     <hr class="divider" />
 
-    <div class="field">
-      <label>Fuel type</label>
-      <div class="fuel-toggle">
-        <button class="fuel-btn active" id="btn-petrol" onclick="setFuel('petrol')">
-          <i class="ti ti-droplet" aria-hidden="true"></i> <span id="btn-petrol-label">Petrol</span>
-        </button>
-        <button class="fuel-btn" id="btn-diesel" onclick="setFuel('diesel')">
-          <i class="ti ti-droplet-half-2" aria-hidden="true"></i> <span id="btn-diesel-label">Diesel</span>
-        </button>
+    <div id="fuel-section">
+      <div class="field">
+        <label>Fuel type</label>
+        <div class="fuel-toggle">
+          <button class="fuel-btn active" id="btn-petrol" onclick="setFuel('petrol')">
+            <i class="ti ti-droplet" aria-hidden="true"></i> <span id="btn-petrol-label">Petrol</span>
+          </button>
+          <button class="fuel-btn" id="btn-diesel" onclick="setFuel('diesel')">
+            <i class="ti ti-droplet-half-2" aria-hidden="true"></i> <span id="btn-diesel-label">Diesel</span>
+          </button>
+        </div>
       </div>
+      <div class="price-badge"><i class="ti ti-gas-station" aria-hidden="true"></i> <span id="price-label">Loading fuel prices...</span></div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:0;">
+          <label id="mpg-label">Fuel economy (MPG)</label>
+          <input type="number" id="mpg" value="40" min="1" max="200" oninput="syncMpg('main')" />
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label id="fuel-price-label">Fuel price</label>
+          <input type="number" id="fuel-price" value="156.98" step="0.01" />
+        </div>
+      </div>
+      <p class="tip" style="margin-top:6px;">Auto-filled after lookup — edit if needed</p>
     </div>
-    <div class="price-badge"><i class="ti ti-gas-station" aria-hidden="true"></i> <span id="price-label">Loading fuel prices...</span></div>
-    <div class="field-row">
-      <div class="field" style="margin-bottom:0;">
-        <label id="mpg-label">Fuel economy (MPG)</label>
-        <input type="number" id="mpg" value="40" min="1" max="200" oninput="syncMpg('main')" />
+
+    <div id="ev-energy-section" class="hidden">
+      <div class="price-badge"><i class="ti ti-bolt" aria-hidden="true"></i> <span id="ev-price-label">UK average: 24p/kWh (home charging)</span></div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:0;">
+          <label>Charging type</label>
+          <select id="ev-charging-type" onchange="updateChargingType()">
+            <option value="home">Home charging (~24p/kWh)</option>
+            <option value="public">Public charging (~50p/kWh)</option>
+            <option value="rapid">Rapid charging (~75p/kWh)</option>
+            <option value="custom">Custom price</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label id="ev-kwh-label">Electricity price (p/kWh)</label>
+          <input type="number" id="ev-kwh-price" value="24" min="1" max="200" step="0.1" />
+        </div>
       </div>
-      <div class="field" style="margin-bottom:0;">
-        <label id="fuel-price-label">Fuel price</label>
-        <input type="number" id="fuel-price" value="156.98" step="0.01" />
-      </div>
+      <p class="tip" style="margin-top:6px;">Home charging is cheapest — public rapid chargers cost 2-3x more</p>
     </div>
-    <p class="tip" style="margin-top:6px;">Auto-filled after lookup — edit if needed</p>
   </div>
 
   <!-- Journey -->
@@ -793,11 +836,65 @@ function setFuel(type) {
   document.getElementById('price-label').textContent = `${country.fuelNames[type]}: ${price.toFixed(2)} ${country.fuelPriceNote}`;
 }
 
+// ─── EV constants ─────────────────────────────────────────────────────────────
+const EV_CO2_PER_KWH = 0.233; // kg CO2 per kWh (UK grid average 2026)
+const EV_URBAN_BOOST = 1.15;  // EVs are more efficient in urban driving (regen braking)
+const EV_MOTORWAY_PENALTY = 0.85; // EVs less efficient at motorway speeds
+
+let isEV = false;
+
 function setMethod(m) {
-  ['model','manual'].forEach(x => {
+  ['model','manual','ev'].forEach(x => {
     document.getElementById('section-'+x).classList.toggle('hidden', x !== m);
     document.getElementById('method-'+x).classList.toggle('active', x === m);
   });
+  isEV = (m === 'ev');
+  document.getElementById('fuel-section').classList.toggle('hidden', isEV);
+  document.getElementById('ev-energy-section').classList.toggle('hidden', !isEV);
+  if (isEV) {
+    document.getElementById('ev-efficiency-label').textContent = country.distUnit === 'km' ? 'Efficiency (kWh/100km)' : 'Efficiency (miles/kWh)';
+  }
+}
+
+function updateChargingType() {
+  const type = document.getElementById('ev-charging-type').value;
+  const prices = { home: 24, public: 50, rapid: 75, custom: null };
+  if (prices[type] !== null) {
+    document.getElementById('ev-kwh-price').value = prices[type];
+    document.getElementById('ev-price-label').textContent = 
+      type === 'home' ? 'UK average: 24p/kWh (home charging)' :
+      type === 'public' ? 'Typical public charging: ~50p/kWh' :
+      'Typical rapid charging: ~75p/kWh';
+  }
+}
+
+async function lookupEV() {
+  const make = document.getElementById('ev-make').value.trim();
+  const model = document.getElementById('ev-model').value.trim();
+  const year = document.getElementById('ev-year').value.trim();
+  const variant = document.getElementById('ev-variant').value.trim();
+  if (!make || !model) { showStatus('ev-result', 'Please enter at least a make and model.', 'error'); return; }
+  showStatus('ev-result', '<i class="ti ti-loader" aria-hidden="true"></i> Looking up EV efficiency...', 'loading');
+  try {
+    const v = await api('/api/model-lookup', {
+      make, model, year, trim: variant,
+      country: country.name,
+      economy: country.distUnit === 'km' ? 'kWh/100km' : 'miles/kWh',
+    });
+    if (v.error) { showStatus('ev-result', v.error, 'error'); return; }
+    const eco = v.real_world_economy || v.real_world_mpg;
+    document.getElementById('ev-result').innerHTML = `
+      <div class="vehicle-badge" style="margin-top:10px;">
+        <i class="ti ti-bolt" style="font-size:22px;color:var(--success-text);flex-shrink:0;" aria-hidden="true"></i>
+        <div>
+          <div class="vehicle-badge-text">${year ? year+' ' : ''}${make} ${model}${variant ? ' — '+variant : ''}</div>
+          <div class="vehicle-badge-sub">${eco} ${country.distUnit === 'km' ? 'kWh/100km' : 'miles/kWh'} real-world est. · ${v.note || 'Based on owner data'}</div>
+        </div>
+      </div>`;
+    document.getElementById('ev-efficiency').value = eco;
+  } catch(e) {
+    showStatus('ev-result', 'Lookup failed. Enter efficiency manually.', 'error');
+  }
 }
 
 function syncMpg(src) {
@@ -1010,12 +1107,143 @@ function co2DeltaHtml(yoursCO2, otherCO2, label) {
   return `<div class="delta-row"><span>${label}</span><span class="${cls}">${sign}${fmtCO2(Math.abs(diff))} CO₂ (${saves?'less':'more'} emissions)</span></div>`;
 }
 
+// ─── EV cost calculation ───────────────────────────────────────────────────────
+function computeEVCost(dist) {
+  const co = country;
+  const efficiency = parseFloat(document.getElementById('ev-efficiency').value) || 3.5;
+  const kwhPrice = parseFloat(document.getElementById('ev-kwh-price').value) || 24;
+  const passengers = parseInt(document.getElementById('passengers').value);
+  const speedA = parseInt(document.getElementById('speed-aroad').value);
+  const speedM = parseInt(document.getElementById('speed-motorway').value);
+  const isGermany = co.limitMotorway === 999;
+  const limitA = Math.min(speedA, co.limitAroad);
+  const limitM = isGermany ? speedM : Math.min(speedM, co.limitMotorway);
+  const slowA = Math.max(co.distUnit==='km'?30:20, limitA-10);
+  const slowM = Math.max(co.distUnit==='km'?50:30, limitM-10);
+
+  function calcEVScenario(aSpeed, mSpeed) {
+    // EVs are more efficient in urban (regen braking) and less efficient at very high motorway speeds
+    const urbanKwh = co.distUnit === 'km'
+      ? (dist * routeLegs.urban) * (efficiency / 100) * (1/EV_URBAN_BOOST)
+      : (dist * routeLegs.urban) / (efficiency * EV_URBAN_BOOST);
+    
+    const aroadSpeedFactor = speedEfficiencyFactor(aSpeed);
+    const motorwaySpeedFactor = aSpeed > (co.distUnit==='km'?100:65) ? EV_MOTORWAY_PENALTY * speedEfficiencyFactor(mSpeed) : speedEfficiencyFactor(mSpeed);
+    
+    let aroadKwh, motorwayKwh;
+    if (co.distUnit === 'km') {
+      aroadKwh = (dist * routeLegs.aroad) * (efficiency / 100) / aroadSpeedFactor;
+      motorwayKwh = (dist * routeLegs.motorway) * (efficiency / 100) / motorwaySpeedFactor;
+    } else {
+      aroadKwh = (dist * routeLegs.aroad) / (efficiency * aroadSpeedFactor);
+      motorwayKwh = (dist * routeLegs.motorway) / (efficiency * motorwaySpeedFactor);
+    }
+
+    const totalKwh = urbanKwh + aroadKwh + motorwayKwh;
+    const cost = (totalKwh * kwhPrice) / 100;
+    const co2 = totalKwh * EV_CO2_PER_KWH;
+    const totalMins = Math.round((dist*routeLegs.urban/co.urbanFixed)*60)
+      + Math.round((dist*routeLegs.aroad/aSpeed)*60)
+      + Math.round((dist*routeLegs.motorway/mSpeed)*60);
+    return { cost, totalKwh, co2, totalMins };
+  }
+
+  const yours = calcEVScenario(speedA, speedM);
+  const limit = calcEVScenario(limitA, limitM);
+  const slow = calcEVScenario(slowA, slowM);
+  const eq = co2Equivalents(yours.co2);
+
+  document.getElementById('results-panel').innerHTML = `
+    <div class="results">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <i class="ti ti-bolt" style="color:var(--accent);font-size:18px;" aria-hidden="true"></i>
+        <div class="section-title" style="margin-bottom:0;">Electric vehicle — speed comparison</div>
+      </div>
+      <div class="comparison-grid">
+        <div class="scenario-card your-speed">
+          <div class="scenario-label your-speed">Your speed</div>
+          <div class="scenario-cost">${fmt(yours.cost)}</div>
+          <div class="scenario-time">${fmtTime(yours.totalMins)}</div>
+          <div class="scenario-speed">${co.aroadLabel}: ${speedA} ${co.speedUnit} · ${co.motorwayLabel}: ${speedM} ${co.speedUnit}</div>
+          ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(yours.cost/passengers)} / person</div>`:''}
+        </div>
+        <div class="scenario-card limit">
+          <div class="scenario-label limit">At speed limits</div>
+          <div class="scenario-cost">${fmt(limit.cost)}</div>
+          <div class="scenario-time">${fmtTime(limit.totalMins)}</div>
+          <div class="scenario-speed">${co.aroadLabel}: ${limitA} · ${co.motorwayLabel}: ${isGermany?speedM:limitM} ${co.speedUnit}</div>
+          ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(limit.cost/passengers)} / person</div>`:''}
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-label">10 ${co.speedUnit} below limit</div>
+          <div class="scenario-cost">${fmt(slow.cost)}</div>
+          <div class="scenario-time">${fmtTime(slow.totalMins)}</div>
+          <div class="scenario-speed">${co.aroadLabel}: ${slowA} · ${co.motorwayLabel}: ${slowM} ${co.speedUnit}</div>
+          ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(slow.cost/passengers)} / person</div>`:''}
+        </div>
+      </div>
+      <div style="margin-bottom:1rem;">
+        <div class="delta-row"><span>At speed limits vs your speed — cost</span><span>${fmtDelta(limit.cost-yours.cost,'cost')}</span></div>
+        <div class="delta-row"><span>At speed limits vs your speed — time</span><span>${fmtDelta(limit.totalMins-yours.totalMins,'time')}</span></div>
+        <div class="delta-row"><span>10 ${co.speedUnit} below limit vs your speed — cost</span><span>${fmtDelta(slow.cost-yours.cost,'cost')}</span></div>
+        <div class="delta-row"><span>10 ${co.speedUnit} below limit vs your speed — time</span><span>${fmtDelta(slow.totalMins-yours.totalMins,'time')}</span></div>
+      </div>
+      <div style="background:var(--success-bg);border:0.5px solid var(--success-border);border-radius:var(--radius);padding:14px;margin-bottom:1rem;">
+        <div class="section-title" style="margin-bottom:10px;color:var(--success-text);">
+          <i class="ti ti-leaf" aria-hidden="true"></i> Environmental impact
+        </div>
+        <div class="comparison-grid" style="margin-bottom:8px;">
+          <div style="background:var(--card);border-radius:var(--radius);padding:10px;text-align:center;">
+            <div style="font-size:11px;color:var(--success-text);font-weight:500;margin-bottom:4px;">Your speed</div>
+            <div style="font-size:18px;font-weight:600;">${fmtCO2(yours.co2)}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);">CO₂ emitted</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:10px;text-align:center;">
+            <div style="font-size:11px;color:var(--success-text);font-weight:500;margin-bottom:4px;">Energy used</div>
+            <div style="font-size:18px;font-weight:600;">${yours.totalKwh.toFixed(1)} kWh</div>
+            <div style="font-size:11px;color:var(--text-tertiary);">total consumption</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:10px;text-align:center;">
+            <div style="font-size:11px;color:var(--success-text);font-weight:500;margin-bottom:4px;">Grid carbon</div>
+            <div style="font-size:18px;font-weight:600;">233g</div>
+            <div style="font-size:11px;color:var(--text-tertiary);">CO₂/kWh (UK grid)</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--success-text);margin-top:8px;">
+          🌳 ${eq.trees} trees to absorb · 📱 ${eq.smartphoneCharges.toLocaleString()} phone charges · ☕ ${eq.kettleBoils.toLocaleString()} kettle boils
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--success-text);padding:8px;background:var(--card);border-radius:var(--radius);">
+          <i class="ti ti-info-circle" aria-hidden="true"></i> EV emissions are based on UK grid carbon intensity (233g CO₂/kWh). As the grid gets greener, EV emissions will fall further.
+        </div>
+      </div>
+      <div class="breakdown">
+        <div class="section-title" style="margin-bottom:8px;">Full breakdown</div>
+        <div class="breakdown-row"><span>Distance</span><span>${dist.toFixed(1)} ${co.distUnit}</span></div>
+        <div class="breakdown-row"><span>Total energy used</span><span>${yours.totalKwh.toFixed(2)} kWh</span></div>
+        <div class="breakdown-row"><span>Electricity price</span><span>${kwhPrice}p/kWh</span></div>
+        <div class="breakdown-row"><span>Efficiency</span><span>${efficiency} ${co.distUnit==='km'?'kWh/100km':'miles/kWh'}</span></div>
+        <div class="breakdown-row" style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border);">
+          <span>Urban (${Math.round(routeLegs.urban*100)}% · ~${co.urbanFixed} ${co.speedUnit})</span><span>boosted by regen braking ⚡</span>
+        </div>
+        <div class="breakdown-row"><span>${co.aroadLabel} (${Math.round(routeLegs.aroad*100)}% · ${speedA} ${co.speedUnit})</span><span>standard efficiency</span></div>
+        <div class="breakdown-row"><span>${co.motorwayLabel} (${Math.round(routeLegs.motorway*100)}% · ${speedM} ${co.speedUnit})</span><span>${speedM > (co.distUnit==='km'?100:65) ? 'reduced at high speed' : 'good efficiency'}</span></div>
+      </div>
+    </div>`;
+}
+
 function computeCost() {
   const dist = distanceMiles || parseFloat(document.getElementById('manual-dist')?.value);
   if (!dist || dist <= 0) {
     document.getElementById('results-panel').innerHTML = `<div class="results"><p style="text-align:center;padding:2rem 0;color:var(--text-tertiary)">Please calculate your route first.</p></div>`;
     return;
   }
+
+  // ─── EV mode ───────────────────────────────────────────────────────────────
+  if (isEV) {
+    computeEVCost(dist);
+    return;
+  }
+
   const mpg = parseFloat(document.getElementById('mpg').value) || 40;
   const speedA = parseInt(document.getElementById('speed-aroad').value);
   const speedM = parseInt(document.getElementById('speed-motorway').value);
@@ -1155,8 +1383,7 @@ function computeCost() {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 setMethod('model');
-onCountryChange();
-</script>
+onCountryChange();</script>
 
   <!-- Cookie consent banner -->
   <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
