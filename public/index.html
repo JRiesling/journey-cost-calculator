@@ -1378,6 +1378,87 @@ function computeCost() {
         <div class="breakdown-row"><span>${co.aroadLabel} (${Math.round(routeLegs.aroad*100)}% · ${speedA} ${co.speedUnit})</span><span>${yours.aL.toFixed(2)}L</span></div>
         <div class="breakdown-row"><span>${co.motorwayLabel} (${Math.round(routeLegs.motorway*100)}% · ${speedM} ${co.speedUnit})</span><span>${yours.mL.toFixed(2)}L</span></div>
       </div>
+
+      <!-- EV Comparison Section -->
+      ${(function() {
+        const EV_EFFICIENCY = 3.5; // miles/kWh typical real-world
+        const EV_EFFICIENCY_KM = 6.5; // kWh/100km typical
+        const HOME_KWH_PRICE = 24; // pence
+        const RAPID_KWH_PRICE = 75; // pence
+        const EV_CO2_KWH = 0.233; // kg CO2 per kWh
+
+        // Calculate EV cost for the same journey at the same speeds
+        function calcEVLeg(distLeg, speedFactor, urbanBoost) {
+          let kwhUsed;
+          if (co.distUnit === 'km') {
+            kwhUsed = (distLeg / 100) * (EV_EFFICIENCY_KM / (speedFactor * (urbanBoost || 1)));
+          } else {
+            kwhUsed = distLeg / (EV_EFFICIENCY * speedFactor * (urbanBoost || 1));
+          }
+          return kwhUsed;
+        }
+
+        const urbanKwh = calcEVLeg(dist * routeLegs.urban, 1, 1.15);
+        const aroadKwh = calcEVLeg(dist * routeLegs.aroad, speedEfficiencyFactor(speedA), 1);
+        const motorwayKwh = calcEVLeg(dist * routeLegs.motorway, speedEfficiencyFactor(speedM) * (speedM > (co.distUnit==='km'?100:65) ? 0.85 : 1), 1);
+        const totalKwh = urbanKwh + aroadKwh + motorwayKwh;
+
+        const evHomeCost = (totalKwh * HOME_KWH_PRICE) / 100;
+        const evRapidCost = (totalKwh * RAPID_KWH_PRICE) / 100;
+        const evCO2 = totalKwh * EV_CO2_KWH;
+
+        const costSaving = yours.cost - evHomeCost;
+        const co2Saving = yoursCO2 - evCO2;
+        const co2SavePct = Math.round((co2Saving / yoursCO2) * 100);
+
+        return `
+      <div style="margin-top:1rem;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius-lg);padding:1.25rem;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <i class="ti ti-bolt" style="color:var(--accent);font-size:18px;" aria-hidden="true"></i>
+          <div class="section-title" style="margin-bottom:0;color:var(--accent-text);">What if you drove electric?</div>
+        </div>
+        <p style="font-size:13px;color:var(--accent-text);margin-bottom:12px;">Same route, same speeds — but in a typical EV (3.5 miles/kWh real-world)</p>
+
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px;">
+          <div style="background:var(--card);border-radius:var(--radius);padding:12px;text-align:center;">
+            <div style="font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Your ${fuelType} car</div>
+            <div style="font-size:22px;font-weight:700;color:var(--text);">${fmt(yours.cost)}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:3px;">${fmtCO2(yoursCO2)} CO₂</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:12px;text-align:center;border:2px solid var(--accent-border);">
+            <div style="font-size:11px;font-weight:600;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">EV — home charging</div>
+            <div style="font-size:22px;font-weight:700;color:var(--accent);">${fmt(evHomeCost)}</div>
+            <div style="font-size:11px;color:var(--accent-text);margin-top:3px;">${fmtCO2(evCO2)} CO₂</div>
+          </div>
+          <div style="background:var(--card);border-radius:var(--radius);padding:12px;text-align:center;">
+            <div style="font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">EV — rapid charging</div>
+            <div style="font-size:22px;font-weight:700;color:var(--text);">${fmt(evRapidCost)}</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:3px;">${fmtCO2(evCO2)} CO₂</div>
+          </div>
+        </div>
+
+        <div style="background:var(--card);border-radius:var(--radius);padding:12px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:0.5px solid var(--border);">
+            <span style="color:var(--text-secondary);">Fuel saving (home charging vs ${fuelType})</span>
+            <span style="font-weight:700;color:${costSaving > 0 ? 'var(--accent-text)' : 'var(--text)'};">${costSaving > 0 ? '−' : '+'}${fmt(Math.abs(costSaving))} ${costSaving > 0 ? 'cheaper' : 'more expensive'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:0.5px solid var(--border);">
+            <span style="color:var(--text-secondary);">CO₂ saving</span>
+            <span style="font-weight:700;color:var(--accent-text);">−${fmtCO2(co2Saving)} (${co2SavePct}% less)</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;">
+            <span style="color:var(--text-secondary);">Energy used</span>
+            <span style="font-weight:700;color:var(--text);">${totalKwh.toFixed(1)} kWh</span>
+          </div>
+        </div>
+
+        <p style="font-size:12px;color:var(--accent-text);margin:0;">
+          Home charging (~24p/kWh) is significantly cheaper than rapid charging (~75p/kWh). 
+          <a href="/ev-calculator" style="color:var(--accent);font-weight:600;text-decoration:underline;">Calculate your exact EV costs →</a>
+        </p>
+      </div>`;
+      })()}
+
     </div>`;
 }
 
