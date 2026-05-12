@@ -234,18 +234,75 @@ app.post('/api/route', async (req, res) => {
   }
 });
 
-// 3. Number plate lookup (no caching — too many combinations)
+// 3. Number plate lookup — DVLA Vehicle Enquiry Service
+const dvlaCache = new Map(); // cache plate lookups indefinitely per session
 app.post('/api/plate-lookup', async (req, res) => {
   try {
     const { plate, country, economy } = req.body;
     if (!plate) return res.status(400).json({ error: 'Plate is required' });
 
-    const result = await callClaude(
-      `You are a vehicle data expert for ${country}. Given a license/number plate, estimate the make, model, year, engine size, fuel type, and real-world fuel economy in ${economy}. Reply ONLY with valid JSON — no preamble, no markdown: {"make":"Ford","model":"Focus","year":2018,"engine_cc":1000,"fuel_type":"petrol","real_world_economy":42,"confidence":"medium","note":"1.0L EcoBoost typical real-world"} If the plate is unrecognisable: {"error":"Unrecognised plate format"}. confidence: high / medium / low.`,
-      `Plate: ${plate.toUpperCase()} Country: ${country}`
+    const cleanPlate = plate.toUpperCase().replace(/\s/g, '');
+
+    // Check cache first
+    const cacheKey = `dvla_${cleanPlate}`;
+    if (dvlaCache.has(cacheKey)) {
+      return res.json(dvlaCache.get(cacheKey));
+    }
+
+    // ── Step 1: Call DVLA Vehicle Enquiry Service ──────────────────────────
+    const dvlaResponse = await fetch('https://driver-vehicle-licensing.api.gov.uk/vehicle-enquiry/v1/vehicles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.DVLA_API_KEY,
+      },
+      body: JSON.stringify({ registrationNumber: cleanPlate }),
+    });
+
+    if (!dvlaResponse.ok) {
+      const errText = await dvlaResponse.text();
+      console.error('DVLA API error:', dvlaResponse.status, errText);
+
+      // If DVLA fails, fall back to AI estimation
+      const fallback = await callClaude(
+        `You are a vehicle data expert for UK. Given a number plate, estimate the make, model, year, engine size, fuel type, and real-world fuel economy in ${economy}. Reply ONLY with valid JSON: {"make":"Ford","model":"Focus","year":2018,"engine_cc":1000,"fuel_type":"petrol","real_world_economy":42,"confidence":"low","note":"DVLA unavailable — AI estimate only"} If unrecognisable: {"error":"Unrecognised plate format"}`,
+        `Plate: ${cleanPlate}`
+      );
+      return res.json(fallback);
+    }
+
+    const dvlaData = await dvlaResponse.json();
+
+    // ── Step 2: Use DVLA data + AI to estimate real-world MPG ─────────────
+    const make = dvlaData.make || 'Unknown';
+    const year = dvlaData.yearOfManufacture || 'Unknown';
+    const engineCC = dvlaData.engineCapacity || 'Unknown';
+    const fuelType = (dvlaData.fuelType || 'PETROL').toLowerCase();
+    const colour = dvlaData.colour || '';
+    const taxClass = dvlaData.taxClass || '';
+
+    // Ask AI for real-world MPG using the accurate DVLA vehicle details
+    const mpgResult = await callClaude(
+      `You are a vehicle fuel economy expert. Given accurate vehicle details from the DVLA database, estimate the real-world fuel economy. Reply ONLY with valid JSON — no preamble, no markdown: {"make":"Ford","model":"Focus","year":2018,"engine_cc":1000,"fuel_type":"petrol","real_world_economy":42,"note":"1.0L EcoBoost — real-world owner data"} The economy unit is ${economy}. Real-world figures are typically 10-20% below official WLTP figures.`,
+      `DVLA data: Make=${make}, Year=${year}, Engine=${engineCC}cc, Fuel=${fuelType}, Colour=${colour}, TaxClass=${taxClass}. Identify the most likely model and trim, then estimate real-world fuel economy.`
     );
 
+    // Merge DVLA data with AI MPG estimate
+    const result = {
+      ...mpgResult,
+      make: make,
+      year: parseInt(year) || mpgResult.year,
+      engine_cc: parseInt(engineCC) || mpgResult.engine_cc,
+      fuel_type: fuelType,
+      dvla_verified: true,
+      confidence: 'high',
+      note: mpgResult.note || `${year} ${make} — DVLA verified, MPG estimated from engine data`,
+    };
+
+    // Cache the result
+    dvlaCache.set(cacheKey, result);
     res.json(result);
+
   } catch (err) {
     console.error('Plate lookup error:', err.message);
     res.status(500).json({ error: 'Could not look up plate. Try make & model or enter MPG manually.' });
@@ -322,5 +379,8 @@ app.listen(PORT, () => {
   }
   if (!process.env.GOOGLE_MAPS_API_KEY) {
     console.warn('WARNING: GOOGLE_MAPS_API_KEY is not set — route calculation will fall back to AI estimation.');
+  }
+  if (!process.env.DVLA_API_KEY) {
+    console.warn('WARNING: DVLA_API_KEY is not set — plate lookup will fall back to AI estimation.');
   }
 });
