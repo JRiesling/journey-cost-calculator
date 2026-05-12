@@ -502,9 +502,12 @@
   <!-- Vehicle -->
   <div class="card">
     <div class="section-title">Your vehicle</div>
-    <div class="method-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="method-toggle" style="grid-template-columns:1fr 1fr 1fr 1fr;">
       <button class="method-btn active" id="method-model" onclick="setMethod('model')">
         <i class="ti ti-car" aria-hidden="true"></i><br>Make &amp; model
+      </button>
+      <button class="method-btn" id="method-plate" onclick="setMethod('plate')">
+        <i class="ti ti-license" aria-hidden="true"></i><br>Number plate
       </button>
       <button class="method-btn" id="method-manual" onclick="setMethod('manual')">
         <i class="ti ti-pencil" aria-hidden="true"></i><br>Enter MPG manually
@@ -512,6 +515,18 @@
       <button class="method-btn" id="method-ev" onclick="setMethod('ev')">
         <i class="ti ti-bolt" aria-hidden="true"></i><br>Electric vehicle
       </button>
+    </div>
+
+    <div id="section-plate" class="hidden">
+      <div class="field" style="margin-bottom:8px;">
+        <label>UK number plate</label>
+        <div class="plate-row">
+          <input type="text" id="plate" placeholder="AB12 CDE" maxlength="10" style="flex:1;height:46px;font-size:20px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-align:center;background:#f5c518;color:#000;border:2px solid #c8a000;border-radius:var(--radius);font-family:monospace;" oninput="this.value=this.value.toUpperCase()" aria-label="Number plate" />
+          <button class="lookup-btn" onclick="lookupPlate()"><i class="ti ti-search" aria-hidden="true"></i> Look up</button>
+        </div>
+      </div>
+      <p class="tip">Powered by the official DVLA database — UK plates only</p>
+      <div id="plate-result"></div>
     </div>
 
     <div id="section-model">
@@ -837,15 +852,8 @@ function setFuel(type) {
   document.getElementById('price-label').textContent = `${country.fuelNames[type]}: ${price.toFixed(2)} ${country.fuelPriceNote}`;
 }
 
-// ─── EV constants ─────────────────────────────────────────────────────────────
-const EV_CO2_PER_KWH = 0.233; // kg CO2 per kWh (UK grid average 2026)
-const EV_URBAN_BOOST = 1.15;  // EVs are more efficient in urban driving (regen braking)
-const EV_MOTORWAY_PENALTY = 0.85; // EVs less efficient at motorway speeds
-
-let isEV = false;
-
 function setMethod(m) {
-  ['model','manual','ev'].forEach(x => {
+  ['model','plate','manual','ev'].forEach(x => {
     document.getElementById('section-'+x).classList.toggle('hidden', x !== m);
     document.getElementById('method-'+x).classList.toggle('active', x === m);
   });
@@ -856,6 +864,41 @@ function setMethod(m) {
     document.getElementById('ev-efficiency-label').textContent = country.distUnit === 'km' ? 'Efficiency (kWh/100km)' : 'Efficiency (miles/kWh)';
   }
 }
+
+async function lookupPlate() {
+  const plate = document.getElementById('plate').value.trim();
+  if (plate.length < 2) { showStatus('plate-result', 'Please enter a valid UK plate.', 'error'); return; }
+  showStatus('plate-result', '<i class="ti ti-loader" aria-hidden="true"></i> Looking up vehicle via DVLA...', 'loading');
+  try {
+    const v = await api('/api/plate-lookup', {
+      plate,
+      country: country.name,
+      economy: country.distUnit === 'km' ? 'L/100km' : 'MPG',
+    });
+    if (v.error) { showStatus('plate-result', v.error + '. Try make & model instead.', 'error'); return; }
+    const eco = v.real_world_economy || v.real_world_mpg;
+    const dvlaTag = v.dvla_verified ? '<span style="font-size:11px;background:var(--accent-light);color:var(--accent-text);border-radius:10px;padding:1px 7px;margin-left:6px;">✓ DVLA verified</span>' : '';
+    document.getElementById('plate-result').innerHTML = `
+      <div class="vehicle-badge" style="margin-top:10px;">
+        <i class="ti ti-license" style="font-size:22px;color:var(--success-text);flex-shrink:0;" aria-hidden="true"></i>
+        <div>
+          <div class="vehicle-badge-text">${v.year ? v.year+' ' : ''}${v.make}${v.model ? ' '+v.model : ''}${dvlaTag}</div>
+          <div class="vehicle-badge-sub">${eco} ${country.distUnit === 'km' ? 'L/100km' : 'MPG'} real-world · ${v.engine_cc ? v.engine_cc+'cc · ' : ''}${v.fuel_type || ''} · ${v.note || ''}</div>
+        </div>
+      </div>`;
+    document.getElementById('mpg').value = eco;
+    document.getElementById('mpg-manual').value = eco;
+    if (v.fuel_type && v.fuel_type.toLowerCase().includes('diesel')) setFuel('diesel');
+    else setFuel('petrol');
+  } catch(e) {
+    showStatus('plate-result', 'Lookup failed. Try make & model or enter manually.', 'error');
+  }
+}
+const EV_URBAN_BOOST = 1.15;  // EVs are more efficient in urban driving (regen braking)
+const EV_MOTORWAY_PENALTY = 0.85; // EVs less efficient at motorway speeds
+
+// ─── EV constants ─────────────────────────────────────────────────────────────
+const EV_CO2_PER_KWH = 0.233; // kg CO2 per kWh (UK grid average 2026)
 
 function updateChargingType() {
   const type = document.getElementById('ev-charging-type').value;
