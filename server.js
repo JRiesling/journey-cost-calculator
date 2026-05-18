@@ -363,12 +363,10 @@ async function getFuelFinderToken() {
 
   const response = await fetch('https://www.fuel-finder.service.gov.uk/api/v1/oauth/generate_access_token', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      grant_type: 'client_credentials',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
       client_id: clientId,
       client_secret: clientSecret,
-      scope: 'fuelfinder.read',
     }),
   });
 
@@ -376,7 +374,8 @@ async function getFuelFinderToken() {
     const errText = await response.text();
     throw new Error(`Fuel Finder token error: ${response.status} — ${errText}`);
   }
-  const data = await response.json();
+  const json = await response.json();
+  const data = json.data || json;
   fuelFinderToken = data.access_token;
   fuelFinderTokenExpiry = Date.now() + ((data.expires_in || 3600) * 1000) - 60000;
   console.log('Fuel Finder token obtained successfully');
