@@ -144,7 +144,7 @@ app.post('/api/route', async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
-        'X-Goog-FieldMask': 'routes.distanceMeters,routes.duration,routes.legs.steps,routes.description',
+        'X-Goog-FieldMask': 'routes.distanceMeters,routes.duration,routes.legs.steps,routes.description,routes.legs.startLocation,routes.legs.endLocation',
       },
       body: JSON.stringify({
         origin: { address: origin },
@@ -198,6 +198,25 @@ app.post('/api/route', async (req, res) => {
     const aroad    = Math.round((aroadMetres / total) * 100) / 100;
     const motorway = Math.round((1 - urban - aroad) * 100) / 100; // ensures sum = 1.0
 
+    // Extract waypoints for fuel finder (start, ~25%, ~50%, ~75%, end)
+    const leg = route.legs?.[0];
+    const waypoints = [];
+    if (leg?.startLocation?.latLng) {
+      waypoints.push({ lat: leg.startLocation.latLng.latitude, lng: leg.startLocation.latLng.longitude });
+    }
+    const stepCount = steps.length;
+    if (stepCount > 4) {
+      [Math.floor(stepCount*0.25), Math.floor(stepCount*0.5), Math.floor(stepCount*0.75)].forEach(idx => {
+        const step = steps[idx];
+        if (step?.startLocation?.latLng) {
+          waypoints.push({ lat: step.startLocation.latLng.latitude, lng: step.startLocation.latLng.longitude });
+        }
+      });
+    }
+    if (leg?.endLocation?.latLng) {
+      waypoints.push({ lat: leg.endLocation.latLng.latitude, lng: leg.endLocation.latLng.longitude });
+    }
+
     const result = {
       distance: Math.round(distance * 10) / 10,
       distanceKm: Math.round(distanceKm * 10) / 10,
@@ -207,6 +226,7 @@ app.post('/api/route', async (req, res) => {
       urban,
       aroad,
       motorway,
+      waypoints,
       source: 'google',
     };
 
@@ -325,6 +345,103 @@ app.post('/api/model-lookup', async (req, res) => {
   } catch (err) {
     console.error('Model lookup error:', err.message);
     res.status(500).json({ error: 'Could not look up vehicle. Please enter fuel economy manually.' });
+  }
+});
+
+// 5. UK Fuel Finder — cheapest station on route
+// Uses UK Government Fuel Finder API (OAuth 2.0)
+let fuelFinderToken = null;
+let fuelFinderTokenExpiry = 0;
+
+async function getFuelFinderToken() {
+  if (fuelFinderToken && Date.now() < fuelFinderTokenExpiry) {
+    return fuelFinderToken;
+  }
+  const clientId = process.env.FUEL_FINDER_CLIENT_ID;
+  const clientSecret = process.env.FUEL_FINDER_CLIENT_SECRET;
+  if (!clientId || !clientSecret) throw new Error('Fuel Finder credentials not configured');
+
+  const response = await fetch('https://api.fuelfinder.desnz.gov.uk/oauth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+    }),
+  });
+
+  if (!response.ok) throw new Error(`Fuel Finder token error: ${response.status}`);
+  const data = await response.json();
+  fuelFinderToken = data.access_token;
+  fuelFinderTokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // 1 min buffer
+  return fuelFinderToken;
+}
+
+// Cache fuel finder results for 30 minutes per location
+const fuelFinderCache = new Map();
+const FUEL_FINDER_TTL = 30 * 60 * 1000;
+
+app.post('/api/fuel-finder', async (req, res) => {
+  try {
+    const { lat, lng, fuelType } = req.body;
+    if (!lat || !lng) return res.status(400).json({ error: 'Location required' });
+
+    const cacheKey = `${Math.round(lat * 100) / 100}_${Math.round(lng * 100) / 100}_${fuelType}`;
+    const cached = fuelFinderCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < FUEL_FINDER_TTL) {
+      return res.json({ ...cached.data, cached: true });
+    }
+
+    const token = await getFuelFinderToken();
+
+    // Search for stations within 5km of the point
+    const response = await fetch(
+      `https://api.fuelfinder.desnz.gov.uk/v1/stations?latitude=${lat}&longitude=${lng}&radius=5&fuel_type=${fuelType === 'diesel' ? 'D' : 'E10'}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('Fuel Finder API error:', response.status, errText);
+      return res.status(502).json({ error: 'Fuel Finder unavailable' });
+    }
+
+    const data = await response.json();
+    const stations = (data.stations || data.results || data || []).slice(0, 20);
+
+    if (!stations.length) {
+      return res.json({ stations: [] });
+    }
+
+    // Sort by price and return top 5
+    const sorted = stations
+      .filter(s => s.prices || s.price)
+      .map(s => ({
+        name: s.name || s.brand || s.site_name || 'Fuel Station',
+        brand: s.brand || '',
+        address: s.address || s.postcode || '',
+        lat: s.latitude || s.lat,
+        lng: s.longitude || s.lng,
+        price: parseFloat(s.prices?.[fuelType === 'diesel' ? 'diesel' : 'E10'] || s.price || 0),
+        lastUpdated: s.last_updated || s.updated_at || '',
+      }))
+      .filter(s => s.price > 0)
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 5);
+
+    const result = { stations: sorted };
+    fuelFinderCache.set(cacheKey, { data: result, timestamp: Date.now() });
+    res.json(result);
+
+  } catch (err) {
+    console.error('Fuel Finder error:', err.message);
+    res.status(500).json({ error: 'Could not fetch fuel prices. ' + err.message });
   }
 });
 
