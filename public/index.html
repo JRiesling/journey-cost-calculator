@@ -411,6 +411,13 @@
     .affiliate-link-text { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
     .affiliate-link-text strong { display: block; color: var(--text); font-size: 14px; font-weight: 600; margin-bottom: 2px; }
     .affiliate-disclosure { font-size: 11px; color: var(--text-tertiary); text-align: center; margin-top: 6px; }
+    .fuel-station-card { background: var(--card); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .fuel-station-card.cheapest { border-width: 2px; }
+    .fuel-station-info { flex: 1; min-width: 0; }
+    .fuel-station-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fuel-station-address { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+    .fuel-station-price { font-size: 22px; font-weight: 700; color: var(--accent); flex-shrink: 0; text-align: right; }
+    .fuel-station-price-label { font-size: 11px; color: var(--accent-text); text-align: right; }
 
     /* ── Plate (legacy, hidden) ──────────────────────────── */
     .plate-row { display: flex; gap: 8px; }
@@ -667,6 +674,22 @@
   </div>
 
   <div id="results-panel"></div>
+
+  <!-- Fuel Finder -->
+  <div id="fuel-finder-section" class="hidden" style="margin-top:1rem;">
+    <div class="card" style="border-color:var(--accent-border);background:var(--accent-light);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <i class="ti ti-gas-station" style="color:var(--accent);font-size:18px;" aria-hidden="true"></i>
+        <div class="section-title" style="margin-bottom:0;color:var(--accent-text);">Cheapest fuel on your route</div>
+      </div>
+      <div id="fuel-finder-results">
+        <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:0;">
+          <i class="ti ti-search" aria-hidden="true"></i> Find cheapest petrol stations on my route
+        </button>
+        <p class="tip" style="margin-top:8px;color:var(--accent-text);">Powered by the UK Government Fuel Finder — live prices from all major forecourts · UK routes only</p>
+      </div>
+    </div>
+  </div>
 
   <!-- Affiliate links -->
   <div style="margin-top:2rem;">
@@ -1038,6 +1061,23 @@ async function calculateRoute() {
     });
     if (r.error) { showDistResult('Could not find that route. Try more specific locations.', false); return; }
     distanceMiles = r.distance;
+
+    // Store waypoints for Fuel Finder (UK only)
+    routeWaypoints = r.waypoints || [];
+    const isUK = country.name === 'United Kingdom';
+    const fuelFinderEl = document.getElementById('fuel-finder-section');
+    if (isUK && routeWaypoints.length) {
+      fuelFinderEl.classList.remove('hidden');
+      // Reset the fuel finder button
+      document.getElementById('fuel-finder-results').innerHTML = `
+        <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:0;">
+          <i class="ti ti-search" aria-hidden="true"></i> Find cheapest petrol stations on my route
+        </button>
+        <p class="tip" style="margin-top:8px;color:var(--accent-text);">Powered by the UK Government Fuel Finder — live prices from all major forecourts · UK routes only</p>`;
+    } else {
+      fuelFinderEl.classList.add('hidden');
+    }
+
     showDistResult(`<i class="ti ti-check" style="color:var(--success-text)" aria-hidden="true"></i> <strong>${r.distance.toFixed(1)} ${country.distUnit}</strong> — ${r.typical_route}`, true);
     showRoadBreakdown({ urban: r.urban, aroad: r.aroad, motorway: r.motorway });
   } catch (e) {
@@ -1504,6 +1544,93 @@ function computeCost() {
       })()}
 
     </div>`;
+}
+
+// ─── Fuel Finder ──────────────────────────────────────────────────────────────
+// Store route waypoints for fuel finder searches
+let routeWaypoints = [];
+
+async function findCheapestFuel() {
+  if (!routeWaypoints.length) {
+    document.getElementById('fuel-finder-results').innerHTML = `
+      <p style="font-size:13px;color:var(--accent-text);">Please calculate a UK route first, then search for fuel stations.</p>`;
+    return;
+  }
+
+  const fuelType = document.getElementById('btn-diesel')?.classList.contains('active') ? 'diesel' : 'petrol';
+  document.getElementById('fuel-finder-results').innerHTML = `
+    <div style="font-size:13px;color:var(--accent-text);padding:12px 0;">
+      <i class="ti ti-loader" aria-hidden="true"></i> Searching for cheapest ${fuelType} on your route...
+    </div>`;
+
+  try {
+    // Sample points along the route — start, middle, and end
+    const pointsToCheck = routeWaypoints.length > 2
+      ? [routeWaypoints[0], routeWaypoints[Math.floor(routeWaypoints.length / 2)], routeWaypoints[routeWaypoints.length - 1]]
+      : routeWaypoints;
+
+    // Fetch stations near each waypoint
+    const allStations = [];
+    for (const point of pointsToCheck) {
+      try {
+        const response = await fetch('/api/fuel-finder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lat: point.lat, lng: point.lng, fuelType }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.stations) allStations.push(...data.stations);
+        }
+      } catch (e) { /* continue */ }
+    }
+
+    if (!allStations.length) {
+      document.getElementById('fuel-finder-results').innerHTML = `
+        <p style="font-size:13px;color:var(--accent-text);">No fuel price data found for this route. This feature works on UK routes only.</p>
+        <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:8px;">Try again</button>`;
+      return;
+    }
+
+    // Deduplicate by name+price and sort by price
+    const seen = new Set();
+    const unique = allStations
+      .filter(s => { const key = s.name + s.price; if (seen.has(key)) return false; seen.add(key); return true; })
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 5);
+
+    const cheapest = unique[0];
+    const fuelLabel = fuelType === 'diesel' ? 'Diesel' : 'Petrol (E10)';
+
+    document.getElementById('fuel-finder-results').innerHTML = `
+      <p style="font-size:13px;color:var(--accent-text);margin-bottom:10px;">
+        Live ${fuelLabel} prices from stations on your route — sorted cheapest first:
+      </p>
+      ${unique.map((s, i) => `
+        <div class="fuel-station-card ${i === 0 ? 'cheapest' : ''}">
+          <div class="fuel-station-info">
+            ${i === 0 ? '<div style="font-size:10px;font-weight:700;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;">⭐ Cheapest on route</div>' : ''}
+            <div class="fuel-station-name">${s.brand ? s.brand + ' — ' : ''}${s.name}</div>
+            <div class="fuel-station-address">${s.address}</div>
+          </div>
+          <div>
+            <div class="fuel-station-price">${s.price.toFixed(1)}p</div>
+            <div class="fuel-station-price-label">per litre</div>
+          </div>
+        </div>`).join('')}
+      ${cheapest.price < (fuelType === 'diesel' ? 188 : 156) ?
+        `<div style="font-size:12px;color:var(--accent-text);margin-top:8px;padding:8px;background:var(--card);border-radius:var(--radius);">
+          💡 Filling up at ${cheapest.name} (${cheapest.price.toFixed(1)}p/L) instead of the UK average saves you approximately ${((fuelType === 'diesel' ? 188.8 : 156.8) - cheapest.price).toFixed(1)}p per litre
+        </div>` : ''}
+      <p style="font-size:11px;color:var(--accent-text);margin-top:8px;">Prices updated by forecourts within 30 minutes of any change · UK Government Fuel Finder</p>
+      <button onclick="findCheapestFuel()" style="background:none;border:none;color:var(--accent-text);font-size:12px;cursor:pointer;margin-top:4px;text-decoration:underline;">🔄 Refresh prices</button>`;
+
+  } catch (err) {
+    console.error('Fuel finder error:', err);
+    document.getElementById('fuel-finder-results').innerHTML = `
+      <p style="font-size:13px;color:var(--accent-text);">Could not fetch fuel prices right now. Try again in a moment.</p>
+      <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:8px;">Try again</button>`;
+  }
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
