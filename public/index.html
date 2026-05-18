@@ -1628,7 +1628,7 @@ async function findCheapestFuel() {
   } catch (err) {
     console.error('Fuel finder error:', err);
     document.getElementById('fuel-finder-results').innerHTML = `
-      <p style="font-size:13px;color:var(--accent-text);">Could not fetch fuel prices right now. Try again in a moment.</p>
+      <p style="font-size:13px;color:var(--accent-text);">Could not fetch fuel prices right now — ${err.message}. Try again in a moment.</p>
       <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:8px;">Try again</button>`;
   }
 }
