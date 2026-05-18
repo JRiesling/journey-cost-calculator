@@ -447,41 +447,51 @@ app.post('/api/fuel-finder', async (req, res) => {
       return res.json({ stations: [] });
     }
 
-    // Calculate distance from waypoint for each station and filter to 5km
-    function haversine(lat1, lng1, lat2, lng2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLng = (lng2 - lng1) * Math.PI / 180;
-      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
-      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    }
+    // Normalise station data using actual API field names
+    const fuelTypeMap = {
+      'petrol': ['E10', 'E5'],
+      'diesel': ['B7_STANDARD', 'B7'],
+    };
+    const targetFuelTypes = fuelTypeMap[fuelType] || ['E10', 'E5'];
 
-    // Normalise station data — handle various field name conventions
     const normalised = stations.map(s => {
-      const sLat = parseFloat(s.latitude || s.lat || s.location?.latitude || 0);
-      const sLng = parseFloat(s.longitude || s.lng || s.location?.longitude || 0);
-      const price = parseFloat(
-        s.prices?.[fuelParam] || s.prices?.[fuelType] ||
-        s.price || s.fuelPrice || s.retailPrice ||
-        s.unleaded || s.diesel || 0
-      );
+      // Extract price for the requested fuel type
+      const fuelPrices = s.fuel_prices || [];
+      let price = 0;
+      for (const ft of targetFuelTypes) {
+        const match = fuelPrices.find(fp => fp.fuel_type === ft);
+        if (match && match.price > 0) { price = match.price; break; }
+      }
+
+      const sLat = parseFloat(s.latitude || s.lat || s.location?.latitude || s.geo?.lat || 0);
+      const sLng = parseFloat(s.longitude || s.lng || s.location?.longitude || s.geo?.lng || 0);
       const distKm = (sLat && sLng) ? haversine(lat, lng, sLat, sLng) : 999;
+
+      const lastUpdated = fuelPrices[0]?.price_last_updated || '';
+
       return {
-        name: s.name || s.site_name || s.brand || s.operator || 'Fuel Station',
+        name: s.trading_name || s.name || s.site_name || 'Fuel Station',
         brand: s.brand || s.operator || '',
-        address: [s.address, s.town, s.postcode].filter(Boolean).join(', ') || s.address || '',
+        address: [s.address, s.town, s.postcode].filter(Boolean).join(', ') || '',
         lat: sLat,
         lng: sLng,
         price,
         distKm,
-        lastUpdated: s.last_updated || s.updated_at || s.priceUpdatedAt || '',
+        lastUpdated,
       };
     })
-    .filter(s => s.price > 50 && s.price < 300 && s.distKm < 5) // valid price range, within 5km
-    .sort((a, b) => a.price - b.price)
-    .slice(0, 5);
+    .filter(s => s.price > 50 && s.price < 300); // valid price range
 
-    const result = { stations: normalised };
+    // Since batch endpoint doesn't include coordinates, sort by price only
+    // and note this is a national sample
+    const sorted = normalised
+      .filter(s => s.price > 0)
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 5);
+
+    console.log(`Fuel Finder: ${normalised.length} stations with prices, cheapest: ${sorted[0]?.price}p`);
+
+    const result = { stations: sorted, note: 'Prices from UK Fuel Finder — national sample, cheapest first' };
     fuelFinderCache.set(cacheKey, { data: result, timestamp: Date.now() });
     res.json(result);
 
