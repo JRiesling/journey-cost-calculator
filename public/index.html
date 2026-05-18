@@ -1564,54 +1564,49 @@ async function findCheapestFuel() {
     </div>`;
 
   try {
-    // Sample points along the route — start, middle, and end
-    const pointsToCheck = routeWaypoints.length > 2
-      ? [routeWaypoints[0], routeWaypoints[Math.floor(routeWaypoints.length / 2)], routeWaypoints[routeWaypoints.length - 1]]
-      : routeWaypoints;
-
-    // Fetch stations near each waypoint
-    const allStations = [];
-    for (const point of pointsToCheck) {
-      try {
-        const response = await fetch('/api/fuel-finder', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lat: point.lat, lng: point.lng, fuelType }),
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.stations) allStations.push(...data.stations);
-        }
-      } catch (e) { /* continue */ }
+    // Fetch stations near each waypoint — send all waypoints at once
+    let data;
+    try {
+      const response = await fetch('/api/fuel-finder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ waypoints: routeWaypoints, fuelType }),
+      });
+      if (response.ok) {
+        data = await response.json();
+      }
+    } catch (e) {
+      console.error('Fuel finder fetch error:', e);
     }
 
-    if (!allStations.length) {
+    if (!data || !data.stations || !data.stations.length) {
       document.getElementById('fuel-finder-results').innerHTML = `
         <p style="font-size:13px;color:var(--accent-text);">No fuel price data found for this route. This feature works on UK routes only.</p>
         <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:8px;">Try again</button>`;
       return;
     }
 
-    // Deduplicate by name+price and sort by price
-    const seen = new Set();
-    const unique = allStations
-      .filter(s => { const key = s.name + s.price; if (seen.has(key)) return false; seen.add(key); return true; })
-      .sort((a, b) => a.price - b.price)
-      .slice(0, 5);
+    const allStations = data.stations;
+    const routeSpecific = data.routeSpecific;
 
+    const unique = allStations;
     const cheapest = unique[0];
     const fuelLabel = fuelType === 'diesel' ? 'Diesel' : 'Petrol (E10)';
+    const locationLabel = routeSpecific ? 'on your route' : 'in the UK (route-specific data coming soon)';
 
     document.getElementById('fuel-finder-results').innerHTML = `
       <p style="font-size:13px;color:var(--accent-text);margin-bottom:10px;">
-        Cheapest UK ${fuelLabel} prices right now — updated within 30 minutes of any change:
+        Cheapest ${fuelLabel} prices ${locationLabel} — sorted cheapest first:
       </p>
       ${unique.map((s, i) => `
         <div class="fuel-station-card ${i === 0 ? 'cheapest' : ''}">
           <div class="fuel-station-info">
-            ${i === 0 ? '<div style="font-size:10px;font-weight:700;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;">⭐ Cheapest on route</div>' : ''}
+            ${i === 0 ? '<div style="font-size:10px;font-weight:700;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;">⭐ Cheapest found</div>' : ''}
             <div class="fuel-station-name">${s.brand ? s.brand + ' — ' : ''}${s.name}</div>
-            <div class="fuel-station-address">${s.address}</div>
+            ${s.address ? `<div class="fuel-station-address">${s.address}</div>` : ''}
+            <a href="https://www.google.com/maps/search/${encodeURIComponent(s.name + (s.address ? ' ' + s.address : ''))}" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:4px;margin-top:4px;">
+              <i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps
+            </a>
           </div>
           <div>
             <div class="fuel-station-price">${s.price.toFixed(1)}p</div>
@@ -1622,7 +1617,7 @@ async function findCheapestFuel() {
         `<div style="font-size:12px;color:var(--accent-text);margin-top:8px;padding:8px;background:var(--card);border-radius:var(--radius);">
           💡 Filling up at ${cheapest.name} (${cheapest.price.toFixed(1)}p/L) instead of the UK average saves you approximately ${((fuelType === 'diesel' ? 188.8 : 156.8) - cheapest.price).toFixed(1)}p per litre
         </div>` : ''}
-      <p style="font-size:11px;color:var(--accent-text);margin-top:8px;">Prices updated by forecourts within 30 minutes of any change · UK Government Fuel Finder</p>
+      <p style="font-size:11px;color:var(--accent-text);margin-top:8px;">${routeSpecific ? 'Stations within 8 miles of your route' : 'Cheapest UK prices — route-specific coming soon'} · UK Government Fuel Finder · updated within 30 mins</p>
       <button onclick="findCheapestFuel()" style="background:none;border:none;color:var(--accent-text);font-size:12px;cursor:pointer;margin-top:4px;text-decoration:underline;">🔄 Refresh prices</button>`;
 
   } catch (err) {
