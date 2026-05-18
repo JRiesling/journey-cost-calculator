@@ -513,9 +513,6 @@ app.post('/api/fuel-finder', async (req, res) => {
       return Math.min(...waypoints.map(wp => haversine(wp.lat, wp.lng, sLat, sLng)));
     }
 
-    const fuelTypeMap = { 'petrol': ['E10', 'E5'], 'diesel': ['B7_STANDARD', 'B7'] };
-    const targetFuelTypes = fuelTypeMap[fuelType] || ['E10', 'E5'];
-
     // Build joined dataset
     const joined = pricesArray.map(s => {
       const info = infoMap.get(s.node_id) || {};
