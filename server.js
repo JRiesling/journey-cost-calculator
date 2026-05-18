@@ -419,6 +419,10 @@ app.post('/api/fuel-finder', async (req, res) => {
 
     const rawData = await response.json();
     console.log('Fuel Finder response shape:', typeof rawData, Array.isArray(rawData) ? 'array len:'+rawData.length : Object.keys(rawData).slice(0,5).join(','));
+    if (Array.isArray(rawData) && rawData.length > 0) {
+      console.log('Sample station keys:', Object.keys(rawData[0]).join(','));
+      console.log('Sample station:', JSON.stringify(rawData[0]).slice(0, 400));
+    }
 
     // Handle different response shapes
     let stations = [];
