@@ -445,10 +445,15 @@ app.post('/api/fuel-finder', async (req, res) => {
         const infoArray = Array.isArray(infoData) ? infoData : (infoData.data || infoData.results || []);
         if (infoArray.length > 0) {
           console.log('PFS info sample keys:', Object.keys(infoArray[0]).join(','));
-          console.log('PFS info sample:', JSON.stringify(infoArray[0]).slice(0, 300));
+          console.log('PFS info sample:', JSON.stringify(infoArray[0]).slice(0, 500));
+        } else {
+          console.log('PFS info: empty array, raw:', JSON.stringify(infoData).slice(0, 200));
         }
         infoArray.forEach(s => { if (s.node_id) infoMap.set(s.node_id, s); });
         console.log(`Fuel Finder: ${pricesArray.length} prices, ${infoMap.size} stations with info`);
+      } else {
+        const errText = await infoRes.text();
+        console.log('PFS info endpoint failed:', infoRes.status, errText.slice(0, 200));
       }
     } catch (e) {
       console.log('PFS info fetch failed (non-fatal):', e.message);
