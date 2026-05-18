@@ -391,7 +391,7 @@ async function loadPFSInfo() {
     console.log('Loading PFS station info (coordinates)...');
     const token = await getFuelFinderToken();
     const res = await fetch(
-      'https://www.fuel-finder.service.gov.uk/api/v1/pfs/pfs-information?batch-number=1',
+      'https://www.fuel-finder.service.gov.uk/api/v1/pfs?batch-number=1',
       { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }
     );
     if (!res.ok) {
@@ -499,9 +499,19 @@ app.post('/api/fuel-finder', async (req, res) => {
       }
       if (!price) return null;
 
-      // Extract coordinates from info endpoint
-      const sLat = parseFloat(info.latitude || info.lat || info.location?.latitude || s.latitude || s.lat || 0);
-      const sLng = parseFloat(info.longitude || info.lng || info.location?.longitude || s.longitude || s.lng || 0);
+      // Extract coordinates — location object may contain lat/lng
+      const sLat = parseFloat(
+        info.latitude || info.lat ||
+        info.location?.latitude || info.location?.lat ||
+        info.location?.coordinates?.[1] ||
+        s.latitude || s.lat || 0
+      );
+      const sLng = parseFloat(
+        info.longitude || info.lng ||
+        info.location?.longitude || info.location?.lng ||
+        info.location?.coordinates?.[0] ||
+        s.longitude || s.lng || 0
+      );
 
       const distKm = (sLat && sLng) ? minDistToRoute(sLat, sLng) : 999;
       const address = [info.address_line_1 || info.address, info.town || info.city, info.postcode].filter(Boolean).join(', ');
