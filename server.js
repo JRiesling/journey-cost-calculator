@@ -390,31 +390,71 @@ async function loadPFSInfo() {
   try {
     console.log('Loading PFS station info (coordinates)...');
     const token = await getFuelFinderToken();
-    const res = await fetch(
-      'https://www.fuel-finder.service.gov.uk/api/v1/pfs?batch-number=1',
-      { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }
-    );
-    if (!res.ok) {
-      console.log('PFS info preload failed:', res.status);
-      return;
+    let totalLoaded = 0;
+
+    for (let batch = 1; batch <= 8; batch++) {
+      try {
+        const res = await fetch(
+          `https://www.fuel-finder.service.gov.uk/api/v1/pfs?batch-number=${batch}`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }
+        );
+        if (!res.ok) { console.log(`PFS batch ${batch} failed: ${res.status}`); break; }
+        const data = await res.json();
+        const arr = Array.isArray(data) ? data : (data.data || data.results || []);
+        if (arr.length === 0) { console.log(`PFS batch ${batch}: empty, stopping`); break; }
+        arr.forEach(s => { if (s.node_id) pfsInfoMap.set(s.node_id, s); });
+        totalLoaded += arr.length;
+        console.log(`PFS batch ${batch}: ${arr.length} stations (total: ${totalLoaded})`);
+        if (arr.length < 500) break;
+      } catch (e) {
+        console.log(`PFS batch ${batch} error:`, e.message);
+        break;
+      }
     }
-    const data = await res.json();
-    const arr = Array.isArray(data) ? data : (data.data || data.results || []);
-    if (arr.length > 0) {
-      console.log('PFS info keys:', Object.keys(arr[0]).join(','));
-      console.log('PFS info sample:', JSON.stringify(arr[0]).slice(0, 800));
-      console.log('PFS info location:', JSON.stringify(arr[0].location));
-    }
-    arr.forEach(s => { if (s.node_id) pfsInfoMap.set(s.node_id, s); });
+
     pfsInfoLoaded = true;
-    console.log(`PFS info loaded: ${pfsInfoMap.size} stations with location data`);
+    console.log(`PFS info fully loaded: ${pfsInfoMap.size} stations`);
   } catch (e) {
     console.log('PFS info preload error:', e.message);
   }
 }
 
-// Refresh PFS info every 24 hours
-setInterval(loadPFSInfo, 24 * 60 * 60 * 1000);
+// Pre-load fuel prices on startup
+let pricesCacheMap = new Map(); // node_id -> fuel_prices array
+
+async function loadFuelPrices() {
+  try {
+    console.log('Loading fuel prices...');
+    const token = await getFuelFinderToken();
+    let totalLoaded = 0;
+
+    for (let batch = 1; batch <= 8; batch++) {
+      try {
+        const res = await fetch(
+          `https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=${batch}`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }
+        );
+        if (!res.ok) { console.log(`Prices batch ${batch} failed: ${res.status}`); break; }
+        const data = await res.json();
+        const arr = Array.isArray(data) ? data : (data.data || data.results || []);
+        if (arr.length === 0) { break; }
+        arr.forEach(s => { if (s.node_id) pricesCacheMap.set(s.node_id, s.fuel_prices || []); });
+        totalLoaded += arr.length;
+        console.log(`Prices batch ${batch}: ${arr.length} stations (total: ${totalLoaded})`);
+        if (arr.length < 500) break;
+      } catch (e) {
+        console.log(`Prices batch ${batch} error:`, e.message);
+        break;
+      }
+    }
+    console.log(`Fuel prices loaded: ${pricesCacheMap.size} stations`);
+  } catch (e) {
+    console.log('Fuel prices preload error:', e.message);
+  }
+}
+
+// Refresh prices every 30 minutes
+setInterval(loadFuelPrices, 30 * 60 * 1000);
 
 // Cache fuel finder results for 30 minutes per location
 const fuelFinderCache = new Map();
@@ -433,42 +473,31 @@ app.post('/api/fuel-finder', async (req, res) => {
       return res.json({ ...cached.data, cached: true });
     }
 
-    const token = await getFuelFinderToken();
-
-    // Fetch with timeout
-    async function fetchWithTimeout(url, options, timeoutMs = 8000) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), timeoutMs);
-      try {
-        const res = await fetch(url, { ...options, signal: controller.signal });
-        clearTimeout(timeout);
-        return res;
-      } catch (e) {
-        clearTimeout(timeout);
-        throw e;
-      }
-    }
-
-    const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' };
-
-    // Fetch prices only — coordinates come from pre-loaded pfsInfoMap
-    const pricesRes = await fetchWithTimeout(
-      'https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1',
-      { headers }
-    );
-
-    if (!pricesRes.ok) {
-      const errText = await pricesRes.text();
-      console.error('Fuel Finder prices error:', pricesRes.status, errText.slice(0, 200));
-      return res.status(502).json({ error: 'Fuel Finder unavailable' });
-    }
-
-    const pricesData = await pricesRes.json();
-    const pricesArray = Array.isArray(pricesData) ? pricesData : (pricesData.data || pricesData.results || []);
-    console.log(`Fuel Finder: ${pricesArray.length} prices, ${pfsInfoMap.size} stations in info cache`);
-
-    // Use pre-loaded info map for coordinates
+    // Use pre-loaded prices and info maps
     const infoMap = pfsInfoMap;
+    const fuelTypeMap = { 'petrol': ['E10', 'E5'], 'diesel': ['B7_STANDARD', 'B7'] };
+    const targetFuelTypes = fuelTypeMap[fuelType] || ['E10', 'E5'];
+
+    // If we have cached prices use them, otherwise fetch batch 1
+    let pricesArray = [];
+    if (pricesCacheMap.size > 0) {
+      // Build from cache
+      pricesArray = Array.from(pricesCacheMap.entries()).map(([node_id, fuel_prices]) => ({ node_id, fuel_prices }));
+      console.log(`Using cached prices: ${pricesArray.length} stations`);
+    } else {
+      // Fetch fresh
+      const token = await getFuelFinderToken();
+      const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' };
+      const pricesRes = await fetchWithTimeout(
+        'https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1',
+        { headers }
+      );
+      if (!pricesRes.ok) return res.status(502).json({ error: 'Fuel Finder unavailable' });
+      const pricesData = await pricesRes.json();
+      pricesArray = Array.isArray(pricesData) ? pricesData : (pricesData.data || pricesData.results || []);
+    }
+
+    console.log(`Fuel Finder: ${pricesArray.length} prices, ${pfsInfoMap.size} stations with coords`);
 
     // Haversine distance in km
     function haversine(lat1, lng1, lat2, lng2) {
@@ -615,6 +644,7 @@ app.listen(PORT, () => {
   if (!process.env.DVLA_API_KEY) {
     console.warn('WARNING: DVLA_API_KEY is not set — plate lookup will fall back to AI estimation.');
   }
-  // Pre-load PFS station info in background (don't block startup)
+  // Pre-load PFS station info and prices in background
   setTimeout(loadPFSInfo, 5000);
+  setTimeout(loadFuelPrices, 10000);
 });
