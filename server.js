@@ -401,15 +401,27 @@ app.post('/api/fuel-finder', async (req, res) => {
 
     const token = await getFuelFinderToken();
 
-    // Fetch prices and station info in parallel
-    const [pricesRes, infoRes] = await Promise.all([
-      fetch('https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1', {
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
-      }),
-      fetch('https://www.fuel-finder.service.gov.uk/api/v1/pfs/pfs-information?batch-number=1', {
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
-      }),
-    ]);
+    // Fetch with timeout to prevent hanging
+    async function fetchWithTimeout(url, options, timeoutMs = 8000) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(timeout);
+        return res;
+      } catch (e) {
+        clearTimeout(timeout);
+        throw e;
+      }
+    }
+
+    const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' };
+
+    // Fetch prices first (required), then info (optional for coordinates)
+    const pricesRes = await fetchWithTimeout(
+      'https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1',
+      { headers }
+    );
 
     if (!pricesRes.ok) {
       const errText = await pricesRes.text();
@@ -420,19 +432,26 @@ app.post('/api/fuel-finder', async (req, res) => {
     const pricesData = await pricesRes.json();
     const pricesArray = Array.isArray(pricesData) ? pricesData : (pricesData.data || pricesData.results || []);
 
-    // Try to get station info with coordinates
+    // Try to get station info with coordinates — optional, don't fail if it times out
     let infoMap = new Map();
-    if (infoRes.ok) {
-      const infoData = await infoRes.json();
-      const infoArray = Array.isArray(infoData) ? infoData : (infoData.data || infoData.results || []);
-      console.log('PFS info sample keys:', infoArray[0] ? Object.keys(infoArray[0]).join(',') : 'empty');
-      if (infoArray[0]) console.log('PFS info sample:', JSON.stringify(infoArray[0]).slice(0, 300));
-      infoArray.forEach(s => {
-        if (s.node_id) infoMap.set(s.node_id, s);
-      });
-      console.log(`Fuel Finder: ${pricesArray.length} prices, ${infoMap.size} stations with info`);
-    } else {
-      console.log('PFS info endpoint failed:', infoRes.status);
+    try {
+      const infoRes = await fetchWithTimeout(
+        'https://www.fuel-finder.service.gov.uk/api/v1/pfs/pfs-information?batch-number=1',
+        { headers },
+        6000
+      );
+      if (infoRes.ok) {
+        const infoData = await infoRes.json();
+        const infoArray = Array.isArray(infoData) ? infoData : (infoData.data || infoData.results || []);
+        if (infoArray.length > 0) {
+          console.log('PFS info sample keys:', Object.keys(infoArray[0]).join(','));
+          console.log('PFS info sample:', JSON.stringify(infoArray[0]).slice(0, 300));
+        }
+        infoArray.forEach(s => { if (s.node_id) infoMap.set(s.node_id, s); });
+        console.log(`Fuel Finder: ${pricesArray.length} prices, ${infoMap.size} stations with info`);
+      }
+    } catch (e) {
+      console.log('PFS info fetch failed (non-fatal):', e.message);
     }
 
     // Haversine distance in km
