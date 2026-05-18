@@ -382,6 +382,39 @@ async function getFuelFinderToken() {
   return fuelFinderToken;
 }
 
+// ─── Pre-load PFS station info (coordinates) on startup ──────────────────────
+let pfsInfoMap = new Map();
+let pfsInfoLoaded = false;
+
+async function loadPFSInfo() {
+  try {
+    console.log('Loading PFS station info (coordinates)...');
+    const token = await getFuelFinderToken();
+    const res = await fetch(
+      'https://www.fuel-finder.service.gov.uk/api/v1/pfs/pfs-information?batch-number=1',
+      { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' } }
+    );
+    if (!res.ok) {
+      console.log('PFS info preload failed:', res.status);
+      return;
+    }
+    const data = await res.json();
+    const arr = Array.isArray(data) ? data : (data.data || data.results || []);
+    if (arr.length > 0) {
+      console.log('PFS info keys:', Object.keys(arr[0]).join(','));
+      console.log('PFS info sample:', JSON.stringify(arr[0]).slice(0, 400));
+    }
+    arr.forEach(s => { if (s.node_id) pfsInfoMap.set(s.node_id, s); });
+    pfsInfoLoaded = true;
+    console.log(`PFS info loaded: ${pfsInfoMap.size} stations with location data`);
+  } catch (e) {
+    console.log('PFS info preload error:', e.message);
+  }
+}
+
+// Refresh PFS info every 24 hours
+setInterval(loadPFSInfo, 24 * 60 * 60 * 1000);
+
 // Cache fuel finder results for 30 minutes per location
 const fuelFinderCache = new Map();
 const FUEL_FINDER_TTL = 30 * 60 * 1000;
@@ -401,7 +434,7 @@ app.post('/api/fuel-finder', async (req, res) => {
 
     const token = await getFuelFinderToken();
 
-    // Fetch with timeout to prevent hanging
+    // Fetch with timeout
     async function fetchWithTimeout(url, options, timeoutMs = 8000) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -417,7 +450,7 @@ app.post('/api/fuel-finder', async (req, res) => {
 
     const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' };
 
-    // Fetch prices first (required), then info (optional for coordinates)
+    // Fetch prices only — coordinates come from pre-loaded pfsInfoMap
     const pricesRes = await fetchWithTimeout(
       'https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1',
       { headers }
@@ -431,33 +464,10 @@ app.post('/api/fuel-finder', async (req, res) => {
 
     const pricesData = await pricesRes.json();
     const pricesArray = Array.isArray(pricesData) ? pricesData : (pricesData.data || pricesData.results || []);
+    console.log(`Fuel Finder: ${pricesArray.length} prices, ${pfsInfoMap.size} stations in info cache`);
 
-    // Try to get station info with coordinates — optional, don't fail if it times out
-    let infoMap = new Map();
-    try {
-      const infoRes = await fetchWithTimeout(
-        'https://www.fuel-finder.service.gov.uk/api/v1/pfs/pfs-information?batch-number=1',
-        { headers },
-        6000
-      );
-      if (infoRes.ok) {
-        const infoData = await infoRes.json();
-        const infoArray = Array.isArray(infoData) ? infoData : (infoData.data || infoData.results || []);
-        if (infoArray.length > 0) {
-          console.log('PFS info sample keys:', Object.keys(infoArray[0]).join(','));
-          console.log('PFS info sample:', JSON.stringify(infoArray[0]).slice(0, 500));
-        } else {
-          console.log('PFS info: empty array, raw:', JSON.stringify(infoData).slice(0, 200));
-        }
-        infoArray.forEach(s => { if (s.node_id) infoMap.set(s.node_id, s); });
-        console.log(`Fuel Finder: ${pricesArray.length} prices, ${infoMap.size} stations with info`);
-      } else {
-        const errText = await infoRes.text();
-        console.log('PFS info endpoint failed:', infoRes.status, errText.slice(0, 200));
-      }
-    } catch (e) {
-      console.log('PFS info fetch failed (non-fatal):', e.message);
-    }
+    // Use pre-loaded info map for coordinates
+    const infoMap = pfsInfoMap;
 
     // Haversine distance in km
     function haversine(lat1, lng1, lat2, lng2) {
@@ -597,4 +607,6 @@ app.listen(PORT, () => {
   if (!process.env.DVLA_API_KEY) {
     console.warn('WARNING: DVLA_API_KEY is not set — plate lookup will fall back to AI estimation.');
   }
+  // Pre-load PFS station info in background (don't block startup)
+  setTimeout(loadPFSInfo, 5000);
 });
