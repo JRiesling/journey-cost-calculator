@@ -388,110 +388,125 @@ const FUEL_FINDER_TTL = 30 * 60 * 1000;
 
 app.post('/api/fuel-finder', async (req, res) => {
   try {
-    const { lat, lng, fuelType } = req.body;
-    if (!lat || !lng) return res.status(400).json({ error: 'Location required' });
+    const { waypoints, fuelType } = req.body;
+    if (!waypoints || !waypoints.length) return res.status(400).json({ error: 'Waypoints required' });
 
-    const cacheKey = `${Math.round(lat * 100) / 100}_${Math.round(lng * 100) / 100}_${fuelType}`;
+    // Use first waypoint as cache key
+    const wp = waypoints[0];
+    const cacheKey = `${Math.round(wp.lat * 10) / 10}_${Math.round(wp.lng * 10) / 10}_${fuelType}`;
     const cached = fuelFinderCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < FUEL_FINDER_TTL) {
       return res.json({ ...cached.data, cached: true });
     }
 
     const token = await getFuelFinderToken();
-    const fuelParam = fuelType === 'diesel' ? 'diesel' : 'unleaded';
 
-    // Fetch batch 1 of all fuel prices
-    const response = await fetch(
-      'https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1',
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        },
-      }
-    );
+    // Fetch prices and station info in parallel
+    const [pricesRes, infoRes] = await Promise.all([
+      fetch('https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1', {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+      }),
+      fetch('https://www.fuel-finder.service.gov.uk/api/v1/pfs/pfs-information?batch-number=1', {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+      }),
+    ]);
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('Fuel Finder prices error:', response.status, errText);
-      return res.status(502).json({ error: 'Fuel Finder unavailable', detail: errText.slice(0, 200) });
+    if (!pricesRes.ok) {
+      const errText = await pricesRes.text();
+      console.error('Fuel Finder prices error:', pricesRes.status, errText.slice(0, 200));
+      return res.status(502).json({ error: 'Fuel Finder unavailable' });
     }
 
-    const rawData = await response.json();
-    console.log('Fuel Finder response shape:', typeof rawData, Array.isArray(rawData) ? 'array len:'+rawData.length : Object.keys(rawData).slice(0,5).join(','));
-    if (Array.isArray(rawData) && rawData.length > 0) {
-      console.log('Sample station keys:', Object.keys(rawData[0]).join(','));
-      console.log('Sample station:', JSON.stringify(rawData[0]).slice(0, 400));
-    }
+    const pricesData = await pricesRes.json();
+    const pricesArray = Array.isArray(pricesData) ? pricesData : (pricesData.data || pricesData.results || []);
 
-    // Handle different response shapes
-    let stations = [];
-    if (Array.isArray(rawData)) {
-      stations = rawData;
-    } else if (rawData.stations) {
-      stations = rawData.stations;
-    } else if (rawData.results) {
-      stations = rawData.results;
-    } else if (rawData.data) {
-      stations = rawData.data;
-    } else if (rawData.pfs) {
-      stations = rawData.pfs;
-    } else if (rawData.fuelPrices) {
-      stations = rawData.fuelPrices;
+    // Try to get station info with coordinates
+    let infoMap = new Map();
+    if (infoRes.ok) {
+      const infoData = await infoRes.json();
+      const infoArray = Array.isArray(infoData) ? infoData : (infoData.data || infoData.results || []);
+      console.log('PFS info sample keys:', infoArray[0] ? Object.keys(infoArray[0]).join(',') : 'empty');
+      if (infoArray[0]) console.log('PFS info sample:', JSON.stringify(infoArray[0]).slice(0, 300));
+      infoArray.forEach(s => {
+        if (s.node_id) infoMap.set(s.node_id, s);
+      });
+      console.log(`Fuel Finder: ${pricesArray.length} prices, ${infoMap.size} stations with info`);
     } else {
-      console.log('Unexpected response:', JSON.stringify(rawData).slice(0, 500));
-      return res.status(502).json({ error: 'Unexpected API response', sample: JSON.stringify(rawData).slice(0, 300) });
+      console.log('PFS info endpoint failed:', infoRes.status);
     }
 
-    if (!stations.length) {
-      return res.json({ stations: [] });
+    // Haversine distance in km
+    function haversine(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     }
 
-    // Normalise station data using actual API field names
-    const fuelTypeMap = {
-      'petrol': ['E10', 'E5'],
-      'diesel': ['B7_STANDARD', 'B7'],
-    };
+    // Min distance from any waypoint
+    function minDistToRoute(sLat, sLng) {
+      return Math.min(...waypoints.map(wp => haversine(wp.lat, wp.lng, sLat, sLng)));
+    }
+
+    const fuelTypeMap = { 'petrol': ['E10', 'E5'], 'diesel': ['B7_STANDARD', 'B7'] };
     const targetFuelTypes = fuelTypeMap[fuelType] || ['E10', 'E5'];
 
-    const normalised = stations.map(s => {
-      // Extract price for the requested fuel type
+    // Build joined dataset
+    const joined = pricesArray.map(s => {
+      const info = infoMap.get(s.node_id) || {};
+
+      // Extract price
       const fuelPrices = s.fuel_prices || [];
       let price = 0;
       for (const ft of targetFuelTypes) {
         const match = fuelPrices.find(fp => fp.fuel_type === ft);
         if (match && match.price > 0) { price = match.price; break; }
       }
+      if (!price) return null;
 
-      const sLat = parseFloat(s.latitude || s.lat || s.location?.latitude || s.geo?.lat || 0);
-      const sLng = parseFloat(s.longitude || s.lng || s.location?.longitude || s.geo?.lng || 0);
-      const distKm = (sLat && sLng) ? haversine(lat, lng, sLat, sLng) : 999;
+      // Extract coordinates from info endpoint
+      const sLat = parseFloat(info.latitude || info.lat || info.location?.latitude || s.latitude || s.lat || 0);
+      const sLng = parseFloat(info.longitude || info.lng || info.location?.longitude || s.longitude || s.lng || 0);
 
-      const lastUpdated = fuelPrices[0]?.price_last_updated || '';
+      const distKm = (sLat && sLng) ? minDistToRoute(sLat, sLng) : 999;
+      const address = [info.address_line_1 || info.address, info.town || info.city, info.postcode].filter(Boolean).join(', ');
 
       return {
-        name: s.trading_name || s.name || s.site_name || 'Fuel Station',
-        brand: s.brand || s.operator || '',
-        address: [s.address, s.town, s.postcode].filter(Boolean).join(', ') || '',
+        name: s.trading_name || info.trading_name || info.name || 'Fuel Station',
+        brand: info.brand || info.operator || '',
+        address,
         lat: sLat,
         lng: sLng,
         price,
         distKm,
-        lastUpdated,
+        lastUpdated: fuelPrices[0]?.price_last_updated || '',
       };
-    })
-    .filter(s => s.price > 50 && s.price < 300); // valid price range
+    }).filter(Boolean);
 
-    // Since batch endpoint doesn't include coordinates, sort by price only
-    // and note this is a national sample
-    const sorted = normalised
-      .filter(s => s.price > 0)
-      .sort((a, b) => a.price - b.price)
-      .slice(0, 5);
+    // If we have coordinates, filter to within 8 miles (13km) of route
+    const hasCoords = joined.some(s => s.lat && s.lng && s.distKm < 100);
+    let result_stations;
 
-    console.log(`Fuel Finder: ${normalised.length} stations with prices, cheapest: ${sorted[0]?.price}p`);
+    if (hasCoords) {
+      result_stations = joined
+        .filter(s => s.distKm < 13 && s.price > 50 && s.price < 300)
+        .sort((a, b) => a.price - b.price)
+        .slice(0, 5);
+      console.log(`Fuel Finder: ${result_stations.length} stations within 8 miles of route`);
+    } else {
+      // Fall back to national cheapest
+      result_stations = joined
+        .filter(s => s.price > 50 && s.price < 300)
+        .sort((a, b) => a.price - b.price)
+        .slice(0, 5);
+      console.log('Fuel Finder: no coordinates found, showing national cheapest');
+    }
 
-    const result = { stations: sorted, note: 'Prices from UK Fuel Finder — national sample, cheapest first' };
+    const result = {
+      stations: result_stations,
+      routeSpecific: hasCoords,
+    };
     fuelFinderCache.set(cacheKey, { data: result, timestamp: Date.now() });
     res.json(result);
 
