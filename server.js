@@ -402,7 +402,8 @@ async function loadPFSInfo() {
     const arr = Array.isArray(data) ? data : (data.data || data.results || []);
     if (arr.length > 0) {
       console.log('PFS info keys:', Object.keys(arr[0]).join(','));
-      console.log('PFS info sample:', JSON.stringify(arr[0]).slice(0, 400));
+      console.log('PFS info sample:', JSON.stringify(arr[0]).slice(0, 800));
+      console.log('PFS info location:', JSON.stringify(arr[0].location));
     }
     arr.forEach(s => { if (s.node_id) pfsInfoMap.set(s.node_id, s); });
     pfsInfoLoaded = true;
