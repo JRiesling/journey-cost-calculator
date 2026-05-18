@@ -500,32 +500,29 @@ app.post('/api/fuel-finder', async (req, res) => {
       }
       if (!price) return null;
 
-      // Extract coordinates — location object may contain lat/lng
-      const sLat = parseFloat(
-        info.latitude || info.lat ||
-        info.location?.latitude || info.location?.lat ||
-        info.location?.coordinates?.[1] ||
-        s.latitude || s.lat || 0
-      );
-      const sLng = parseFloat(
-        info.longitude || info.lng ||
-        info.location?.longitude || info.location?.lng ||
-        info.location?.coordinates?.[0] ||
-        s.longitude || s.lng || 0
-      );
+      // Extract coordinates from location object (confirmed field names from API)
+      const loc = info.location || {};
+      const sLat = parseFloat(loc.latitude || info.latitude || 0);
+      const sLng = parseFloat(loc.longitude || info.longitude || 0);
 
       const distKm = (sLat && sLng) ? minDistToRoute(sLat, sLng) : 999;
-      const address = [info.address_line_1 || info.address, info.town || info.city, info.postcode].filter(Boolean).join(', ');
+      const address = [
+        loc.address_line_1,
+        loc.city,
+        loc.postcode,
+      ].filter(Boolean).join(', ');
 
       return {
-        name: s.trading_name || info.trading_name || info.name || 'Fuel Station',
-        brand: info.brand || info.operator || '',
+        name: s.trading_name || info.trading_name || 'Fuel Station',
+        brand: info.brand_name || '',
         address,
         lat: sLat,
         lng: sLng,
         price,
         distKm,
         lastUpdated: fuelPrices[0]?.price_last_updated || '',
+        isSupermarket: info.is_supermarket_service_station || false,
+        isMotorway: info.is_motorway_service_station || false,
       };
     }).filter(Boolean);
 
