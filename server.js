@@ -361,40 +361,26 @@ async function getFuelFinderToken() {
   const clientSecret = process.env.FUEL_FINDER_CLIENT_SECRET;
   if (!clientId || !clientSecret) throw new Error('Fuel Finder credentials not configured');
 
-  // Try known token endpoints
-  const tokenUrls = [
-    'https://api.fuelfinder.service.gov.uk/oauth/token',
-    'https://api.fuelfinder.service.gov.uk/v1/oauth/token',
-    'https://auth.fuelfinder.service.gov.uk/oauth/token',
-  ];
+  const response = await fetch('https://www.fuel-finder.service.gov.uk/api/v1/oauth/generate_access_token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+      scope: 'fuelfinder.read',
+    }),
+  });
 
-  let lastError;
-  for (const tokenUrl of tokenUrls) {
-    try {
-      const response = await fetch(tokenUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          grant_type: 'client_credentials',
-          client_id: clientId,
-          client_secret: clientSecret,
-          scope: 'fuelfinder.read',
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        fuelFinderToken = data.access_token;
-        fuelFinderTokenExpiry = Date.now() + (data.expires_in * 1000) - 60000;
-        console.log(`Fuel Finder token obtained from: ${tokenUrl}`);
-        return fuelFinderToken;
-      }
-      lastError = `${tokenUrl}: ${response.status}`;
-    } catch (e) {
-      lastError = `${tokenUrl}: ${e.message}`;
-    }
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Fuel Finder token error: ${response.status} — ${errText}`);
   }
-  throw new Error(`Fuel Finder token failed. Last error: ${lastError}`);
+  const data = await response.json();
+  fuelFinderToken = data.access_token;
+  fuelFinderTokenExpiry = Date.now() + ((data.expires_in || 3600) * 1000) - 60000;
+  console.log('Fuel Finder token obtained successfully');
+  return fuelFinderToken;
 }
 
 // Cache fuel finder results for 30 minutes per location
@@ -415,9 +401,9 @@ app.post('/api/fuel-finder', async (req, res) => {
     const token = await getFuelFinderToken();
     const fuelParam = fuelType === 'diesel' ? 'diesel' : 'unleaded';
 
-    // Try fetching prices — API returns all stations, we filter by proximity
+    // Fetch batch 1 of all fuel prices
     const response = await fetch(
-      `https://api.fuelfinder.service.gov.uk/v1/prices?fuel_type=${fuelParam}&latitude=${lat}&longitude=${lng}&radius=5`,
+      'https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=1',
       {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -426,30 +412,14 @@ app.post('/api/fuel-finder', async (req, res) => {
       }
     );
 
-    // If location search not supported, try bulk endpoint
-    let rawData;
     if (!response.ok) {
-      console.log(`Location search failed (${response.status}), trying bulk endpoint...`);
-      const bulkResponse = await fetch(
-        `https://api.fuelfinder.service.gov.uk/v1/prices?fuel_type=${fuelParam}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-          },
-        }
-      );
-      if (!bulkResponse.ok) {
-        const errText = await bulkResponse.text();
-        console.error('Fuel Finder bulk error:', bulkResponse.status, errText);
-        return res.status(502).json({ error: 'Fuel Finder unavailable', detail: errText });
-      }
-      rawData = await bulkResponse.json();
-    } else {
-      rawData = await response.json();
+      const errText = await response.text();
+      console.error('Fuel Finder prices error:', response.status, errText);
+      return res.status(502).json({ error: 'Fuel Finder unavailable', detail: errText.slice(0, 200) });
     }
 
-    console.log('Fuel Finder raw response type:', typeof rawData, Array.isArray(rawData) ? 'array len:'+rawData.length : Object.keys(rawData).join(','));
+    const rawData = await response.json();
+    console.log('Fuel Finder response shape:', typeof rawData, Array.isArray(rawData) ? 'array len:'+rawData.length : Object.keys(rawData).slice(0,5).join(','));
 
     // Handle different response shapes
     let stations = [];
@@ -461,10 +431,13 @@ app.post('/api/fuel-finder', async (req, res) => {
       stations = rawData.results;
     } else if (rawData.data) {
       stations = rawData.data;
+    } else if (rawData.pfs) {
+      stations = rawData.pfs;
+    } else if (rawData.fuelPrices) {
+      stations = rawData.fuelPrices;
     } else {
-      // Log what we got so we can adapt
-      console.log('Unexpected Fuel Finder response shape:', JSON.stringify(rawData).slice(0, 500));
-      return res.status(502).json({ error: 'Unexpected API response format', sample: JSON.stringify(rawData).slice(0, 200) });
+      console.log('Unexpected response:', JSON.stringify(rawData).slice(0, 500));
+      return res.status(502).json({ error: 'Unexpected API response', sample: JSON.stringify(rawData).slice(0, 300) });
     }
 
     if (!stations.length) {
