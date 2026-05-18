@@ -680,13 +680,13 @@
     <div class="card" style="border-color:var(--accent-border);background:var(--accent-light);">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
         <i class="ti ti-gas-station" style="color:var(--accent);font-size:18px;" aria-hidden="true"></i>
-        <div class="section-title" style="margin-bottom:0;color:var(--accent-text);">Cheapest fuel on your route</div>
+        <div class="section-title" style="margin-bottom:0;color:var(--accent-text);">Cheapest fuel in the UK right now</div>
       </div>
       <div id="fuel-finder-results">
         <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:0;">
-          <i class="ti ti-search" aria-hidden="true"></i> Find cheapest petrol stations on my route
+          <i class="ti ti-search" aria-hidden="true"></i> Find cheapest petrol stations — live prices
         </button>
-        <p class="tip" style="margin-top:8px;color:var(--accent-text);">Powered by the UK Government Fuel Finder — live prices from all major forecourts · UK routes only</p>
+        <p class="tip" style="margin-top:8px;color:var(--accent-text);">Powered by the UK Government Fuel Finder — prices updated within 30 minutes · UK only</p>
       </div>
     </div>
   </div>
@@ -1604,7 +1604,7 @@ async function findCheapestFuel() {
 
     document.getElementById('fuel-finder-results').innerHTML = `
       <p style="font-size:13px;color:var(--accent-text);margin-bottom:10px;">
-        Live ${fuelLabel} prices from stations on your route — sorted cheapest first:
+        Cheapest UK ${fuelLabel} prices right now — updated within 30 minutes of any change:
       </p>
       ${unique.map((s, i) => `
         <div class="fuel-station-card ${i === 0 ? 'cheapest' : ''}">
