@@ -1588,11 +1588,16 @@ async function findCheapestFuel() {
 
     const allStations = data.stations;
     const routeSpecific = data.routeSpecific;
+    const radiusUsed = data.radiusUsed;
 
     const unique = allStations;
     const cheapest = unique[0];
     const fuelLabel = fuelType === 'diesel' ? 'Diesel' : 'Petrol (E10)';
-    const locationLabel = routeSpecific ? 'on your route' : 'in the UK (route-specific data coming soon)';
+    const radiusLabel = radiusUsed === 1 ? 'within 1 mile of your route' :
+                        radiusUsed === 3 ? 'within 3 miles of your route' :
+                        radiusUsed === 8 ? 'within 8 miles of your route' :
+                        'cheapest in the UK (route-specific coming soon)';
+    const locationLabel = routeSpecific ? radiusLabel : 'in the UK (route-specific coming soon)';
 
     document.getElementById('fuel-finder-results').innerHTML = `
       <p style="font-size:13px;color:var(--accent-text);margin-bottom:10px;">
@@ -1618,7 +1623,7 @@ async function findCheapestFuel() {
         `<div style="font-size:12px;color:var(--accent-text);margin-top:8px;padding:8px;background:var(--card);border-radius:var(--radius);">
           💡 Filling up at ${cheapest.name} (${cheapest.price.toFixed(1)}p/L) instead of the UK average saves you approximately ${((fuelType === 'diesel' ? 188.8 : 156.8) - cheapest.price).toFixed(1)}p per litre
         </div>` : ''}
-      <p style="font-size:11px;color:var(--accent-text);margin-top:8px;">${routeSpecific ? 'Stations within 8 miles of your route' : 'Cheapest UK prices — route-specific coming soon'} · UK Government Fuel Finder · updated within 30 mins</p>
+      <p style="font-size:11px;color:var(--accent-text);margin-top:8px;">${routeSpecific ? `Stations ${radiusLabel}` : 'Cheapest UK prices — route-specific coming soon'} · UK Government Fuel Finder · updated within 30 mins</p>
       <button onclick="findCheapestFuel()" style="background:none;border:none;color:var(--accent-text);font-size:12px;cursor:pointer;margin-top:4px;text-decoration:underline;">🔄 Refresh prices</button>`;
 
   } catch (err) {
