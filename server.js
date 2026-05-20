@@ -198,24 +198,22 @@ app.post('/api/route', async (req, res) => {
     const aroad    = Math.round((aroadMetres / total) * 100) / 100;
     const motorway = Math.round((1 - urban - aroad) * 100) / 100; // ensures sum = 1.0
 
-    // Extract waypoints for fuel finder (start, ~25%, ~50%, ~75%, end)
+    // Extract waypoints for fuel finder — use every step location for good coverage
     const leg = route.legs?.[0];
     const waypoints = [];
     if (leg?.startLocation?.latLng) {
       waypoints.push({ lat: leg.startLocation.latLng.latitude, lng: leg.startLocation.latLng.longitude });
     }
-    const stepCount = steps.length;
-    if (stepCount > 4) {
-      [Math.floor(stepCount*0.25), Math.floor(stepCount*0.5), Math.floor(stepCount*0.75)].forEach(idx => {
-        const step = steps[idx];
-        if (step?.startLocation?.latLng) {
-          waypoints.push({ lat: step.startLocation.latLng.latitude, lng: step.startLocation.latLng.longitude });
-        }
-      });
-    }
+    // Add every step location — gives a waypoint roughly every few miles
+    steps.forEach(step => {
+      if (step?.startLocation?.latLng) {
+        waypoints.push({ lat: step.startLocation.latLng.latitude, lng: step.startLocation.latLng.longitude });
+      }
+    });
     if (leg?.endLocation?.latLng) {
       waypoints.push({ lat: leg.endLocation.latLng.latitude, lng: leg.endLocation.latLng.longitude });
     }
+    console.log(`Route waypoints extracted: ${waypoints.length}`);
 
     const result = {
       distance: Math.round(distance * 10) / 10,
@@ -552,28 +550,52 @@ app.post('/api/fuel-finder', async (req, res) => {
       };
     }).filter(Boolean);
 
-    // If we have coordinates, filter to within 8 miles (13km) of route
+    // If we have coordinates, filter with progressive radius fallback
     const hasCoords = joined.some(s => s.lat && s.lng && s.distKm < 100);
     let result_stations;
+    let radiusUsed;
 
     if (hasCoords) {
+      // Try 1 mile (1.6km) first
       result_stations = joined
-        .filter(s => s.distKm < 13 && s.price > 50 && s.price < 300)
+        .filter(s => s.distKm < 1.6 && s.price > 50 && s.price < 300)
         .sort((a, b) => a.price - b.price)
         .slice(0, 5);
-      console.log(`Fuel Finder: ${result_stations.length} stations within 8 miles of route`);
+      radiusUsed = 1;
+
+      // Fall back to 3 miles (4.8km) if fewer than 3 found
+      if (result_stations.length < 3) {
+        result_stations = joined
+          .filter(s => s.distKm < 4.8 && s.price > 50 && s.price < 300)
+          .sort((a, b) => a.price - b.price)
+          .slice(0, 5);
+        radiusUsed = 3;
+      }
+
+      // Fall back to 8 miles (13km) if still fewer than 3
+      if (result_stations.length < 3) {
+        result_stations = joined
+          .filter(s => s.distKm < 13 && s.price > 50 && s.price < 300)
+          .sort((a, b) => a.price - b.price)
+          .slice(0, 5);
+        radiusUsed = 8;
+      }
+
+      console.log(`Fuel Finder: ${result_stations.length} stations within ${radiusUsed} mile(s) of route`);
     } else {
       // Fall back to national cheapest
       result_stations = joined
         .filter(s => s.price > 50 && s.price < 300)
         .sort((a, b) => a.price - b.price)
         .slice(0, 5);
+      radiusUsed = null;
       console.log('Fuel Finder: no coordinates found, showing national cheapest');
     }
 
     const result = {
       stations: result_stations,
       routeSpecific: hasCoords,
+      radiusUsed,
     };
     fuelFinderCache.set(cacheKey, { data: result, timestamp: Date.now() });
     res.json(result);
