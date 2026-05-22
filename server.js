@@ -390,7 +390,7 @@ async function loadPFSInfo() {
     const token = await getFuelFinderToken();
     let totalLoaded = 0;
 
-    for (let batch = 1; batch <= 8; batch++) {
+    for (let batch = 1; batch <= 20; batch++) {
       try {
         const res = await fetch(
           `https://www.fuel-finder.service.gov.uk/api/v1/pfs?batch-number=${batch}`,
@@ -426,7 +426,7 @@ async function loadFuelPrices() {
     const token = await getFuelFinderToken();
     let totalLoaded = 0;
 
-    for (let batch = 1; batch <= 8; batch++) {
+    for (let batch = 1; batch <= 20; batch++) {
       try {
         const res = await fetch(
           `https://www.fuel-finder.service.gov.uk/api/v1/pfs/fuel-prices?batch-number=${batch}`,

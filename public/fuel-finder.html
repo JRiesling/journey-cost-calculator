@@ -42,8 +42,13 @@
     var map = null;
     var mapsLoaded = false;
 
+    function showMapFallback() {
+      document.getElementById('map').style.display = 'none';
+      document.getElementById('map-fallback').style.display = 'flex';
+    }
+
     fetch('/api/maps-key').then(r => r.json()).then(({ key }) => {
-      if (!key) { console.error('No Maps key returned'); return; }
+      if (!key) { console.error('No Maps key returned'); showMapFallback(); return; }
       window.initMap = function() {
         mapsLoaded = true;
         map = new google.maps.Map(document.getElementById('map'), {
@@ -61,8 +66,9 @@
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`;
       script.async = true;
+      script.onerror = () => { console.error('Maps script failed'); showMapFallback(); };
       document.head.appendChild(script);
-    }).catch(err => console.error('Maps key fetch failed:', err));
+    }).catch(err => { console.error('Maps key fetch failed:', err); showMapFallback(); });
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -256,7 +262,13 @@
   </div>
 
   <!-- Map -->
-  <div id="map"></div>
+  <div id="map-container" style="position:relative;">
+    <div id="map"></div>
+    <div id="map-fallback" style="display:none;width:100%;height:calc(100vh - 60px);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-tertiary);font-size:14px;">
+      <i class="ti ti-map-off" style="font-size:40px;" aria-hidden="true"></i>
+      <p>Map unavailable — station results shown on the left</p>
+    </div>
+  </div>
 </div>
 
 <footer>
