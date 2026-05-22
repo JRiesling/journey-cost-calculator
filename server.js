@@ -613,6 +613,11 @@ app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime
 app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
 app.get('/fuel-prices', (req, res) => res.sendFile(path.join(__dirname, 'public', 'fuel-prices.html')));
 app.get('/environment', (req, res) => res.sendFile(path.join(__dirname, 'public', 'environment.html')));
+app.get('/fuel-finder', (req, res) => res.sendFile(path.join(__dirname, 'public', 'fuel-finder.html')));
+// Safe endpoint to provide Maps key for client-side map rendering
+app.get('/api/maps-key', (req, res) => {
+  res.json({ key: process.env.GOOGLE_MAPS_API_KEY || '' });
+});
 app.get('/uk', (req, res) => res.sendFile(path.join(__dirname, 'public', 'uk.html')));
 app.get('/us', (req, res) => res.sendFile(path.join(__dirname, 'public', 'us.html')));
 app.get('/australia', (req, res) => res.sendFile(path.join(__dirname, 'public', 'australia.html')));
