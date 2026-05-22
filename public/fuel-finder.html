@@ -38,11 +38,25 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
   <!-- Google Maps loaded dynamically after key fetch -->
   <script>
-    // Load Google Maps with key from server
+    let mapsLoaded = false;
     fetch('/api/maps-key').then(r => r.json()).then(({ key }) => {
       if (!key) return;
+      window.initMap = function() {
+        mapsLoaded = true;
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 52.5, lng: -1.5 },
+          zoom: 6,
+          styles: [
+            { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
+            { featureType: 'transit', elementType: 'labels', stylers: [{ visibility: 'off' }] },
+          ],
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+        });
+      };
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=initMap`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`;
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
@@ -142,6 +156,8 @@
     #map { width: 100%; height: calc(100vh - 60px); position: sticky; top: 60px; }
     @media (max-width: 768px) { #map { height: 350px; position: relative; top: 0; } }
 
+    .hidden { display: none; }
+
     /* ── Status ── */
     .status { padding: 1rem; text-align: center; font-size: 14px; color: var(--text-tertiary); }
     .loading { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--accent-text); font-size: 14px; padding: 1rem; }
@@ -182,14 +198,36 @@
     </div>
 
     <div class="card">
-      <div style="margin-bottom:12px;">
-        <label for="origin-input">From</label>
-        <input type="text" id="origin-input" placeholder="e.g. Manchester" autocomplete="off" />
+      <!-- Mode toggle -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+        <button class="fuel-btn active" id="mode-single" onclick="setMode('single')">
+          <i class="ti ti-map-pin" aria-hidden="true"></i> Near a location
+        </button>
+        <button class="fuel-btn" id="mode-route" onclick="setMode('route')">
+          <i class="ti ti-route" aria-hidden="true"></i> On a route
+        </button>
       </div>
-      <div style="margin-bottom:14px;">
-        <label for="dest-input">To</label>
-        <input type="text" id="dest-input" placeholder="e.g. London" autocomplete="off" />
+
+      <!-- Single location inputs -->
+      <div id="section-single">
+        <div style="margin-bottom:14px;">
+          <label for="location-input">Location</label>
+          <input type="text" id="location-input" placeholder="e.g. Birmingham, B1 1AA, or postcode" autocomplete="off" />
+        </div>
       </div>
+
+      <!-- Route inputs -->
+      <div id="section-route" class="hidden">
+        <div style="margin-bottom:12px;">
+          <label for="origin-input">From</label>
+          <input type="text" id="origin-input" placeholder="e.g. Manchester" autocomplete="off" />
+        </div>
+        <div style="margin-bottom:14px;">
+          <label for="dest-input">To</label>
+          <input type="text" id="dest-input" placeholder="e.g. London" autocomplete="off" />
+        </div>
+      </div>
+
       <div class="fuel-toggle">
         <button class="fuel-btn active" id="btn-petrol" onclick="setFuel('petrol')">
           <i class="ti ti-droplet" aria-hidden="true"></i> Petrol
@@ -238,9 +276,22 @@
 <script>
 // ── State ──────────────────────────────────────────────────────────────────────
 let fuelType = 'petrol';
+let searchMode = 'single'; // 'single' or 'route'
 let map, routePolyline;
 let markers = [];
 let selectedStation = null;
+
+// ── Mode toggle ────────────────────────────────────────────────────────────────
+function setMode(mode) {
+  searchMode = mode;
+  document.getElementById('mode-single').classList.toggle('active', mode === 'single');
+  document.getElementById('mode-route').classList.toggle('active', mode === 'route');
+  document.getElementById('section-single').classList.toggle('hidden', mode !== 'single');
+  document.getElementById('section-route').classList.toggle('hidden', mode !== 'route');
+  document.getElementById('search-btn').innerHTML = mode === 'single'
+    ? '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel nearby'
+    : '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel on route';
+}
 
 // ── Cookie consent ─────────────────────────────────────────────────────────────
 (function() { if (!localStorage.getItem('fs_cookie_consent')) document.getElementById('cookie-banner').style.display = 'block'; })();
@@ -251,21 +302,6 @@ function setFuel(type) {
   fuelType = type;
   document.getElementById('btn-petrol').classList.toggle('active', type === 'petrol');
   document.getElementById('btn-diesel').classList.toggle('active', type === 'diesel');
-}
-
-// ── Map init ───────────────────────────────────────────────────────────────────
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 52.5, lng: -1.5 },
-    zoom: 6,
-    styles: [
-      { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-      { featureType: 'transit', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-    ],
-    mapTypeControl: false,
-    streetViewControl: false,
-    fullscreenControl: false,
-  });
 }
 
 // ── Clear map ──────────────────────────────────────────────────────────────────
@@ -340,66 +376,103 @@ function fmt(n) { return `£${n.toFixed(2)}`; }
 
 // ── Main search ────────────────────────────────────────────────────────────────
 async function findFuel() {
-  const origin = document.getElementById('origin-input').value.trim();
-  const dest = document.getElementById('dest-input').value.trim();
-  if (!origin || !dest) {
-    showStatus('Please enter both a start and end location.', 'error');
-    return;
-  }
-
   const btn = document.getElementById('search-btn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Calculating route...';
-
-  showLoading('Calculating your route...');
+  btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Searching...';
+  showLoading('Finding cheapest fuel stations...');
   clearMap();
 
   try {
-    // Step 1: Get route and waypoints
-    const routeRes = await fetch('/api/route', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ origin, destination: dest, country: 'GB' }),
-    });
-    const routeData = await routeRes.json();
-    if (routeData.error) { showStatus(routeData.error, 'error'); return; }
+    if (searchMode === 'single') {
+      // ── Single location mode ──────────────────────────────────────────────
+      const location = document.getElementById('location-input').value.trim();
+      if (!location) { showStatus('Please enter a location.', 'error'); return; }
 
-    // Draw route on map
-    if (routeData.waypoints?.length) drawRoute(routeData.waypoints);
+      // Geocode the location via route API (origin = destination = location)
+      const routeRes = await fetch('/api/route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin: location, destination: location, country: 'GB' }),
+      });
+      const routeData = await routeRes.json();
 
-    btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Finding cheapest stations...';
-    showLoading('Finding cheapest fuel stations on your route...');
+      // Use start point as single waypoint
+      const waypoint = routeData.waypoints?.[0];
+      if (!waypoint) { showStatus('Could not find that location. Try a postcode or town name.', 'error'); return; }
 
-    // Step 2: Find cheapest fuel stations
-    const fuelRes = await fetch('/api/fuel-finder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ waypoints: routeData.waypoints, fuelType }),
-    });
-    const fuelData = await fuelRes.json();
+      // Centre map on location
+      if (map) {
+        map.setCenter({ lat: waypoint.lat, lng: waypoint.lng });
+        map.setZoom(12);
+      }
 
-    if (!fuelData.stations?.length) {
-      showStatus('No fuel stations found on this route. UK routes only.', 'error');
-      return;
+      // Find stations near this point
+      const fuelRes = await fetch('/api/fuel-finder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ waypoints: [waypoint], fuelType }),
+      });
+      const fuelData = await fuelRes.json();
+
+      if (!fuelData.stations?.length) {
+        showStatus('No fuel stations found near this location. UK locations only.', 'error');
+        return;
+      }
+
+      fuelData.stations.forEach((s, i) => addStationMarker(s, i, false));
+      renderResults(fuelData, { distance: null, origin: location }, true);
+
+    } else {
+      // ── Route mode ───────────────────────────────────────────────────────
+      const origin = document.getElementById('origin-input').value.trim();
+      const dest = document.getElementById('dest-input').value.trim();
+      if (!origin || !dest) { showStatus('Please enter both a start and end location.', 'error'); return; }
+
+      btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Calculating route...';
+      showLoading('Calculating your route...');
+
+      const routeRes = await fetch('/api/route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ origin, destination: dest, country: 'GB' }),
+      });
+      const routeData = await routeRes.json();
+      if (routeData.error) { showStatus(routeData.error, 'error'); return; }
+
+      if (routeData.waypoints?.length) drawRoute(routeData.waypoints);
+
+      btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Finding cheapest stations...';
+      showLoading('Finding cheapest fuel stations on your route...');
+
+      const fuelRes = await fetch('/api/fuel-finder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ waypoints: routeData.waypoints, fuelType }),
+      });
+      const fuelData = await fuelRes.json();
+
+      if (!fuelData.stations?.length) {
+        showStatus('No fuel stations found on this route. UK routes only.', 'error');
+        return;
+      }
+
+      fuelData.stations.forEach((s, i) => addStationMarker(s, i, false));
+      renderResults(fuelData, routeData, false);
     }
-
-    // Add markers to map
-    fuelData.stations.forEach((s, i) => addStationMarker(s, i, false));
-
-    // Show results
-    renderResults(fuelData, routeData);
 
   } catch (err) {
     console.error(err);
     showStatus('Something went wrong. Please try again.', 'error');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel';
+    btn.innerHTML = searchMode === 'single'
+      ? '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel nearby'
+      : '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel on route';
   }
 }
 
 // ── Render results ─────────────────────────────────────────────────────────────
-function renderResults(fuelData, routeData) {
+function renderResults(fuelData, routeData, isSingle) {
   const stations = fuelData.stations;
   const cheapest = stations[0];
   const radiusUsed = fuelData.radiusUsed;
@@ -410,8 +483,13 @@ function renderResults(fuelData, routeData) {
 
   let html = '';
 
-  // Route summary
+  // Route/location summary
   html += `<div class="card" style="margin-bottom:12px;">
+    ${isSingle ? `
+    <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:0.5px solid var(--border);">
+      <span style="color:var(--text-secondary);">Location</span>
+      <span style="font-weight:600;">${document.getElementById('location-input').value}</span>
+    </div>` : `
     <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:0.5px solid var(--border);">
       <span style="color:var(--text-secondary);">Route</span>
       <span style="font-weight:600;">${document.getElementById('origin-input').value} → ${document.getElementById('dest-input').value}</span>
@@ -419,10 +497,10 @@ function renderResults(fuelData, routeData) {
     <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:0.5px solid var(--border);margin-top:6px;">
       <span style="color:var(--text-secondary);">Distance</span>
       <span style="font-weight:600;">${routeData.distance?.toFixed(0)} miles</span>
-    </div>
+    </div>`}
     <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;margin-top:6px;">
       <span style="color:var(--text-secondary);">Stations found</span>
-      <span style="font-weight:600;">${stations.length} within ${radiusLabel} of route</span>
+      <span style="font-weight:600;">${stations.length} within ${radiusLabel} ${isSingle ? 'of location' : 'of route'}</span>
     </div>
   </div>`;
 
