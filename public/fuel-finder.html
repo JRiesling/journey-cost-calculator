@@ -38,9 +38,12 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
   <!-- Google Maps loaded dynamically after key fetch -->
   <script>
-    let mapsLoaded = false;
+    // Declare map globally so all functions can access it
+    var map = null;
+    var mapsLoaded = false;
+
     fetch('/api/maps-key').then(r => r.json()).then(({ key }) => {
-      if (!key) return;
+      if (!key) { console.error('No Maps key returned'); return; }
       window.initMap = function() {
         mapsLoaded = true;
         map = new google.maps.Map(document.getElementById('map'), {
@@ -58,9 +61,8 @@
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`;
       script.async = true;
-      script.defer = true;
       document.head.appendChild(script);
-    });
+    }).catch(err => console.error('Maps key fetch failed:', err));
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -95,7 +97,7 @@
     .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
     .logo-text { font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; }
     .logo-text span { color: var(--accent); }
-    nav { margin-left: auto; display: flex; overflow-x: auto; scrollbar-width: none; }
+  nav { margin-left: auto; display: flex; overflow-x: auto; scrollbar-width: none; }
     nav::-webkit-scrollbar { display: none; }
     nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; padding: 0 12px; height: 60px; display: flex; align-items: center; border-bottom: 2px solid transparent; white-space: nowrap; }
     nav a:hover { color: var(--text); }
@@ -179,8 +181,8 @@
     <span class="logo-text">Fuel<span>Smarter</span></span>
   </a>
   <nav>
+    <a href="/fuel-finder" class="active">⛽ Fuel Finder</a>
     <a href="/">Calculator</a>
-    <a href="/fuel-finder" class="active">Fuel Finder</a>
     <a href="/fuel-prices">Fuel Prices</a>
     <a href="/guides">Guides</a>
     <a href="/ev-calculator">EV</a>
@@ -275,11 +277,11 @@
 
 <script>
 // ── State ──────────────────────────────────────────────────────────────────────
-let fuelType = 'petrol';
-let searchMode = 'single'; // 'single' or 'route'
-let map, routePolyline;
-let markers = [];
-let selectedStation = null;
+var fuelType = 'petrol';
+var searchMode = 'single';
+var routePolyline = null;
+var markers = [];
+var selectedStation = null;
 
 // ── Mode toggle ────────────────────────────────────────────────────────────────
 function setMode(mode) {
