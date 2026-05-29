@@ -19,7 +19,9 @@
     @media (prefers-color-scheme: dark) { :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --border-hover: rgba(255,255,255,0.2); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; } }
     body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
     header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    header .logo { text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    header .logo { text-decoration: none; display: flex; align-items: center; gap: 0; }
+header .logo .fuel { color: #1C1917; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; text-decoration: underline; text-decoration-color: #2D6A4F; text-decoration-thickness: 2px; text-underline-offset: 3px; }
     nav { margin-left: auto; display: flex; gap: 1.25rem; flex-wrap: wrap; }
     nav a { text-decoration: none; color: var(--text-secondary); font-size: 14px; }
     nav a:hover, nav a.active { color: var(--text); }
