@@ -353,7 +353,7 @@ function renderResults(fuelData,routeData,isSingle){
 
   var html='<div class="summary-card">';
   html+='<div class="summary-row"><span class="summary-label">'+(isSingle?'Location':'Route')+'</span><span class="summary-value">'+locationName+'</span></div>';
-  if(!isSingle&&routeData&&routeData.distance)'<div class="summary-row"><span class="summary-label">Distance</span><span class="summary-value">'+(routeData.distanceMiles||routeData.distance).toFixed(0)+' miles</span></div>';
+  if(!isSingle&&routeData&&routeData.distance)html+='<div class="summary-row"><span class="summary-label">Distance</span><span class="summary-value">'+(routeData.distanceMiles||routeData.distance).toFixed(0)+' miles</span></div>';
   html+='<div class="summary-row"><span class="summary-label">Stations</span><span class="summary-value">'+stations.length+' within '+radiusLabel+'</span></div>';
   html+='</div>';
 
@@ -363,7 +363,7 @@ function renderResults(fuelData,routeData,isSingle){
 
   stations.forEach(function(s,i){
     html+='<div class="station-card'+(i===0?' cheapest':'')+'" onclick="selectStation('+i+')" id="station-'+i+'">';
-    html+='<div class="station-rank'+(i===0?' top':'')">'+(i===0?'⭐':(i+1))+'</div>';
+    html+='<div class="station-rank'+(i===0?' top':'')+'">'+( i===0?'⭐':(i+1))+'</div>';
     html+='<div class="station-info">';
     html+='<div class="station-name">'+(s.brand?s.brand+' — ':'')+s.name+'</div>';
     if(s.address)html+='<div class="station-address">'+s.address+'</div>';
