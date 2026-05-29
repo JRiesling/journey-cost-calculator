@@ -13,62 +13,36 @@
   <meta property="og:url" content="https://fuel-smarter.com/fuel-finder" />
   <meta property="og:type" content="website" />
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Fuel Smarter — Fuel Finder",
-    "description": "Find the cheapest petrol and diesel stations on your UK route using live government fuel price data.",
-    "url": "https://fuel-smarter.com/fuel-finder",
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" }
-  }
-  </script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Fuel Smarter — Fuel Finder","description":"Find the cheapest petrol and diesel stations on your UK route using live government fuel price data.","url":"https://fuel-smarter.com/fuel-finder","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"}}</script>
 
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-MPGYCEEDJQ');
-  </script>
-  <!-- Google AdSense -->
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MPGYCEEDJQ');</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
-  <!-- Google Maps loaded dynamically after key fetch -->
+
+  <!-- Maps loaded dynamically -->
   <script>
-    // Declare map globally so all functions can access it
     var map = null;
     var mapsLoaded = false;
-
     function showMapFallback() {
-      document.getElementById('map').style.display = 'none';
-      document.getElementById('map-fallback').style.display = 'flex';
+      var m = document.getElementById('map');
+      if (m) m.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#A8A29E;font-family:Inter,sans-serif;font-size:14px;"><span style="font-size:40px;">🗺️</span><p>Map unavailable — results shown on left</p></div>';
     }
-
-    fetch('/api/maps-key').then(r => r.json()).then(({ key }) => {
-      if (!key) { console.error('No Maps key returned'); showMapFallback(); return; }
-      window.initMap = function() {
-        mapsLoaded = true;
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: { lat: 52.5, lng: -1.5 },
-          zoom: 6,
-          styles: [
-            { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-            { featureType: 'transit', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-          ],
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: false,
+    fetch('/api/maps-key').then(r=>r.json()).then(({key})=>{
+      if(!key){showMapFallback();return;}
+      window.initMap=function(){
+        mapsLoaded=true;
+        map=new google.maps.Map(document.getElementById('map'),{
+          center:{lat:52.5,lng:-1.5},zoom:6,
+          styles:[{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'transit',elementType:'labels',stylers:[{visibility:'off'}]}],
+          mapTypeControl:false,streetViewControl:false,fullscreenControl:false
         });
       };
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`;
-      script.async = true;
-      script.onerror = () => { console.error('Maps script failed'); showMapFallback(); };
-      document.head.appendChild(script);
-    }).catch(err => { console.error('Maps key fetch failed:', err); showMapFallback(); });
+      var s=document.createElement('script');
+      s.src='https://maps.googleapis.com/maps/api/js?key='+key+'&libraries=geometry&callback=initMap';
+      s.async=true;
+      s.onerror=function(){showMapFallback();};
+      document.head.appendChild(s);
+    }).catch(function(){showMapFallback();});
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -77,106 +51,74 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" />
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #F4F1EA; --card: #FDFCFA; --border: rgba(0,0,0,0.08);
-      --text: #1C1917; --text-secondary: #6B6560; --text-tertiary: #A8A29E;
-      --accent: #2D6A4F; --accent-light: #EAF4EE; --accent-border: #95C9A8; --accent-text: #1A4731;
-      --warning-bg: #FEF3C7; --warning-text: #78350F;
-      --radius: 10px; --radius-lg: 16px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-      --shadow-lg: 0 4px 24px rgba(0,0,0,0.08);
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #171512; --card: #1F1E1B; --border: rgba(255,255,255,0.08);
-        --text: #E8E4DC; --text-secondary: #9B9690; --text-tertiary: #6B6560;
-        --accent: #40916C; --accent-light: #1A2E22; --accent-border: #2D6A4F; --accent-text: #95C9A8;
-        --warning-bg: #2D1F0A; --warning-text: #FCD34D;
-      }
-    }
-    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; min-height: 100vh; }
-
-    /* ── Header ── */
-    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 60px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 200; box-shadow: var(--shadow); }
-    .logo-mark { width: 34px; height: 34px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .logo-text { font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; }
-    .logo-text span { color: var(--accent); }
-  nav { margin-left: auto; display: flex; overflow-x: auto; scrollbar-width: none; }
-    nav::-webkit-scrollbar { display: none; }
-    nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; padding: 0 12px; height: 60px; display: flex; align-items: center; border-bottom: 2px solid transparent; white-space: nowrap; }
-    nav a:hover { color: var(--text); }
-    nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-    /* ── Layout ── */
-    .page { display: grid; grid-template-columns: 420px 1fr; min-height: calc(100vh - 60px); }
-    @media (max-width: 768px) { .page { grid-template-columns: 1fr; } }
-
-    /* ── Left panel ── */
-    .panel { padding: 1.5rem; overflow-y: auto; max-height: calc(100vh - 60px); }
-    @media (max-width: 768px) { .panel { max-height: none; } }
-
-    .hero { margin-bottom: 1.5rem; }
-    .hero h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 6px; }
-    .hero p { font-size: 14px; color: var(--text-secondary); }
-    .live-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-light); color: var(--accent-text); border: 1px solid var(--accent-border); border-radius: 20px; padding: 3px 10px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
-    .live-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-    /* ── Form ── */
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
-    label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-    input[type="text"] { width: 100%; height: 44px; border: 1.5px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font-size: 15px; padding: 0 12px; font-family: var(--font); outline: none; transition: border-color 0.15s; }
-    input[type="text"]:focus { border-color: var(--accent); }
-    .fuel-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
-    .fuel-btn { height: 42px; border: 1.5px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font); display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
-    .fuel-btn.active { border-color: var(--accent-border); background: var(--accent-light); color: var(--accent-text); }
-    .search-btn { width: 100%; height: 48px; background: var(--accent); color: white; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--font); display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; }
-    .search-btn:hover { background: #235c42; }
-    .search-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    /* ── Results ── */
-    #results-panel { margin-top: 0.5rem; }
-    .station-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 12px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.15s; }
-    .station-card:hover { border-color: var(--accent-border); box-shadow: var(--shadow-lg); }
-    .station-card.cheapest { border-color: var(--accent-border); border-width: 2px; background: var(--accent-light); }
-    .station-card.selected { border-color: var(--accent); border-width: 2px; }
-    .station-rank { width: 28px; height: 28px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); flex-shrink: 0; margin-top: 2px; }
-    .station-rank.top { background: var(--accent); border-color: var(--accent); color: white; }
-    .station-info { flex: 1; min-width: 0; }
-    .station-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .station-address { font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px; }
-    .station-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-    .station-tag { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 8px; background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
-    .station-tag.supermarket { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
-    .station-tag.motorway { background: #FEF3C7; color: #78350F; border-color: #FDE68A; }
-    .station-price { font-size: 24px; font-weight: 700; color: var(--accent); flex-shrink: 0; text-align: right; }
-    .station-price-label { font-size: 11px; color: var(--text-tertiary); text-align: right; }
-    .station-dist { font-size: 11px; color: var(--accent-text); font-weight: 500; }
-    .maps-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--accent); font-weight: 600; text-decoration: none; margin-top: 4px; }
-    .maps-link:hover { text-decoration: underline; }
-
-    .radius-note { font-size: 12px; color: var(--text-tertiary); text-align: center; padding: 8px; }
-    .saving-box { background: var(--accent-light); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 12px; margin-bottom: 8px; font-size: 13px; color: var(--accent-text); }
-
-    /* ── Map ── */
-    #map { width: 100%; height: calc(100vh - 60px); position: sticky; top: 60px; }
-    @media (max-width: 768px) { #map { height: 350px; position: relative; top: 0; } }
-
-    .hidden { display: none; }
-
-    /* ── Status ── */
-    .status { padding: 1rem; text-align: center; font-size: 14px; color: var(--text-tertiary); }
-    .loading { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--accent-text); font-size: 14px; padding: 1rem; }
-
-    /* ── SEO content ── */
-    .seo-section { margin-top: 1.5rem; }
-    .seo-section h2 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
-    .seo-section p { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.6; }
-
-    footer { background: var(--card); border-top: 1px solid var(--border); padding: 1.5rem; text-align: center; font-size: 12px; color: var(--text-tertiary); }
-    footer a { color: inherit; text-decoration: none; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#F4F1EA;--card:#FDFCFA;--border:rgba(0,0,0,0.08);--text:#1C1917;--text-secondary:#6B6560;--text-tertiary:#A8A29E;--accent:#2D6A4F;--accent-light:#EAF4EE;--accent-border:#95C9A8;--accent-text:#1A4731;--radius:10px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;}
+    @media(prefers-color-scheme:dark){:root{--bg:#171512;--card:#1F1E1B;--border:rgba(255,255,255,0.08);--text:#E8E4DC;--text-secondary:#9B9690;--text-tertiary:#6B6560;--accent:#40916C;--accent-light:#1A2E22;--accent-border:#2D6A4F;--accent-text:#95C9A8;}}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+    header{background:var(--card);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+    .logo-mark{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .logo-text{font-size:17px;font-weight:700;color:var(--text);text-decoration:none;}
+    .logo-text span{color:var(--accent);}
+    nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;}
+    nav::-webkit-scrollbar{display:none;}
+    nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
+    nav a:hover{color:var(--text);}
+    nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+    .page{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 60px);}
+    @media(max-width:768px){.page{grid-template-columns:1fr;}}
+    .panel{padding:1.25rem;overflow-y:auto;max-height:calc(100vh - 60px);}
+    @media(max-width:768px){.panel{max-height:none;}}
+    .hero{margin-bottom:1.25rem;}
+    .hero h1{font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:5px;}
+    .hero p{font-size:13px;color:var(--text-secondary);}
+    .live-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent-light);color:var(--accent-text);border:1px solid var(--accent-border);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;margin-bottom:8px;}
+    .live-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:1rem;box-shadow:var(--shadow);}
+    label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+    input[type="text"]{width:100%;height:42px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:15px;padding:0 12px;font-family:var(--font);outline:none;transition:border-color 0.15s;}
+    input[type="text"]:focus{border-color:var(--accent);}
+    .mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+    .fuel-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+    .toggle-btn{height:40px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text-secondary);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;}
+    .toggle-btn.active{border-color:var(--accent-border);background:var(--accent-light);color:var(--accent-text);}
+    .search-btn{width:100%;height:46px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;}
+    .search-btn:hover{background:#235c42;}
+    .search-btn:disabled{opacity:0.6;cursor:not-allowed;}
+    .hidden{display:none !important;}
+    #map{width:100%;height:calc(100vh - 60px);position:sticky;top:60px;}
+    @media(max-width:768px){#map{height:300px;position:relative;top:0;}}
+    .station-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
+    .station-card:hover{border-color:var(--accent-border);}
+    .station-card.cheapest{border-color:var(--accent-border);border-width:2px;background:var(--accent-light);}
+    .station-card.selected{border-color:var(--accent);border-width:2px;}
+    .station-rank{width:26px;height:26px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-secondary);flex-shrink:0;margin-top:2px;}
+    .station-rank.top{background:var(--accent);border-color:var(--accent);color:white;}
+    .station-info{flex:1;min-width:0;}
+    .station-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .station-address{font-size:11px;color:var(--text-tertiary);margin-bottom:3px;}
+    .station-meta{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+    .station-dist{font-size:11px;color:var(--accent-text);font-weight:500;}
+    .station-tag{font-size:10px;font-weight:600;padding:1px 5px;border-radius:6px;background:var(--bg);color:var(--text-secondary);border:1px solid var(--border);}
+    .station-tag.supermarket{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE;}
+    .station-tag.motorway{background:#FEF3C7;color:#78350F;border-color:#FDE68A;}
+    .maps-link{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--accent);font-weight:600;text-decoration:none;margin-top:3px;}
+    .station-price{font-size:22px;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right;line-height:1;}
+    .station-price-label{font-size:10px;color:var(--text-tertiary);text-align:right;}
+    .saving-box{background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;font-size:13px;color:var(--accent-text);}
+    .summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:10px;font-size:13px;}
+    .summary-row{display:flex;justify-content:space-between;padding:3px 0;}
+    .summary-row:not(:last-child){border-bottom:0.5px solid var(--border);}
+    .summary-label{color:var(--text-secondary);}
+    .summary-value{font-weight:600;}
+    .radius-note{font-size:11px;color:var(--text-tertiary);text-align:center;padding:6px;}
+    .status{padding:1rem;text-align:center;font-size:14px;color:var(--text-tertiary);}
+    .loading{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--accent-text);font-size:13px;padding:1rem;}
+    .seo-section{margin-top:1.25rem;}
+    .seo-section h2{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--text);}
+    .seo-section p{font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;}
+    footer{background:var(--card);border-top:1px solid var(--border);padding:1.25rem;text-align:center;font-size:12px;color:var(--text-tertiary);}
+    footer a{color:inherit;text-decoration:none;}
   </style>
 </head>
 <body>
@@ -197,86 +139,67 @@
 </header>
 
 <div class="page">
-  <!-- Left panel -->
   <div class="panel">
     <div class="hero">
       <div class="live-badge"><span class="live-dot"></span> Live prices</div>
       <h1>Cheapest fuel on your route ⛽</h1>
-      <p>Enter your journey and we'll find the cheapest petrol or diesel stations along your route — updated within 30 minutes by law.</p>
+      <p>Find the cheapest petrol or diesel stations near you or along your journey — updated within 30 minutes by law.</p>
     </div>
 
     <div class="card">
-      <!-- Mode toggle -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-        <button class="fuel-btn active" id="mode-single" onclick="setMode('single')">
-          <i class="ti ti-map-pin" aria-hidden="true"></i> Near a location
-        </button>
-        <button class="fuel-btn" id="mode-route" onclick="setMode('route')">
-          <i class="ti ti-route" aria-hidden="true"></i> On a route
-        </button>
+      <div class="mode-toggle">
+        <button class="toggle-btn active" id="mode-single" onclick="setMode('single')"><i class="ti ti-map-pin" aria-hidden="true"></i> Near a location</button>
+        <button class="toggle-btn" id="mode-route" onclick="setMode('route')"><i class="ti ti-route" aria-hidden="true"></i> On a route</button>
       </div>
 
-      <!-- Single location inputs -->
       <div id="section-single">
-        <div style="margin-bottom:14px;">
+        <div style="margin-bottom:12px;">
           <label for="location-input">Location</label>
-          <input type="text" id="location-input" placeholder="e.g. Birmingham, B1 1AA, or postcode" autocomplete="off" />
+          <input type="text" id="location-input" placeholder="e.g. Birmingham or B1 1AA" autocomplete="off" />
         </div>
       </div>
 
-      <!-- Route inputs -->
       <div id="section-route" class="hidden">
-        <div style="margin-bottom:12px;">
+        <div style="margin-bottom:10px;">
           <label for="origin-input">From</label>
           <input type="text" id="origin-input" placeholder="e.g. Manchester" autocomplete="off" />
         </div>
-        <div style="margin-bottom:14px;">
+        <div style="margin-bottom:12px;">
           <label for="dest-input">To</label>
           <input type="text" id="dest-input" placeholder="e.g. London" autocomplete="off" />
         </div>
       </div>
 
       <div class="fuel-toggle">
-        <button class="fuel-btn active" id="btn-petrol" onclick="setFuel('petrol')">
-          <i class="ti ti-droplet" aria-hidden="true"></i> Petrol
-        </button>
-        <button class="fuel-btn" id="btn-diesel" onclick="setFuel('diesel')">
-          <i class="ti ti-droplet-half-2" aria-hidden="true"></i> Diesel
-        </button>
+        <button class="toggle-btn active" id="btn-petrol" onclick="setFuel('petrol')"><i class="ti ti-droplet" aria-hidden="true"></i> Petrol</button>
+        <button class="toggle-btn" id="btn-diesel" onclick="setFuel('diesel')"><i class="ti ti-droplet-half-2" aria-hidden="true"></i> Diesel</button>
       </div>
+
       <button class="search-btn" id="search-btn" onclick="findFuel()">
-        <i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel
+        <i class="ti ti-search" aria-hidden="true"></i> <span id="search-btn-text">Find cheapest fuel nearby</span>
       </button>
     </div>
 
     <div id="results-panel">
-      <div class="status">Enter a route above to find the cheapest fuel stations along your way.</div>
+      <div class="status">Enter a location or route above to find the cheapest fuel stations.</div>
     </div>
 
     <div class="seo-section">
       <h2>How it works</h2>
-      <p>Fuel Smarter uses the UK Government's official Fuel Finder database — every petrol station in the UK is legally required to update their prices within 30 minutes of any change. We calculate your route, then search for the cheapest stations within 1 mile of your journey.</p>
-      <h2>Why prices vary so much</h2>
-      <p>Supermarket forecourts (Tesco, Asda, Sainsbury's, Morrisons) are consistently 3-8p per litre cheaper than branded stations and motorway services. On a 50-litre fill up that's £1.50-£4 difference — worth planning for on a long journey.</p>
+      <p>Fuel Smarter uses the UK Government's official Fuel Finder database — every petrol station is legally required to update prices within 30 minutes of any change. We search stations within 1 mile of your location or route.</p>
+      <h2>Why use supermarkets?</h2>
+      <p>Supermarket forecourts (Tesco, Asda, Sainsbury's, Morrisons) are consistently 3-8p/litre cheaper than branded stations and motorway services. On a 50-litre fill up that's up to £4 difference.</p>
     </div>
   </div>
 
-  <!-- Map -->
-  <div id="map-container" style="position:relative;">
-    <div id="map"></div>
-    <div id="map-fallback" style="display:none;width:100%;height:calc(100vh - 60px);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-tertiary);font-size:14px;">
-      <i class="ti ti-map-off" style="font-size:40px;" aria-hidden="true"></i>
-      <p>Map unavailable — station results shown on the left</p>
-    </div>
-  </div>
+  <div id="map"></div>
 </div>
 
 <footer>
-  <p>Prices updated within 30 minutes of any change · Powered by UK Government Fuel Finder · UK routes only</p>
-  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Calculator</a> · <a href="/guides">Guides</a> · <a href="/ev-calculator">EV Calculator</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+  <p>Prices updated within 30 minutes · UK Government Fuel Finder · UK only</p>
+  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Calculator</a> · <a href="/guides">Guides</a> · <a href="/ev-calculator">EV</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
 </footer>
 
-<!-- Cookie consent -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
   <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
     <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">We use cookies to see how people use Fuel Smarter. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
@@ -288,293 +211,188 @@
 </div>
 
 <script>
-// ── State ──────────────────────────────────────────────────────────────────────
-var fuelType = 'petrol';
-var searchMode = 'single';
-var routePolyline = null;
-var markers = [];
-var selectedStation = null;
+(function(){if(!localStorage.getItem('fs_cookie_consent'))document.getElementById('cookie-banner').style.display='block';})();
+function handleConsent(d){localStorage.setItem('fs_cookie_consent',d);document.getElementById('cookie-banner').style.display='none';}
 
-// ── Mode toggle ────────────────────────────────────────────────────────────────
-function setMode(mode) {
-  searchMode = mode;
-  document.getElementById('mode-single').classList.toggle('active', mode === 'single');
-  document.getElementById('mode-route').classList.toggle('active', mode === 'route');
-  document.getElementById('section-single').classList.toggle('hidden', mode !== 'single');
-  document.getElementById('section-route').classList.toggle('hidden', mode !== 'route');
-  document.getElementById('search-btn').innerHTML = mode === 'single'
-    ? '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel nearby'
-    : '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel on route';
+var fuelType='petrol';
+var searchMode='single';
+var routePolyline=null;
+var markers=[];
+
+function setMode(mode){
+  searchMode=mode;
+  document.getElementById('mode-single').classList.toggle('active',mode==='single');
+  document.getElementById('mode-route').classList.toggle('active',mode==='route');
+  document.getElementById('section-single').classList.toggle('hidden',mode!=='single');
+  document.getElementById('section-route').classList.toggle('hidden',mode!=='route');
+  document.getElementById('search-btn-text').textContent=mode==='single'?'Find cheapest fuel nearby':'Find cheapest fuel on route';
 }
 
-// ── Cookie consent ─────────────────────────────────────────────────────────────
-(function() { if (!localStorage.getItem('fs_cookie_consent')) document.getElementById('cookie-banner').style.display = 'block'; })();
-function handleConsent(d) { localStorage.setItem('fs_cookie_consent', d); document.getElementById('cookie-banner').style.display = 'none'; }
-
-// ── Fuel toggle ────────────────────────────────────────────────────────────────
-function setFuel(type) {
-  fuelType = type;
-  document.getElementById('btn-petrol').classList.toggle('active', type === 'petrol');
-  document.getElementById('btn-diesel').classList.toggle('active', type === 'diesel');
+function setFuel(type){
+  fuelType=type;
+  document.getElementById('btn-petrol').classList.toggle('active',type==='petrol');
+  document.getElementById('btn-diesel').classList.toggle('active',type==='diesel');
 }
 
-// ── Clear map ──────────────────────────────────────────────────────────────────
-function clearMap() {
-  markers.forEach(m => m.setMap(null));
-  markers = [];
-  if (routePolyline) { routePolyline.setMap(null); routePolyline = null; }
+function clearMap(){
+  markers.forEach(m=>{try{m.setMap(null);}catch(e){}});
+  markers=[];
+  if(routePolyline){try{routePolyline.setMap(null);}catch(e){} routePolyline=null;}
 }
 
-// ── Draw route on map ──────────────────────────────────────────────────────────
-function drawRoute(waypoints) {
-  if (!map || waypoints.length < 2) return;
-  const path = waypoints.map(wp => ({ lat: wp.lat, lng: wp.lng }));
-  routePolyline = new google.maps.Polyline({
-    path,
-    geodesic: true,
-    strokeColor: '#2D6A4F',
-    strokeOpacity: 0.6,
-    strokeWeight: 4,
-    map,
+// Draw actual road route from encoded polyline
+function drawRoute(encodedPolyline){
+  if(!map||!encodedPolyline)return;
+  // Decode polyline server-side gave us points, but we can also use Maps API decoder
+  if(google && google.maps && google.maps.geometry){
+    var path=google.maps.geometry.encoding.decodePath(encodedPolyline);
+    routePolyline=new google.maps.Polyline({path:path,geodesic:false,strokeColor:'#2D6A4F',strokeOpacity:0.7,strokeWeight:5,map:map});
+    var bounds=new google.maps.LatLngBounds();
+    path.forEach(function(p){bounds.extend(p);});
+    map.fitBounds(bounds,{top:60,right:40,bottom:60,left:40});
+  } else {
+    // Fallback: use waypoints array if geometry library not available
+    drawRouteFromWaypoints(window._lastWaypoints||[]);
+  }
+}
+
+function drawRouteFromWaypoints(waypoints){
+  if(!map||!waypoints.length)return;
+  var path=waypoints.map(function(wp){return{lat:wp.lat,lng:wp.lng};});
+  routePolyline=new google.maps.Polyline({path:path,geodesic:true,strokeColor:'#2D6A4F',strokeOpacity:0.6,strokeWeight:4,map:map});
+  var bounds=new google.maps.LatLngBounds();
+  path.forEach(function(p){bounds.extend(p);});
+  map.fitBounds(bounds,{top:60,right:40,bottom:60,left:40});
+}
+
+function addStationMarker(station,index){
+  if(!map||!station.lat||!station.lng)return;
+  var colour=index===0?'#2D6A4F':'#6B6560';
+  var marker=new google.maps.Marker({
+    position:{lat:station.lat,lng:station.lng},map:map,title:station.name,
+    label:{text:index===0?'⭐':String(index+1),color:'white',fontSize:index===0?'14px':'11px',fontWeight:'700'},
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:index===0?18:14,fillColor:colour,fillOpacity:1,strokeColor:'white',strokeWeight:2},
+    zIndex:index===0?10:5
   });
-  const bounds = new google.maps.LatLngBounds();
-  path.forEach(p => bounds.extend(p));
-  map.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
-}
-
-// ── Add station markers ────────────────────────────────────────────────────────
-function addStationMarker(station, index, isSelected) {
-  if (!map || !station.lat || !station.lng) return;
-  const colour = index === 0 ? '#2D6A4F' : '#6B6560';
-  const marker = new google.maps.Marker({
-    position: { lat: station.lat, lng: station.lng },
-    map,
-    title: station.name,
-    label: {
-      text: index === 0 ? '⭐' : String(index + 1),
-      color: 'white',
-      fontSize: index === 0 ? '14px' : '12px',
-      fontWeight: '700',
-    },
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: index === 0 ? 20 : 16,
-      fillColor: colour,
-      fillOpacity: 1,
-      strokeColor: 'white',
-      strokeWeight: 2,
-    },
-    zIndex: index === 0 ? 10 : 5,
-  });
-
-  const infoContent = `
-    <div style="font-family:'Inter',sans-serif;padding:4px;max-width:200px;">
-      <div style="font-weight:700;font-size:14px;margin-bottom:4px;">${station.name}</div>
-      <div style="font-size:22px;font-weight:700;color:#2D6A4F;">${station.price.toFixed(1)}p/L</div>
-      ${station.address ? `<div style="font-size:12px;color:#6B6560;margin-top:4px;">${station.address}</div>` : ''}
-      ${station.distKm && station.distKm < 100 ? `<div style="font-size:12px;color:#2D6A4F;font-weight:500;margin-top:2px;">📍 ${(station.distKm * 0.621).toFixed(1)} miles from route</div>` : ''}
-      <a href="https://www.google.com/maps/search/${encodeURIComponent(station.name + ' ' + (station.address || ''))}" target="_blank" style="font-size:12px;color:#2D6A4F;font-weight:600;text-decoration:none;display:inline-block;margin-top:6px;">Open in Maps →</a>
-    </div>`;
-
-  const infoWindow = new google.maps.InfoWindow({ content: infoContent });
-  marker.addListener('click', () => {
-    markers.forEach(m => m._infoWindow?.close());
-    infoWindow.open(map, marker);
-  });
-  marker._infoWindow = infoWindow;
+  var infoContent='<div style="font-family:Inter,sans-serif;padding:4px;max-width:200px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+station.name+'</div><div style="font-size:20px;font-weight:700;color:#2D6A4F;">'+station.price.toFixed(1)+'p/L</div>'+(station.address?'<div style="font-size:11px;color:#6B6560;margin-top:3px;">'+station.address+'</div>':'')+(station.distKm&&station.distKm<100?'<div style="font-size:11px;color:#2D6A4F;font-weight:500;margin-top:2px;">📍 '+(station.distKm*0.621).toFixed(1)+' miles from route</div>':'')+'<a href="https://www.google.com/maps/search/'+encodeURIComponent(station.name+' '+(station.address||''))+'" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;">Open in Maps →</a></div>';
+  var iw=new google.maps.InfoWindow({content:infoContent});
+  marker.addListener('click',function(){markers.forEach(function(m){if(m._iw)m._iw.close();});iw.open(map,marker);});
+  marker._iw=iw;
   markers.push(marker);
 }
 
-// ── Format helpers ─────────────────────────────────────────────────────────────
-function fmt(n) { return `£${n.toFixed(2)}`; }
+function showStatus(msg,type){document.getElementById('results-panel').innerHTML='<div class="status" style="color:'+(type==='error'?'#7F1D1D':'var(--text-tertiary)')+';">'+msg+'</div>';}
+function showLoading(msg){document.getElementById('results-panel').innerHTML='<div class="loading"><i class="ti ti-loader" aria-hidden="true"></i> '+msg+'</div>';}
 
-// ── Main search ────────────────────────────────────────────────────────────────
-async function findFuel() {
-  const btn = document.getElementById('search-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Searching...';
-  showLoading('Finding cheapest fuel stations...');
+async function findFuel(){
+  var btn=document.getElementById('search-btn');
+  btn.disabled=true;
   clearMap();
 
-  try {
-    if (searchMode === 'single') {
-      // ── Single location mode ──────────────────────────────────────────────
-      const location = document.getElementById('location-input').value.trim();
-      if (!location) { showStatus('Please enter a location.', 'error'); return; }
+  try{
+    var waypoints,routeData=null,isSingle=false;
 
-      // Geocode the location via route API (origin = destination = location)
-      const routeRes = await fetch('/api/route', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ origin: location, destination: location, country: 'GB' }),
-      });
-      const routeData = await routeRes.json();
-
-      // Use start point as single waypoint
-      const waypoint = routeData.waypoints?.[0];
-      if (!waypoint) { showStatus('Could not find that location. Try a postcode or town name.', 'error'); return; }
-
-      // Centre map on location
-      if (map) {
-        map.setCenter({ lat: waypoint.lat, lng: waypoint.lng });
-        map.setZoom(12);
-      }
-
-      // Find stations near this point
-      const fuelRes = await fetch('/api/fuel-finder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ waypoints: [waypoint], fuelType }),
-      });
-      const fuelData = await fuelRes.json();
-
-      if (!fuelData.stations?.length) {
-        showStatus('No fuel stations found near this location. UK locations only.', 'error');
-        return;
-      }
-
-      fuelData.stations.forEach((s, i) => addStationMarker(s, i, false));
-      renderResults(fuelData, { distance: null, origin: location }, true);
-
+    if(searchMode==='single'){
+      isSingle=true;
+      var location=document.getElementById('location-input').value.trim();
+      if(!location){showStatus('Please enter a location.','error');return;}
+      showLoading('Finding your location...');
+      var r=await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:location,destination:location,distUnit:'miles'})});
+      var rd=await r.json();
+      waypoints=rd.waypoints||[];
+      if(!waypoints.length){showStatus('Could not find that location. Try a postcode or town name.','error');return;}
+      if(map){map.setCenter({lat:waypoints[0].lat,lng:waypoints[0].lng});map.setZoom(12);}
     } else {
-      // ── Route mode ───────────────────────────────────────────────────────
-      const origin = document.getElementById('origin-input').value.trim();
-      const dest = document.getElementById('dest-input').value.trim();
-      if (!origin || !dest) { showStatus('Please enter both a start and end location.', 'error'); return; }
-
-      btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Calculating route...';
+      var origin=document.getElementById('origin-input').value.trim();
+      var dest=document.getElementById('dest-input').value.trim();
+      if(!origin||!dest){showStatus('Please enter both a start and end location.','error');return;}
       showLoading('Calculating your route...');
-
-      const routeRes = await fetch('/api/route', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ origin, destination: dest, country: 'GB' }),
-      });
-      const routeData = await routeRes.json();
-      if (routeData.error) { showStatus(routeData.error, 'error'); return; }
-
-      if (routeData.waypoints?.length) drawRoute(routeData.waypoints);
-
-      btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Finding cheapest stations...';
-      showLoading('Finding cheapest fuel stations on your route...');
-
-      const fuelRes = await fetch('/api/fuel-finder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ waypoints: routeData.waypoints, fuelType }),
-      });
-      const fuelData = await fuelRes.json();
-
-      if (!fuelData.stations?.length) {
-        showStatus('No fuel stations found on this route. UK routes only.', 'error');
-        return;
+      var r=await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:origin,destination:dest,distUnit:'miles'})});
+      routeData=await r.json();
+      if(routeData.error){showStatus(routeData.error,'error');return;}
+      waypoints=routeData.waypoints||[];
+      window._lastWaypoints=waypoints;
+      // Draw actual road route
+      if(routeData.polyline){
+        drawRoute(routeData.polyline);
+      } else if(waypoints.length){
+        drawRouteFromWaypoints(waypoints);
       }
-
-      fuelData.stations.forEach((s, i) => addStationMarker(s, i, false));
-      renderResults(fuelData, routeData, false);
     }
 
-  } catch (err) {
+    document.getElementById('search-btn-text').textContent='Finding stations...';
+    showLoading('Finding cheapest fuel stations...');
+
+    var fr=await fetch('/api/fuel-finder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({waypoints:waypoints,fuelType:fuelType})});
+    var fd=await fr.json();
+
+    if(!fd.stations||!fd.stations.length){showStatus('No fuel stations found. UK locations only.','error');return;}
+
+    fd.stations.forEach(function(s,i){addStationMarker(s,i);});
+    renderResults(fd,routeData,isSingle);
+
+  }catch(err){
     console.error(err);
-    showStatus('Something went wrong. Please try again.', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = searchMode === 'single'
-      ? '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel nearby'
-      : '<i class="ti ti-search" aria-hidden="true"></i> Find cheapest fuel on route';
+    showStatus('Something went wrong. Please try again.','error');
+  }finally{
+    btn.disabled=false;
+    document.getElementById('search-btn-text').textContent=searchMode==='single'?'Find cheapest fuel nearby':'Find cheapest fuel on route';
   }
 }
 
-// ── Render results ─────────────────────────────────────────────────────────────
-function renderResults(fuelData, routeData, isSingle) {
-  const stations = fuelData.stations;
-  const cheapest = stations[0];
-  const radiusUsed = fuelData.radiusUsed;
-  const fuelLabel = fuelType === 'diesel' ? 'Diesel' : 'Petrol (E10)';
-  const ukAvg = fuelType === 'diesel' ? 188.8 : 156.8;
-  const saving = ukAvg - cheapest.price;
-  const radiusLabel = radiusUsed === 1 ? '1 mile' : radiusUsed === 3 ? '3 miles' : '8 miles';
+function renderResults(fuelData,routeData,isSingle){
+  var stations=fuelData.stations;
+  var cheapest=stations[0];
+  var radiusUsed=fuelData.radiusUsed;
+  var fuelLabel=fuelType==='diesel'?'Diesel':'Petrol (E10)';
+  var ukAvg=fuelType==='diesel'?188.8:156.8;
+  var saving=ukAvg-cheapest.price;
+  var radiusLabel=radiusUsed===1?'1 mile':radiusUsed===3?'3 miles':'8 miles';
+  var locationName=isSingle?document.getElementById('location-input').value:(document.getElementById('origin-input').value+' → '+document.getElementById('dest-input').value);
 
-  let html = '';
+  var html='<div class="summary-card">';
+  html+='<div class="summary-row"><span class="summary-label">'+(isSingle?'Location':'Route')+'</span><span class="summary-value">'+locationName+'</span></div>';
+  if(!isSingle&&routeData&&routeData.distance)'<div class="summary-row"><span class="summary-label">Distance</span><span class="summary-value">'+(routeData.distanceMiles||routeData.distance).toFixed(0)+' miles</span></div>';
+  html+='<div class="summary-row"><span class="summary-label">Stations</span><span class="summary-value">'+stations.length+' within '+radiusLabel+'</span></div>';
+  html+='</div>';
 
-  // Route/location summary
-  html += `<div class="card" style="margin-bottom:12px;">
-    ${isSingle ? `
-    <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:0.5px solid var(--border);">
-      <span style="color:var(--text-secondary);">Location</span>
-      <span style="font-weight:600;">${document.getElementById('location-input').value}</span>
-    </div>` : `
-    <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:0.5px solid var(--border);">
-      <span style="color:var(--text-secondary);">Route</span>
-      <span style="font-weight:600;">${document.getElementById('origin-input').value} → ${document.getElementById('dest-input').value}</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:0.5px solid var(--border);margin-top:6px;">
-      <span style="color:var(--text-secondary);">Distance</span>
-      <span style="font-weight:600;">${routeData.distance?.toFixed(0)} miles</span>
-    </div>`}
-    <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;margin-top:6px;">
-      <span style="color:var(--text-secondary);">Stations found</span>
-      <span style="font-weight:600;">${stations.length} within ${radiusLabel} ${isSingle ? 'of location' : 'of route'}</span>
-    </div>
-  </div>`;
-
-  // Saving box
-  if (saving > 0) {
-    html += `<div class="saving-box">
-      💡 Filling up at <strong>${cheapest.name}</strong> (${cheapest.price.toFixed(1)}p/L) saves you <strong>${saving.toFixed(1)}p per litre</strong> vs the UK average
-    </div>`;
+  if(saving>0){
+    html+='<div class="saving-box">💡 Filling at <strong>'+cheapest.name+'</strong> ('+cheapest.price.toFixed(1)+'p/L) saves <strong>'+saving.toFixed(1)+'p/litre</strong> vs UK average</div>';
   }
 
-  // Station cards
-  stations.forEach((s, i) => {
-    html += `<div class="station-card ${i === 0 ? 'cheapest' : ''}" onclick="selectStation(${i})" id="station-${i}">
-      <div class="station-rank ${i === 0 ? 'top' : ''}">${i === 0 ? '⭐' : i + 1}</div>
-      <div class="station-info">
-        <div class="station-name">${s.brand ? s.brand + ' — ' : ''}${s.name}</div>
-        ${s.address ? `<div class="station-address">${s.address}</div>` : ''}
-        <div class="station-tags">
-          ${s.distKm && s.distKm < 100 ? `<span class="station-dist">📍 ${(s.distKm * 0.621).toFixed(1)} mi from route</span>` : ''}
-          ${s.isSupermarket ? '<span class="station-tag supermarket">🛒 Supermarket</span>' : ''}
-          ${s.isMotorway ? '<span class="station-tag motorway">🛣️ Motorway</span>' : ''}
-        </div>
-        <a href="https://www.google.com/maps/search/${encodeURIComponent(s.name + ' ' + (s.address || ''))}" target="_blank" rel="noopener" class="maps-link">
-          <i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps
-        </a>
-      </div>
-      <div>
-        <div class="station-price">${s.price.toFixed(1)}p</div>
-        <div class="station-price-label">per litre</div>
-      </div>
-    </div>`;
+  stations.forEach(function(s,i){
+    html+='<div class="station-card'+(i===0?' cheapest':'')+'" onclick="selectStation('+i+')" id="station-'+i+'">';
+    html+='<div class="station-rank'+(i===0?' top':'')">'+(i===0?'⭐':(i+1))+'</div>';
+    html+='<div class="station-info">';
+    html+='<div class="station-name">'+(s.brand?s.brand+' — ':'')+s.name+'</div>';
+    if(s.address)html+='<div class="station-address">'+s.address+'</div>';
+    html+='<div class="station-meta">';
+    if(s.distKm&&s.distKm<100)html+='<span class="station-dist">📍 '+(s.distKm*0.621).toFixed(1)+' mi</span>';
+    if(s.isSupermarket)html+='<span class="station-tag supermarket">🛒 Supermarket</span>';
+    if(s.isMotorway)html+='<span class="station-tag motorway">🛣️ Motorway</span>';
+    html+='</div>';
+    html+='<a href="https://www.google.com/maps/search/'+encodeURIComponent(s.name+' '+(s.address||''))+'" target="_blank" rel="noopener" class="maps-link"><i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps</a>';
+    html+='</div>';
+    html+='<div><div class="station-price">'+s.price.toFixed(1)+'p</div><div class="station-price-label">per litre</div></div>';
+    html+='</div>';
   });
 
-  html += `<div class="radius-note">Prices updated within 30 mins · UK Government Fuel Finder</div>`;
-  html += `<div style="margin-top:1rem;text-align:center;"><a href="/" style="font-size:13px;color:var(--accent);font-weight:600;text-decoration:none;">← Also calculate your full journey fuel cost</a></div>`;
+  html+='<div class="radius-note">Stations within '+radiusLabel+' · UK Gov Fuel Finder · updated within 30 mins</div>';
+  html+='<div style="margin-top:0.75rem;text-align:center;"><a href="/" style="font-size:12px;color:var(--accent);font-weight:600;text-decoration:none;">← Calculate full journey fuel cost</a></div>';
 
-  document.getElementById('results-panel').innerHTML = html;
+  document.getElementById('results-panel').innerHTML=html;
 }
 
-// ── Select station (highlight on map) ─────────────────────────────────────────
-function selectStation(index) {
-  document.querySelectorAll('.station-card').forEach((el, i) => {
-    el.classList.toggle('selected', i === index);
-  });
-  if (markers[index]) {
+function selectStation(index){
+  document.querySelectorAll('.station-card').forEach(function(el,i){el.classList.toggle('selected',i===index);});
+  if(markers[index]){
     map.panTo(markers[index].getPosition());
-    map.setZoom(14);
-    markers[index]._infoWindow?.open(map, markers[index]);
+    map.setZoom(15);
+    markers.forEach(function(m){if(m._iw)m._iw.close();});
+    markers[index]._iw.open(map,markers[index]);
   }
-}
-
-// ── Status helpers ─────────────────────────────────────────────────────────────
-function showStatus(msg, type) {
-  document.getElementById('results-panel').innerHTML = `<div class="status" style="color:${type === 'error' ? '#7F1D1D' : 'var(--text-tertiary)'};">${msg}</div>`;
-}
-function showLoading(msg) {
-  document.getElementById('results-panel').innerHTML = `<div class="loading"><i class="ti ti-loader" aria-hidden="true"></i> ${msg}</div>`;
 }
 </script>
-
 <script type="text/javascript" src="https://s.skimresources.com/js/302872X1790896.skimlinks.js"></script>
 </body>
 </html>
