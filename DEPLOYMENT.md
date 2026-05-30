@@ -115,7 +115,8 @@ To add adverts to your site:
 1. Go to https://adsense.google.com and apply
 2. Google will review your site (takes 1–14 days)
 3. Once approved, you'll get a code snippet to add to `public/index.html`
-4. Add it just before the closing `</head>` tag
+4. Add it just before the closing `<link rel="stylesheet" href="/style.css" />
+</head>` tag
 5. Then add ad unit code wherever you want ads to appear in the page
 
 Good ad placement for this app:
