@@ -65,6 +65,15 @@ app.post('/api/fuel-prices', async (req, res) => {
   try {
     const { country, currencyCode, fuelPriceNote } = req.body;
     if (!country) return res.status(400).json({ error: 'Country is required' });
+
+    // UK — use hardcoded current averages rather than AI (which returns stale data)
+    // Update these periodically to reflect RAC/AA tracked national averages
+    if (country === 'United Kingdom' || country === 'GB' || country === 'UK') {
+      const ukPrices = { petrol: 156.8, diesel: 188.8, currency_note: 'pence/litre — UK national average May 2026' };
+      fuelCache.set(country, { data: ukPrices, timestamp: Date.now() });
+      return res.json(ukPrices);
+    }
+
     const cached = fuelCache.get(country);
     if (cached && Date.now() - cached.timestamp < FUEL_TTL) return res.json({ ...cached.data, cached: true });
     const result = await callClaude(
