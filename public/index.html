@@ -1364,24 +1364,33 @@ function computeCost() {
       <div class="comparison-grid">
         <div class="scenario-card your-speed">
           <div class="scenario-label your-speed">Your speed</div>
-          <div class="scenario-cost">${fmt(yours.cost)}</div>
+          ${passengers>1?`
+          <div class="scenario-cost">${fmt(yours.cost/passengers)}</div>
+          <div class="scenario-time">per person · ${passengers} passengers</div>
+          <div class="scenario-time" style="margin-top:2px;color:var(--text-tertiary);">Total: ${fmt(yours.cost)}</div>`:`
+          <div class="scenario-cost">${fmt(yours.cost)}</div>`}
           <div class="scenario-time">${fmtTime(yours.totalMins)}</div>
           <div class="scenario-speed">${co.aroadLabel}: ${speedA} ${co.speedUnit} · ${co.motorwayLabel}: ${speedM} ${co.speedUnit}</div>
-          ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(yours.cost/passengers)} / person</div>`:''}
         </div>
         <div class="scenario-card limit">
           <div class="scenario-label limit">At speed limits</div>
-          <div class="scenario-cost">${fmt(limit.cost)}</div>
+          ${passengers>1?`
+          <div class="scenario-cost">${fmt(limit.cost/passengers)}</div>
+          <div class="scenario-time">per person · ${passengers} passengers</div>
+          <div class="scenario-time" style="margin-top:2px;color:var(--text-tertiary);">Total: ${fmt(limit.cost)}</div>`:`
+          <div class="scenario-cost">${fmt(limit.cost)}</div>`}
           <div class="scenario-time">${fmtTime(limit.totalMins)}</div>
           <div class="scenario-speed">${co.aroadLabel}: ${limitA} · ${co.motorwayLabel}: ${isGermany?speedM+'(no limit)':limitM} ${co.speedUnit}</div>
-          ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(limit.cost/passengers)} / person</div>`:''}
         </div>
         <div class="scenario-card">
           <div class="scenario-label">10 ${co.speedUnit} below limit</div>
-          <div class="scenario-cost">${fmt(slow.cost)}</div>
+          ${passengers>1?`
+          <div class="scenario-cost">${fmt(slow.cost/passengers)}</div>
+          <div class="scenario-time">per person · ${passengers} passengers</div>
+          <div class="scenario-time" style="margin-top:2px;color:var(--text-tertiary);">Total: ${fmt(slow.cost)}</div>`:`
+          <div class="scenario-cost">${fmt(slow.cost)}</div>`}
           <div class="scenario-time">${fmtTime(slow.totalMins)}</div>
           <div class="scenario-speed">${co.aroadLabel}: ${slowA} · ${co.motorwayLabel}: ${slowM} ${co.speedUnit}</div>
-          ${passengers>1?`<div class="scenario-time" style="margin-top:4px;">${fmt(slow.cost/passengers)} / person</div>`:''}
         </div>
       </div>
 
