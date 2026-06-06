@@ -26,19 +26,20 @@
     body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
     header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 60px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; width: 100%; overflow-x: hidden; }
     header .logo { text-decoration: none; display: flex; align-items: center; gap: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-header .logo .fuel { color: #1C1917; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; text-decoration: underline; text-decoration-color: #2D6A4F; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+    header .logo .fuel { color: #1C1917; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; text-decoration: underline; text-decoration-color: #2D6A4F; text-decoration-thickness: 2px; text-underline-offset: 3px; }
     nav { margin-left: auto; display: flex; gap: 1.25rem; flex-wrap: wrap; }
     nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; }
     nav a:hover, nav a.active { color: var(--text); }
     main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
     h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; }
-    h2 { font-size: 20px; font-weight: 600; margin: 2rem 0 1rem; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.06em; }
+    h2 { font-size: 12px; font-weight: 600; margin: 2rem 0 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
     p.intro { color: var(--text-secondary); margin-bottom: 2rem; font-size: 15px; }
     .article-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 2rem; }
     .article-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-decoration: none; display: block; transition: border-color 0.15s; }
     .article-card:hover { border-color: var(--border-hover); }
     .article-tag { font-size: 11px; font-weight: 500; color: var(--info-text); background: var(--info-bg); border-radius: 20px; padding: 2px 8px; display: inline-block; margin-bottom: 8px; }
+    .article-tag.green { color: var(--success-text); background: var(--success-bg); }
     .article-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
     .article-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
     .article-meta { font-size: 12px; color: var(--text-tertiary); display: flex; gap: 10px; }
@@ -58,8 +59,6 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-
-    // Set default consent state — denied until user accepts
     gtag('consent', 'default', {
       'ad_storage': 'denied',
       'ad_user_data': 'denied',
@@ -67,8 +66,6 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
       'analytics_storage': 'denied',
       'wait_for_update': 500
     });
-
-    // Check if user has already consented
     (function() {
       var consent = localStorage.getItem('fs_cookie_consent');
       if (consent === 'accepted') {
@@ -81,7 +78,6 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
       }
     })();
   </script>
-
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
   <script>
@@ -92,14 +88,11 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
   </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/style.css" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
 <header>
-  <a href="/" class="logo"><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span></a>
+  <a href="/" class="logo"><span class="fuel">Fuel</span><span class="smarter">Smarter</span></a>
   <nav>
     <a href="/">Calculator</a>
     <a href="/fuel-finder">⛽ Fuel Finder</a>
@@ -109,6 +102,7 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
     <a href="/uk">UK</a>
   </nav>
 </header>
+
 <main>
   <h1>Driving Guides</h1>
   <p class="intro">Evidence-based guides to help you spend less on fuel, reduce your emissions, and drive smarter — wherever you are in the world.</p>
@@ -150,6 +144,34 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
       <div class="article-title">Why Is Petrol a Different Price at Every Station?</div>
       <div class="article-desc">Why do prices vary by 15-20p per litre on the same road? A clear explanation of how UK fuel pricing really works.</div>
       <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+  </div>
+
+  <h2>Most fuel efficient cars</h2>
+  <div class="article-grid">
+    <a href="/guides/most-fuel-efficient-small-cars" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient Small Cars UK 2026</div>
+      <div class="article-desc">Top picks for city cars and superminis — from the Toyota Yaris Hybrid to the Peugeot 208 diesel, with real-world MPG figures.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 8 min read</span></div>
+    </a>
+    <a href="/guides/most-fuel-efficient-family-cars" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient Family Cars UK 2026</div>
+      <div class="article-desc">Hatchbacks and estates that won't burn through your budget — including the Toyota Corolla Hybrid and Honda Civic eHEV.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 9 min read</span></div>
+    </a>
+    <a href="/guides/most-fuel-efficient-suvs" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient SUVs UK 2026</div>
+      <div class="article-desc">The best MPG SUVs and crossovers — from the Yaris Cross to the RAV4 Hybrid — with annual fuel cost comparisons.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 9 min read</span></div>
+    </a>
+    <a href="/guides/most-fuel-efficient-used-cars" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient Used Cars UK 2026</div>
+      <div class="article-desc">The best used buys for fuel economy across every budget — from a £6,000 Prius to a nearly-new Corolla Hybrid.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 10 min read</span></div>
     </a>
   </div>
 
@@ -205,7 +227,7 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
     <a href="/guides/uk-fuel-duty" class="article-card">
       <span class="article-tag">Fuel prices</span>
       <div class="article-title">How Much Fuel Duty Do You Pay in the UK?</div>
-      <div class="article-desc">Where does your fuel money actually go? A clear breakdown of duty, VAT, and why UK prices are so high.</div>
+      <div class="article-desc">Where does your fuel money actually go? A breakdown of duty, VAT, and why UK prices are so high.</div>
       <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
     </a>
     <a href="/guides/autobahn-driving-guide" class="article-card">
@@ -231,68 +253,47 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
     </div>
     <div class="article-card" style="opacity:0.5;cursor:default;">
       <span class="article-tag">Coming soon</span>
-      <div class="article-title">Electric vs Petrol — What's the True Cost Per Mile?</div>
-      <div class="article-desc">A real-world cost comparison between electric and petrol cars, factoring in charging, fuel, and depreciation.</div>
-    </div>
-    <div class="article-card" style="opacity:0.5;cursor:default;">
-      <span class="article-tag">Coming soon</span>
-      <div class="article-title">How Fuel Duty Works in the UK — and Why Prices Are So High</div>
-      <div class="article-desc">Where does your money actually go when you fill up? A breakdown of tax, duty, and retail margins.</div>
-    </div>
-    <div class="article-card" style="opacity:0.5;cursor:default;">
-      <span class="article-tag">Coming soon</span>
-      <div class="article-title">The Best and Worst Cars for Fuel Economy in 2026</div>
-      <div class="article-desc">Real-world MPG figures for the UK's most popular cars — not the official test numbers.</div>
+      <div class="article-title">Most Fuel Efficient Vans UK 2026</div>
+      <div class="article-desc">The best MPG vans for tradespeople and small businesses — diesel, hybrid, and electric options compared.</div>
     </div>
   </div>
 
   <a href="/" class="cta"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate the fuel cost of your next journey</a>
 </main>
+
 <footer>
-  <p>© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Calculator</a> · <a href="/fuel-finder">⛽ Fuel Finder</a><a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/uk">UK Guide</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+  <p>© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Calculator</a> · <a href="/fuel-finder">⛽ Fuel Finder</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/uk">UK Guide</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
 </footer>
-  <!-- Cookie consent banner -->
-  <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
-    <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-      <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
-        We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
-      </p>
-      <div style="display:flex;gap:8px;flex-shrink:0;">
-        <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">
-          Decline
-        </button>
-        <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">
-          Accept cookies
-        </button>
-      </div>
+
+<!-- Cookie consent banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+  <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
+      We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
+    </p>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">Decline</button>
+      <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">Accept cookies</button>
     </div>
   </div>
+</div>
 
-  <script>
-    // Show banner if no consent decision yet
-    (function() {
-      if (!localStorage.getItem('fs_cookie_consent')) {
-        document.getElementById('cookie-banner').style.display = 'block';
-      }
-    })();
-
-    function handleConsent(decision) {
-      localStorage.setItem('fs_cookie_consent', decision);
-      document.getElementById('cookie-banner').style.display = 'none';
-
-      if (decision === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-        // Fire a page view now that consent is granted
-        gtag('event', 'page_view');
-      }
+<script>
+  (function() {
+    if (!localStorage.getItem('fs_cookie_consent')) {
+      document.getElementById('cookie-banner').style.display = 'block';
     }
-  </script>
-  <!-- Skimlinks affiliate tracking -->
-  <script type="text/javascript" src="https://s.skimresources.com/js/302872X1790896.skimlinks.js"></script>
+  })();
+  function handleConsent(decision) {
+    localStorage.setItem('fs_cookie_consent', decision);
+    document.getElementById('cookie-banner').style.display = 'none';
+    if (decision === 'accepted') {
+      gtag('consent', 'update', { 'analytics_storage': 'granted', 'ad_storage': 'granted', 'ad_user_data': 'granted', 'ad_personalization': 'granted' });
+      gtag('event', 'page_view');
+    }
+  }
+</script>
+<!-- Skimlinks affiliate tracking -->
+<script type="text/javascript" src="https://s.skimresources.com/js/302872X1790896.skimlinks.js"></script>
 </body>
 </html>
