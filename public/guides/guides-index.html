@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driving Guides & Fuel Saving Tips | Fuel Smarter</title>
+  <meta name="description" content="Free guides on how to save money on fuel, improve your car's MPG, and drive smarter. Evidence-based tips for UK and international drivers." />
+  <meta name="keywords" content="fuel saving tips, how to improve MPG, driving guides, save money on petrol, fuel economy tips UK" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="canonical" href="https://fuel-smarter.com/guides" />
+  <meta property="og:title" content="Driving Guides & Fuel Saving Tips | Fuel Smarter" />
+  <meta property="og:description" content="Free guides on how to save money on fuel, improve your car's MPG, and drive smarter." />
+  <meta property="og:url" content="https://fuel-smarter.com/guides" />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1); --border-hover: rgba(0,0,0,0.2); --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97; --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a; --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c; --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --border-hover: rgba(255,255,255,0.2); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; } }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
+    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 60px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; width: 100%; overflow-x: hidden; }
+    header .logo { text-decoration: none; display: flex; align-items: center; gap: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    header .logo .fuel { color: #1C1917; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; text-decoration: underline; text-decoration-color: #2D6A4F; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+    nav { margin-left: auto; display: flex; gap: 1.25rem; flex-wrap: wrap; }
+    nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; }
+    nav a:hover, nav a.active { color: var(--text); }
+    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; }
+    h2 { font-size: 12px; font-weight: 600; margin: 2rem 0 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+    p.intro { color: var(--text-secondary); margin-bottom: 2rem; font-size: 15px; }
+    .article-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 2rem; }
+    .article-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-decoration: none; display: block; transition: border-color 0.15s; }
+    .article-card:hover { border-color: var(--border-hover); }
+    .article-tag { font-size: 11px; font-weight: 500; color: var(--info-text); background: var(--info-bg); border-radius: 20px; padding: 2px 8px; display: inline-block; margin-bottom: 8px; }
+    .article-tag.green { color: var(--success-text); background: var(--success-bg); }
+    .article-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+    .article-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
+    .article-meta { font-size: 12px; color: var(--text-tertiary); display: flex; gap: 10px; }
+    .country-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
+    .country-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px; text-decoration: none; text-align: center; transition: border-color 0.15s; }
+    .country-card:hover { border-color: var(--border-hover); }
+    .country-flag { font-size: 28px; margin-bottom: 6px; display: block; }
+    .country-name { font-size: 13px; font-weight: 500; color: var(--text); }
+    .country-desc { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+    .cta { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 14px; font-weight: 500; margin-top: 2rem; font-size: 15px; }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
+    footer a { color: inherit; text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 600px) { .article-grid { grid-template-columns: 1fr; } .country-grid { grid-template-columns: 1fr 1fr; } h1 { font-size: 24px; } }
+  </style>
+  <!-- Google Consent Mode v2 — must load before GA -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+    (function() {
+      var consent = localStorage.getItem('fs_cookie_consent');
+      if (consent === 'accepted') {
+        gtag('consent', 'update', {
+          'analytics_storage': 'granted',
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        });
+      }
+    })();
+  </script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-MPGYCEEDJQ');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header>
+  <a href="/" class="logo"><span class="fuel">Fuel</span><span class="smarter">Smarter</span></a>
+  <nav>
+    <a href="/">Calculator</a>
+    <a href="/fuel-finder">⛽ Fuel Finder</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/environment">Environment</a>
+    <a href="/guides" class="active">Guides</a>
+    <a href="/uk">UK</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Driving Guides</h1>
+  <p class="intro">Evidence-based guides to help you spend less on fuel, reduce your emissions, and drive smarter — wherever you are in the world.</p>
+
+  <h2>Fuel saving guides</h2>
+  <div class="article-grid">
+    <a href="/guides/how-to-improve-mpg" class="article-card">
+      <span class="article-tag">Fuel economy</span>
+      <div class="article-title">How to Improve Your Car's MPG — 12 Ways to Use Less Fuel</div>
+      <div class="article-desc">From tyre pressure to driving technique, these changes can save you hundreds of pounds a year at the pump.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 6 min read</span></div>
+    </a>
+    <a href="/guides/is-it-worth-driving-slower" class="article-card">
+      <span class="article-tag">Speed & cost</span>
+      <div class="article-title">Is It Worth Driving Slower? The Real Cost of Speeding on the Motorway</div>
+      <div class="article-desc">We calculate the exact fuel cost difference between 60, 70, and 80 mph — and whether the time saving is actually worth it.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+    <a href="/guides/london-to-cornwall" class="article-card">
+      <span class="article-tag">Journey guide</span>
+      <div class="article-title">How Much Does It Cost to Drive from London to Cornwall?</div>
+      <div class="article-desc">Exact fuel costs for every car type, cheapest stations on the route, and whether driving beats the train.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+    <a href="/guides/london-to-edinburgh" class="article-card">
+      <span class="article-tag">Journey guide</span>
+      <div class="article-title">How Much Does It Cost to Drive from London to Edinburgh?</div>
+      <div class="article-desc">Full fuel cost breakdown for the 400-mile journey, eastern vs western route comparison, and speed vs cost analysis.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+    <a href="/guides/cheapest-day-to-buy-petrol" class="article-card">
+      <span class="article-tag">Saving money</span>
+      <div class="article-title">What Is the Cheapest Day to Buy Petrol in the UK?</div>
+      <div class="article-desc">Is there really a cheapest day? We look at the data on weekly fuel price patterns and where the real savings are.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 4 min read</span></div>
+    </a>
+    <a href="/guides/why-petrol-prices-vary" class="article-card">
+      <span class="article-tag">Explainer</span>
+      <div class="article-title">Why Is Petrol a Different Price at Every Station?</div>
+      <div class="article-desc">Why do prices vary by 15-20p per litre on the same road? A clear explanation of how UK fuel pricing really works.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+  </div>
+
+  <h2>Most fuel efficient cars</h2>
+  <div class="article-grid">
+    <a href="/guides/most-fuel-efficient-small-cars" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient Small Cars UK 2026</div>
+      <div class="article-desc">Top picks for city cars and superminis — from the Toyota Yaris Hybrid to the Peugeot 208 diesel, with real-world MPG figures.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 8 min read</span></div>
+    </a>
+    <a href="/guides/most-fuel-efficient-family-cars" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient Family Cars UK 2026</div>
+      <div class="article-desc">Hatchbacks and estates that won't burn through your budget — including the Toyota Corolla Hybrid and Honda Civic eHEV.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 9 min read</span></div>
+    </a>
+    <a href="/guides/most-fuel-efficient-suvs" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient SUVs UK 2026</div>
+      <div class="article-desc">The best MPG SUVs and crossovers — from the Yaris Cross to the RAV4 Hybrid — with annual fuel cost comparisons.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 9 min read</span></div>
+    </a>
+    <a href="/guides/most-fuel-efficient-used-cars" class="article-card">
+      <span class="article-tag green">Car buying</span>
+      <div class="article-title">Most Fuel Efficient Used Cars UK 2026</div>
+      <div class="article-desc">The best used buys for fuel economy across every budget — from a £6,000 Prius to a nearly-new Corolla Hybrid.</div>
+      <div class="article-meta"><span>📅 June 2026</span><span>⏱️ 10 min read</span></div>
+    </a>
+  </div>
+
+  <h2>Country fuel guides</h2>
+  <div class="country-grid">
+    <a href="/uk" class="country-card">
+      <span class="country-flag">🇬🇧</span>
+      <div class="country-name">United Kingdom</div>
+      <div class="country-desc">Petrol & diesel prices, MPG tips, speed limits</div>
+    </a>
+    <a href="/us" class="country-card">
+      <span class="country-flag">🇺🇸</span>
+      <div class="country-name">United States</div>
+      <div class="country-desc">Gas prices, road trip costs, MPG calculator</div>
+    </a>
+    <a href="/australia" class="country-card">
+      <span class="country-flag">🇦🇺</span>
+      <div class="country-name">Australia</div>
+      <div class="country-desc">Fuel prices, L/100km calculator, road trips</div>
+    </a>
+  </div>
+
+  <h2>Electric vehicle guides</h2>
+  <div class="article-grid">
+    <a href="/guides/petrol-vs-electric" class="article-card">
+      <span class="article-tag">EV vs Petrol</span>
+      <div class="article-title">Petrol vs Electric — What's the True Cost Per Mile in 2026?</div>
+      <div class="article-desc">The definitive real-world comparison of running costs. Find out if switching to electric actually saves you money.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 7 min read</span></div>
+    </a>
+    <a href="/guides/ev-charging-costs" class="article-card">
+      <span class="article-tag">EV charging</span>
+      <div class="article-title">How Much Does It Cost to Charge an Electric Car in the UK?</div>
+      <div class="article-desc">Home vs public vs rapid charging costs compared — and how to charge your EV as cheaply as possible.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 6 min read</span></div>
+    </a>
+  </div>
+
+  <h2>UK driving guides</h2>
+  <div class="article-grid">
+    <a href="/guides/cost-per-mile-uk" class="article-card">
+      <span class="article-tag">Running costs</span>
+      <div class="article-title">How Much Does It Cost to Drive Per Mile in the UK?</div>
+      <div class="article-desc">Exact cost per mile for petrol, diesel, electric and hybrid cars based on current 2026 UK prices.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+    <a href="/guides/best-fuel-efficient-cars-uk" class="article-card">
+      <span class="article-tag">Car buying</span>
+      <div class="article-title">Best Fuel Efficient Cars UK 2026 — Cheapest to Run</div>
+      <div class="article-desc">Real-world MPG figures and running costs for the most fuel efficient cars in the UK right now.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 6 min read</span></div>
+    </a>
+    <a href="/guides/uk-fuel-duty" class="article-card">
+      <span class="article-tag">Fuel prices</span>
+      <div class="article-title">How Much Fuel Duty Do You Pay in the UK?</div>
+      <div class="article-desc">Where does your fuel money actually go? A breakdown of duty, VAT, and why UK prices are so high.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 5 min read</span></div>
+    </a>
+    <a href="/guides/autobahn-driving-guide" class="article-card">
+      <span class="article-tag">International</span>
+      <div class="article-title">Driving on the Autobahn — Fuel Costs & Tips for UK Drivers</div>
+      <div class="article-desc">Planning a German road trip? Find out what fuel costs, how speed affects your bill, and what UK drivers need to know.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 6 min read</span></div>
+    </a>
+    <a href="/guides/ev-vs-hybrid" class="article-card">
+      <span class="article-tag">EV & hybrid</span>
+      <div class="article-title">EV vs Hybrid — Which Is Cheaper to Run in the UK?</div>
+      <div class="article-desc">A real-world comparison of running costs, charging, range and which suits different types of drivers.</div>
+      <div class="article-meta"><span>📅 May 2026</span><span>⏱️ 7 min read</span></div>
+    </a>
+  </div>
+
+  <h2>More guides coming soon</h2>
+  <div class="article-grid">
+    <div class="article-card" style="opacity:0.5;cursor:default;">
+      <span class="article-tag">Coming soon</span>
+      <div class="article-title">Is Hypermiling Worth It? Extreme Fuel Saving Tested</div>
+      <div class="article-desc">We put the most extreme fuel-saving techniques to the test. How much can you actually save?</div>
+    </div>
+    <div class="article-card" style="opacity:0.5;cursor:default;">
+      <span class="article-tag">Coming soon</span>
+      <div class="article-title">Most Fuel Efficient Vans UK 2026</div>
+      <div class="article-desc">The best MPG vans for tradespeople and small businesses — diesel, hybrid, and electric options compared.</div>
+    </div>
+  </div>
+
+  <a href="/" class="cta"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate the fuel cost of your next journey</a>
+</main>
+
+<footer>
+  <p>© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Calculator</a> · <a href="/fuel-finder">⛽ Fuel Finder</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/uk">UK Guide</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+</footer>
+
+<!-- Cookie consent banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+  <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
+      We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
+    </p>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">Decline</button>
+      <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">Accept cookies</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    if (!localStorage.getItem('fs_cookie_consent')) {
+      document.getElementById('cookie-banner').style.display = 'block';
+    }
+  })();
+  function handleConsent(decision) {
+    localStorage.setItem('fs_cookie_consent', decision);
+    document.getElementById('cookie-banner').style.display = 'none';
+    if (decision === 'accepted') {
+      gtag('consent', 'update', { 'analytics_storage': 'granted', 'ad_storage': 'granted', 'ad_user_data': 'granted', 'ad_personalization': 'granted' });
+      gtag('event', 'page_view');
+    }
+  }
+</script>
+<!-- Skimlinks affiliate tracking -->
+<script type="text/javascript" src="https://s.skimresources.com/js/302872X1790896.skimlinks.js"></script>
+</body>
+</html>
