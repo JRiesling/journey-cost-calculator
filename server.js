@@ -468,11 +468,17 @@ app.post('/api/ev-chargers', async (req, res) => {
     const apiKey = process.env.OPEN_CHARGE_MAP_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'EV charger API not configured' });
 
-    const url = `https://api.openchargemap.io/v3/poi/?output=json&latitude=${lat}&longitude=${lng}&distance=${distance}&distanceunit=KM&maxresults=${maxresults}&compact=true&verbose=false&countrycode=&key=${apiKey}`;
+    const url = `https://api.openchargemap.io/v3/poi/?output=json&latitude=${lat}&longitude=${lng}&distance=${distance}&distanceunit=KM&maxresults=${maxresults}&compact=true&verbose=false`;
 
     const response = await fetch(url, {
-      headers: { 'User-Agent': 'FuelSmarter/1.0 (fuel-smarter.com)' }
-    });
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; FuelSmarter/1.0; +https://fuel-smarter.com)',
+      'Accept': 'application/json',
+      'Accept-Language': 'en-GB,en;q=0.9',
+      'Referer': 'https://fuel-smarter.com/',
+      'X-API-Key': process.env.OPEN_CHARGE_MAP_API_KEY,
+  }
+});
 
     if (!response.ok) {
       const err = await response.text();
