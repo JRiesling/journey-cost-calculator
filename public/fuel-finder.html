@@ -462,45 +462,76 @@ async function fetchPetrol(waypoints, routeData, isSingle, appendResults) {
 async function fetchEV(lat, lng, waypoints, isSingle, appendResults) {
   if(!appendResults) showLoading('Finding EV charging points...');
 
-  // For routes, sample a few waypoints along the route and merge results
   var searchPoints = isSingle ? [{lat,lng}] : sampleWaypoints(waypoints, 5);
   var allChargers = [];
   var seen = new Set();
+  var OCM_KEY = '28c57446-0873-4d94-b360-c4258f0642d4';
 
   for(var i=0; i<searchPoints.length; i++) {
     var pt = searchPoints[i];
     try {
-      var res = await fetch('/api/ev-chargers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:pt.lat,lng:pt.lng,distance:isSingle?10:15,maxresults:10})});
+      var url = 'https://api.openchargemap.io/v3/poi/?output=json'
+        + '&latitude=' + pt.lat
+        + '&longitude=' + pt.lng
+        + '&distance=' + (isSingle ? 10 : 15)
+        + '&distanceunit=KM'
+        + '&maxresults=10'
+        + '&compact=true'
+        + '&verbose=false'
+        + '&key=' + OCM_KEY;
+
+      var res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if(!res.ok) { console.error('OCM error:', res.status); continue; }
       var data = await res.json();
-      if(data.chargers) {
-        data.chargers.forEach(function(c){
-          if(!seen.has(c.id)){
-            seen.add(c.id);
-            allChargers.push(c);
-          }
+
+      if(Array.isArray(data)) {
+        data.forEach(function(poi) {
+          if(seen.has(poi.ID)) return;
+          seen.add(poi.ID);
+
+          var addr = poi.AddressInfo || {};
+          var connections = poi.Connections || [];
+          var maxKw = connections.reduce(function(max, c){ return (c.PowerKW||0) > max ? (c.PowerKW||0) : max; }, 0);
+          var connTypes = connections.map(function(c){ return c.ConnectionType && c.ConnectionType.Title; }).filter(Boolean).filter(function(v,i,a){return a.indexOf(v)===i;}).slice(0,3);
+          var speedLabel = maxKw >= 100 ? 'Ultra-rapid' : maxKw >= 43 ? 'Rapid' : maxKw >= 7 ? 'Fast' : 'Slow';
+          var operator = (poi.OperatorInfo && poi.OperatorInfo.Title) || 'Unknown';
+
+          allChargers.push({
+            id: poi.ID,
+            name: addr.Title || operator,
+            operator: operator,
+            address: [addr.AddressLine1, addr.Town, addr.Postcode].filter(Boolean).join(', '),
+            lat: addr.Latitude,
+            lng: addr.Longitude,
+            maxKw: maxKw,
+            speedLabel: speedLabel,
+            connTypes: connTypes,
+            numPoints: poi.NumberOfPoints || connections.length || 1,
+            isFree: poi.UsageType && poi.UsageType.IsFreeCharge,
+            mapsUrl: 'https://www.google.com/maps/search/' + encodeURIComponent((addr.Title || operator) + ' ' + (addr.AddressLine1 || '') + ' ' + (addr.Postcode || '')),
+          });
         });
       }
     } catch(e) { console.error('EV fetch error:', e); }
   }
 
   // Apply speed filter
-  var minKw = {any:0,fast:7,rapid:43,ultra:100}[speedFilter]||0;
-  if(minKw > 0) allChargers = allChargers.filter(function(c){return c.maxKw >= minKw;});
+  var minKw = {any:0, fast:7, rapid:43, ultra:100}[speedFilter] || 0;
+  if(minKw > 0) allChargers = allChargers.filter(function(c){ return c.maxKw >= minKw; });
 
-  // Sort by power descending
-  allChargers.sort(function(a,b){return b.maxKw - a.maxKw;});
+  // Sort fastest first
+  allChargers.sort(function(a,b){ return b.maxKw - a.maxKw; });
   allChargers = allChargers.slice(0, 15);
 
-  if(!allChargers.length){
-    if(!appendResults) showStatus('No EV chargers found near this location.','error');
+  if(!allChargers.length) {
+    if(!appendResults) showStatus('No EV chargers found near this location.', 'error');
     return;
   }
 
-  allChargers.forEach(function(c){addEVMarker(c);});
+  allChargers.forEach(function(c){ addEVMarker(c); });
   if(!appendResults) renderEVResults(allChargers, isSingle);
   else appendEVResults(allChargers, isSingle);
 }
-
 function sampleWaypoints(waypoints, count) {
   if(waypoints.length <= count) return waypoints;
   var result = [];
