@@ -579,6 +579,7 @@ app.get('/privacy', (req, res) => res.sendFile(path.join(__dirname, 'public', 'p
 app.get('/sitemap.xml', (req, res) => { res.setHeader('Content-Type', 'application/xml'); res.sendFile(path.join(__dirname, 'public', 'sitemap.xml')); });
 app.get('/ads.txt', (req, res) => { res.setHeader('Content-Type', 'text/plain'); res.sendFile(path.join(__dirname, 'public', 'ads.txt')); });
 app.get('/robots.txt', (req, res) => { res.setHeader('Content-Type', 'text/plain'); res.sendFile(path.join(__dirname, 'public', 'robots.txt')); });
+app.get('/ev-charger-finder', (req, res) => res.sendFile(path.join(__dirname, 'public', 'ev-charger-finder.html')));
 app.get('/91addefa64b146dea96e677938a4c432.txt', (req, res) => { res.setHeader('Content-Type', 'text/plain'); res.sendFile(path.join(__dirname, 'public', '91addefa64b146dea96e677938a4c432.txt')); });
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', '404.html')));
 
