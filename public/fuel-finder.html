@@ -3,18 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cheapest Petrol on Your Route — UK Fuel Finder | Fuel Smarter</title>
-  <meta name="description" content="Find the cheapest petrol and diesel stations on your route. Live UK fuel prices from the government Fuel Finder — updated within 30 minutes. Free, no signup." />
-  <meta name="keywords" content="cheapest petrol on my route UK, fuel finder UK, cheapest petrol near me, cheapest diesel on route, petrol station finder UK, live fuel prices UK" />
+  <title>Fuel Finder & EV Charger Finder — UK & Global | Fuel Smarter</title>
+  <meta name="description" content="Find the cheapest petrol and diesel stations on your route, or locate EV charging points near you or along your journey. Live UK fuel prices and global EV charger data." />
+  <meta name="keywords" content="cheapest petrol on my route UK, fuel finder UK, EV charger finder, electric car charging points near me, cheapest diesel on route, live fuel prices UK" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://fuel-smarter.com/fuel-finder" />
-  <meta property="og:title" content="Cheapest Petrol on Your Route — UK Fuel Finder" />
-  <meta property="og:description" content="Find the cheapest petrol and diesel stations on your route. Live UK fuel prices updated within 30 minutes." />
+  <meta property="og:title" content="Fuel Finder & EV Charger Finder | Fuel Smarter" />
+  <meta property="og:description" content="Find cheapest petrol stations or EV charging points near you or on your route." />
   <meta property="og:url" content="https://fuel-smarter.com/fuel-finder" />
   <meta property="og:type" content="website" />
-
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Fuel Smarter — Fuel Finder","description":"Find the cheapest petrol and diesel stations on your UK route using live government fuel price data.","url":"https://fuel-smarter.com/fuel-finder","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"}}</script>
-
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Fuel Smarter — Fuel & EV Charger Finder","description":"Find cheapest petrol and diesel stations or EV charging points on your route. Live UK fuel prices and global EV charger data.","url":"https://fuel-smarter.com/fuel-finder","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"}}</script>
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
@@ -24,12 +22,8 @@
 
   <!-- Maps loaded dynamically -->
   <script>
-    var map = null;
-    var mapsLoaded = false;
-    function showMapFallback() {
-      var m = document.getElementById('map');
-      if (m) m.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#A8A29E;font-family:Inter,sans-serif;font-size:14px;"><span style="font-size:40px;">🗺️</span><p>Map unavailable — results shown on left</p></div>';
-    }
+    var map=null,mapsLoaded=false;
+    function showMapFallback(){var m=document.getElementById('map');if(m)m.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#A8A29E;font-family:Inter,sans-serif;font-size:14px;"><span style="font-size:40px;">🗺️</span><p>Map unavailable — results shown on left</p></div>';}
     fetch('/api/maps-key').then(r=>r.json()).then(({key})=>{
       if(!key){showMapFallback();return;}
       window.initMap=function(){
@@ -42,26 +36,22 @@
       };
       var s=document.createElement('script');
       s.src='https://maps.googleapis.com/maps/api/js?key='+key+'&libraries=geometry&callback=initMap';
-      s.async=true;
-      s.onerror=function(){showMapFallback();};
+      s.async=true;s.onerror=function(){showMapFallback();};
       document.head.appendChild(s);
     }).catch(function(){showMapFallback();});
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
 
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{--bg:#F4F1EA;--card:#FDFCFA;--border:rgba(0,0,0,0.08);--text:#1C1917;--text-secondary:#6B6560;--text-tertiary:#A8A29E;--accent:#2D6A4F;--accent-light:#EAF4EE;--accent-border:#95C9A8;--accent-text:#1A4731;--radius:10px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;}
-    @media(prefers-color-scheme:dark){:root{--bg:#171512;--card:#1F1E1B;--border:rgba(255,255,255,0.08);--text:#E8E4DC;--text-secondary:#9B9690;--text-tertiary:#6B6560;--accent:#40916C;--accent-light:#1A2E22;--accent-border:#2D6A4F;--accent-text:#95C9A8;}}
+    :root{--bg:#F4F1EA;--card:#FDFCFA;--border:rgba(0,0,0,0.08);--text:#1C1917;--text-secondary:#6B6560;--text-tertiary:#A8A29E;--accent:#2D6A4F;--accent-light:#EAF4EE;--accent-border:#95C9A8;--accent-text:#1A4731;--ev:#1D4ED8;--ev-light:#EFF6FF;--ev-border:#BFDBFE;--ev-text:#1e3a8a;--radius:10px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;}
+    @media(prefers-color-scheme:dark){:root{--bg:#171512;--card:#1F1E1B;--border:rgba(255,255,255,0.08);--text:#E8E4DC;--text-secondary:#9B9690;--text-tertiary:#6B6560;--accent:#40916C;--accent-light:#1A2E22;--accent-border:#2D6A4F;--accent-text:#95C9A8;--ev:#3B82F6;--ev-light:#1e3a5f;--ev-border:#1D4ED8;--ev-text:#93C5FD;}}
     body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
     header{background:var(--card);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
-    .logo-mark{ display: none; }
-    .logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; white-space: nowrap; }
-    .logo-text span { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
     nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;}
     nav::-webkit-scrollbar{display:none;}
     nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
@@ -81,17 +71,23 @@
     label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
     input[type="text"]{width:100%;height:42px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:15px;padding:0 12px;font-family:var(--font);outline:none;transition:border-color 0.15s;}
     input[type="text"]:focus{border-color:var(--accent);}
+
+    /* ── Type toggle (Petrol / EV / Both) ── */
+    .type-toggle{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;}
     .mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
     .fuel-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
     .toggle-btn{height:44px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text-secondary);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;user-select:none;-webkit-tap-highlight-color:transparent;}
     .toggle-btn:active{opacity:0.8;}
     .toggle-btn.active{border-color:var(--accent-border);background:var(--accent-light);color:var(--accent-text);}
+    .toggle-btn.active-ev{border-color:var(--ev-border);background:var(--ev-light);color:var(--ev-text);}
     .search-btn{width:100%;height:46px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;}
     .search-btn:hover{background:#235c42;}
     .search-btn:disabled{opacity:0.6;cursor:not-allowed;}
     .hidden{display:none !important;}
     #map{width:100%;height:calc(100vh - 60px);position:sticky;top:60px;}
     @media(max-width:768px){#map{height:300px;position:relative;top:0;}}
+
+    /* ── Petrol station cards ── */
     .station-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
     .station-card:hover{border-color:var(--accent-border);}
     .station-card.cheapest{border-color:var(--accent-border);border-width:2px;background:var(--accent-light);}
@@ -106,10 +102,27 @@
     .station-tag{font-size:10px;font-weight:600;padding:1px 5px;border-radius:6px;background:var(--bg);color:var(--text-secondary);border:1px solid var(--border);}
     .station-tag.supermarket{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE;}
     .station-tag.motorway{background:#FEF3C7;color:#78350F;border-color:#FDE68A;}
+    .station-tag.rapid{background:#FEF3C7;color:#78350F;border-color:#FDE68A;}
+    .station-tag.fast{background:var(--ev-light);color:var(--ev-text);border-color:var(--ev-border);}
+    .station-tag.free{background:#DCFCE7;color:#166534;border-color:#86EFAC;}
     .maps-link{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--accent);font-weight:600;text-decoration:none;margin-top:3px;}
     .station-price{font-size:22px;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right;line-height:1;}
     .station-price-label{font-size:10px;color:var(--text-tertiary);text-align:right;}
+
+    /* ── EV charger specific ── */
+    .charger-card{background:var(--card);border:1px solid var(--ev-border);border-radius:var(--radius);padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
+    .charger-card:hover{border-width:2px;}
+    .charger-card.selected{border-width:2px;border-color:var(--ev);}
+    .charger-kw{font-size:20px;font-weight:700;color:var(--ev);flex-shrink:0;text-align:right;line-height:1;}
+    .charger-kw-label{font-size:10px;color:var(--text-tertiary);text-align:right;}
+    .charger-speed{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:10px;margin-bottom:4px;}
+    .speed-ultra{background:#FEF3C7;color:#78350F;}
+    .speed-rapid{background:#FEE2E2;color:#991B1B;}
+    .speed-fast{background:var(--ev-light);color:var(--ev-text);}
+    .speed-slow{background:var(--bg);color:var(--text-secondary);border:1px solid var(--border);}
+
     .saving-box{background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;font-size:13px;color:var(--accent-text);}
+    .ev-info-box{background:var(--ev-light);border:1px solid var(--ev-border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px;font-size:13px;color:var(--ev-text);}
     .summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:10px;font-size:13px;}
     .summary-row{display:flex;justify-content:space-between;padding:3px 0;}
     .summary-row:not(:last-child){border-bottom:0.5px solid var(--border);}
@@ -124,16 +137,12 @@
     footer{background:var(--card);border-top:1px solid var(--border);padding:1.25rem;text-align:center;font-size:12px;color:var(--text-tertiary);}
     footer a{color:inherit;text-decoration:none;}
   </style>
-<link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
 
 <header>
-  <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
-    <div class="logo-mark">⛽</div>
-    <span class="logo-text">Fuel<span>Smarter</span></span>
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;">
+    <span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span>
   </a>
   <nav>
     <a href="/fuel-finder" class="active">⛽ Fuel Finder</a>
@@ -141,6 +150,7 @@
     <a href="/fuel-prices">Fuel Prices</a>
     <a href="/guides">Guides</a>
     <a href="/ev-calculator">EV</a>
+    <a href="/car-care">Car Care</a>
     <a href="/faq">FAQ</a>
   </nav>
 </header>
@@ -148,12 +158,21 @@
 <div class="page">
   <div class="panel">
     <div class="hero">
-      <div class="live-badge"><span class="live-dot"></span> Live prices</div>
-      <h1>Cheapest fuel on your route ⛽</h1>
-      <p>Find the cheapest petrol or diesel stations near you or along your journey — updated within 30 minutes by law.</p>
+      <div class="live-badge"><span class="live-dot"></span> Live data</div>
+      <h1 id="hero-title">Cheapest fuel on your route ⛽</h1>
+      <p id="hero-desc">Find the cheapest petrol or diesel stations near you or along your journey — updated within 30 minutes by law.</p>
     </div>
 
     <div class="card">
+
+      <!-- Type toggle -->
+      <div class="type-toggle" style="margin-bottom:14px;">
+        <button class="toggle-btn active" id="type-petrol" onclick="setType('petrol')"><i class="ti ti-droplet" aria-hidden="true"></i> Petrol</button>
+        <button class="toggle-btn" id="type-ev" onclick="setType('ev')"><i class="ti ti-bolt" aria-hidden="true"></i> EV Chargers</button>
+        <button class="toggle-btn" id="type-both" onclick="setType('both')"><i class="ti ti-layout-grid" aria-hidden="true"></i> Both</button>
+      </div>
+
+      <!-- Location mode toggle -->
       <div class="mode-toggle">
         <button class="toggle-btn active" id="mode-single" onclick="setMode('single')"><i class="ti ti-map-pin" aria-hidden="true"></i> Near a location</button>
         <button class="toggle-btn" id="mode-route" onclick="setMode('route')"><i class="ti ti-route" aria-hidden="true"></i> On a route</button>
@@ -162,7 +181,7 @@
       <div id="section-single">
         <div style="margin-bottom:12px;">
           <label for="location-input">Location</label>
-          <input type="text" id="location-input" placeholder="e.g. Birmingham or B1 1AA" autocomplete="off" />
+          <input type="text" id="location-input" placeholder="e.g. Birmingham, Berlin or New York" autocomplete="off" />
         </div>
       </div>
 
@@ -177,25 +196,37 @@
         </div>
       </div>
 
-      <div class="fuel-toggle">
+      <!-- Fuel type toggle — only shown for petrol mode -->
+      <div class="fuel-toggle" id="fuel-type-section">
         <button class="toggle-btn active" id="btn-petrol" onclick="setFuel('petrol')"><i class="ti ti-droplet" aria-hidden="true"></i> Petrol</button>
         <button class="toggle-btn" id="btn-diesel" onclick="setFuel('diesel')"><i class="ti ti-droplet-half-2" aria-hidden="true"></i> Diesel</button>
       </div>
 
-      <button class="search-btn" id="search-btn" onclick="findFuel()">
+      <!-- EV connector filter — only shown for EV mode -->
+      <div id="ev-filter-section" class="hidden" style="margin-bottom:12px;">
+        <label>Minimum speed</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;">
+          <button class="toggle-btn active" id="speed-any" onclick="setSpeedFilter('any')" style="font-size:11px;">Any</button>
+          <button class="toggle-btn" id="speed-fast" onclick="setSpeedFilter('fast')" style="font-size:11px;">7kW+</button>
+          <button class="toggle-btn" id="speed-rapid" onclick="setSpeedFilter('rapid')" style="font-size:11px;">43kW+</button>
+          <button class="toggle-btn" id="speed-ultra" onclick="setSpeedFilter('ultra')" style="font-size:11px;">100kW+</button>
+        </div>
+      </div>
+
+      <button class="search-btn" id="search-btn" onclick="doSearch()">
         <i class="ti ti-search" aria-hidden="true"></i> <span id="search-btn-text">Find cheapest fuel nearby</span>
       </button>
     </div>
 
     <div id="results-panel">
-      <div class="status">Enter a location or route above to find the cheapest fuel stations.</div>
+      <div class="status">Select what you're looking for above, then enter a location.</div>
     </div>
 
     <div class="seo-section">
-      <h2>How it works</h2>
-      <p>Fuel Smarter uses the UK Government's official Fuel Finder database — every petrol station is legally required to update prices within 30 minutes of any change. We search stations within 1 mile of your location or route.</p>
-      <h2>Why use supermarkets?</h2>
-      <p>Supermarket forecourts (Tesco, Asda, Sainsbury's, Morrisons) are consistently 3-8p/litre cheaper than branded stations and motorway services. On a 50-litre fill up that's up to £4 difference.</p>
+      <h2 id="seo-title">How it works</h2>
+      <p id="seo-text">Fuel Smarter uses the UK Government's official Fuel Finder database — every petrol station is legally required to update prices within 30 minutes of any change.</p>
+      <h2>EV Charger Finder</h2>
+      <p>EV charger data comes from Open Charge Map — the world's largest open registry of charging locations, covering the UK and 100+ countries. Find rapid chargers, Pod Point, bp pulse, Osprey and more.</p>
     </div>
   </div>
 
@@ -203,8 +234,8 @@
 </div>
 
 <footer>
-  <p>Prices updated within 30 minutes · UK Government Fuel Finder · UK only</p>
-  <p style="margin-top:6px;">© 2026 Fuel Smarter · <a href="/">Calculator</a> · <a href="/guides">Guides</a> · <a href="/ev-calculator">EV</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+  <p>Petrol prices: UK Government Fuel Finder · EV chargers: Open Charge Map · Global coverage</p>
+  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Calculator</a> · <a href="/guides">Guides</a> · <a href="/ev-calculator">EV</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
 </footer>
 
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
@@ -221,58 +252,104 @@
 (function(){if(!localStorage.getItem('fs_cookie_consent'))document.getElementById('cookie-banner').style.display='block';})();
 function handleConsent(d){localStorage.setItem('fs_cookie_consent',d);document.getElementById('cookie-banner').style.display='none';}
 
-var fuelType='petrol';
-var searchMode='single';
-var routePolyline=null;
-var markers=[];
+// ─── State ────────────────────────────────────────────────────────────────────
+var searchType = 'petrol'; // petrol | ev | both
+var fuelType = 'petrol';
+var searchMode = 'single';
+var speedFilter = 'any';
+var routePolyline = null;
+var markers = [];
+var lastWaypoints = [];
 
-function setMode(mode){
-  searchMode=mode;
-  document.getElementById('mode-single').classList.toggle('active',mode==='single');
-  document.getElementById('mode-route').classList.toggle('active',mode==='route');
-  document.getElementById('section-single').classList.toggle('hidden',mode!=='single');
-  document.getElementById('section-route').classList.toggle('hidden',mode!=='route');
-  document.getElementById('search-btn-text').textContent=mode==='single'?'Find cheapest fuel nearby':'Find cheapest fuel on route';
+// ─── Check for URL param to pre-select EV mode ────────────────────────────────
+(function(){
+  if(window.location.search.includes('type=ev')) setType('ev');
+})();
+
+// ─── Type toggle ──────────────────────────────────────────────────────────────
+function setType(type) {
+  searchType = type;
+  ['petrol','ev','both'].forEach(function(t) {
+    var btn = document.getElementById('type-'+t);
+    btn.classList.remove('active','active-ev');
+  });
+  var activeBtn = document.getElementById('type-'+type);
+  if(type === 'ev') activeBtn.classList.add('active-ev');
+  else activeBtn.classList.add('active');
+
+  // Show/hide fuel type vs EV filter
+  document.getElementById('fuel-type-section').classList.toggle('hidden', type === 'ev');
+  document.getElementById('ev-filter-section').classList.toggle('hidden', type === 'petrol');
+
+  // Update hero text
+  var titles = {
+    petrol: 'Cheapest fuel on your route ⛽',
+    ev: 'EV charging points near you ⚡',
+    both: 'Fuel stations & EV chargers 🗺️'
+  };
+  var descs = {
+    petrol: 'Find the cheapest petrol or diesel stations near you or along your journey — UK only, updated within 30 minutes.',
+    ev: 'Find EV charging points near you or along your route — rapid chargers, Pod Point, bp pulse and more. Works worldwide.',
+    both: 'See petrol stations and EV charging points on the same map. UK fuel prices + global EV charger data.'
+  };
+  document.getElementById('hero-title').textContent = titles[type];
+  document.getElementById('hero-desc').textContent = descs[type];
+
+  // Update search button
+  updateSearchBtn();
 }
 
-function setFuel(type){
-  fuelType=type;
-  document.getElementById('btn-petrol').classList.toggle('active',type==='petrol');
-  document.getElementById('btn-diesel').classList.toggle('active',type==='diesel');
+function setMode(mode) {
+  searchMode = mode;
+  document.getElementById('mode-single').classList.toggle('active', mode==='single');
+  document.getElementById('mode-route').classList.toggle('active', mode==='route');
+  document.getElementById('section-single').classList.toggle('hidden', mode!=='single');
+  document.getElementById('section-route').classList.toggle('hidden', mode!=='route');
+  updateSearchBtn();
 }
 
-function clearMap(){
-  markers.forEach(m=>{try{m.setMap(null);}catch(e){}});
-  markers=[];
+function setFuel(type) {
+  fuelType = type;
+  document.getElementById('btn-petrol').classList.toggle('active', type==='petrol');
+  document.getElementById('btn-diesel').classList.toggle('active', type==='diesel');
+}
+
+function setSpeedFilter(speed) {
+  speedFilter = speed;
+  ['any','fast','rapid','ultra'].forEach(function(s){
+    document.getElementById('speed-'+s).classList.remove('active','active-ev');
+  });
+  document.getElementById('speed-'+speed).classList.add('active-ev');
+}
+
+function updateSearchBtn() {
+  var labels = {
+    petrol: { single: 'Find cheapest fuel nearby', route: 'Find cheapest fuel on route' },
+    ev: { single: 'Find EV chargers nearby', route: 'Find EV chargers on route' },
+    both: { single: 'Find fuel & chargers nearby', route: 'Find fuel & chargers on route' }
+  };
+  document.getElementById('search-btn-text').textContent = labels[searchType][searchMode];
+}
+
+// ─── Map helpers ──────────────────────────────────────────────────────────────
+function clearMap() {
+  markers.forEach(function(m){try{m.setMap(null);}catch(e){}});
+  markers = [];
   if(routePolyline){try{routePolyline.setMap(null);}catch(e){} routePolyline=null;}
 }
 
-// Draw actual road route from encoded polyline
-function drawRoute(encodedPolyline){
+function drawRoute(encodedPolyline) {
   if(!map||!encodedPolyline)return;
-  // Decode polyline server-side gave us points, but we can also use Maps API decoder
-  if(google && google.maps && google.maps.geometry){
+  if(google&&google.maps&&google.maps.geometry){
     var path=google.maps.geometry.encoding.decodePath(encodedPolyline);
     routePolyline=new google.maps.Polyline({path:path,geodesic:false,strokeColor:'#2D6A4F',strokeOpacity:0.7,strokeWeight:5,map:map});
     var bounds=new google.maps.LatLngBounds();
     path.forEach(function(p){bounds.extend(p);});
     map.fitBounds(bounds,{top:60,right:40,bottom:60,left:40});
-  } else {
-    // Fallback: use waypoints array if geometry library not available
-    drawRouteFromWaypoints(window._lastWaypoints||[]);
   }
 }
 
-function drawRouteFromWaypoints(waypoints){
-  if(!map||!waypoints.length)return;
-  var path=waypoints.map(function(wp){return{lat:wp.lat,lng:wp.lng};});
-  routePolyline=new google.maps.Polyline({path:path,geodesic:true,strokeColor:'#2D6A4F',strokeOpacity:0.6,strokeWeight:4,map:map});
-  var bounds=new google.maps.LatLngBounds();
-  path.forEach(function(p){bounds.extend(p);});
-  map.fitBounds(bounds,{top:60,right:40,bottom:60,left:40});
-}
-
-function addStationMarker(station,index){
+function addPetrolMarker(station, index) {
   if(!map||!station.lat||!station.lng)return;
   var colour=index===0?'#2D6A4F':'#6B6560';
   var marker=new google.maps.Marker({
@@ -281,116 +358,240 @@ function addStationMarker(station,index){
     icon:{path:google.maps.SymbolPath.CIRCLE,scale:index===0?18:14,fillColor:colour,fillOpacity:1,strokeColor:'white',strokeWeight:2},
     zIndex:index===0?10:5
   });
-  var infoContent='<div style="font-family:Inter,sans-serif;padding:4px;max-width:200px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+station.name+'</div><div style="font-size:20px;font-weight:700;color:#2D6A4F;">'+station.price.toFixed(1)+'p/L</div>'+(station.address?'<div style="font-size:11px;color:#6B6560;margin-top:3px;">'+station.address+'</div>':'')+(station.distKm&&station.distKm<100?'<div style="font-size:11px;color:#2D6A4F;font-weight:500;margin-top:2px;">📍 '+(station.distKm*0.621).toFixed(1)+' miles from route</div>':'')+'<a href="https://www.google.com/maps/search/'+encodeURIComponent(station.name+' '+(station.address||''))+'" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;">Open in Maps →</a></div>';
-  var iw=new google.maps.InfoWindow({content:infoContent});
+  var iw=new google.maps.InfoWindow({content:'<div style="font-family:Inter,sans-serif;padding:4px;max-width:200px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+station.name+'</div><div style="font-size:20px;font-weight:700;color:#2D6A4F;">'+station.price.toFixed(1)+'p/L</div>'+(station.address?'<div style="font-size:11px;color:#6B6560;margin-top:3px;">'+station.address+'</div>':'')+'<a href="https://www.google.com/maps/search/'+encodeURIComponent(station.name+' '+(station.address||''))+'" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;">Open in Maps →</a></div>'});
   marker.addListener('click',function(){markers.forEach(function(m){if(m._iw)m._iw.close();});iw.open(map,marker);});
   marker._iw=iw;
   markers.push(marker);
 }
 
+function addEVMarker(charger, index) {
+  if(!map||!charger.lat||!charger.lng)return;
+  var colour = charger.maxKw >= 100 ? '#DC2626' : charger.maxKw >= 43 ? '#EA580C' : '#1D4ED8';
+  var label = charger.maxKw > 0 ? charger.maxKw+'kW' : '⚡';
+  var marker=new google.maps.Marker({
+    position:{lat:charger.lat,lng:charger.lng},map:map,title:charger.name,
+    label:{text:label,color:'white',fontSize:'9px',fontWeight:'700'},
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:16,fillColor:colour,fillOpacity:1,strokeColor:'white',strokeWeight:2},
+    zIndex:5
+  });
+  var connStr = charger.connTypes.length ? charger.connTypes.join(', ') : 'Unknown connector';
+  var iw=new google.maps.InfoWindow({content:'<div style="font-family:Inter,sans-serif;padding:4px;max-width:220px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+charger.name+'</div>'+(charger.maxKw>0?'<div style="font-size:18px;font-weight:700;color:'+colour+';">'+charger.maxKw+' kW — '+charger.speedLabel+'</div>':'')+'<div style="font-size:11px;color:#6B6560;margin-top:3px;">'+connStr+'</div>'+(charger.address?'<div style="font-size:11px;color:#6B6560;margin-top:2px;">'+charger.address+'</div>':'')+(charger.numPoints?'<div style="font-size:11px;color:#1D4ED8;font-weight:500;margin-top:2px;">'+charger.numPoints+' point'+(charger.numPoints>1?'s':'')+'</div>':'')+'<a href="'+charger.mapsUrl+'" target="_blank" style="font-size:11px;color:#1D4ED8;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;">Open in Maps →</a></div>'});
+  marker.addListener('click',function(){markers.forEach(function(m){if(m._iw)m._iw.close();});iw.open(map,marker);});
+  marker._iw=iw;
+  markers.push(marker);
+}
+
+// ─── Status helpers ───────────────────────────────────────────────────────────
 function showStatus(msg,type){document.getElementById('results-panel').innerHTML='<div class="status" style="color:'+(type==='error'?'#7F1D1D':'var(--text-tertiary)')+';">'+msg+'</div>';}
 function showLoading(msg){document.getElementById('results-panel').innerHTML='<div class="loading"><i class="ti ti-loader" aria-hidden="true"></i> '+msg+'</div>';}
 
-async function findFuel(){
-  var btn=document.getElementById('search-btn');
-  btn.disabled=true;
+// ─── Main search ──────────────────────────────────────────────────────────────
+async function doSearch() {
+  var btn = document.getElementById('search-btn');
+  btn.disabled = true;
   clearMap();
 
-  try{
-    var waypoints,routeData=null,isSingle=false;
+  try {
+    var waypoints = [], routeData = null, isSingle = false, centerLat, centerLng;
 
-    if(searchMode==='single'){
-      isSingle=true;
-      var location=document.getElementById('location-input').value.trim();
+    if(searchMode === 'single') {
+      isSingle = true;
+      var location = document.getElementById('location-input').value.trim();
       if(!location){showStatus('Please enter a location.','error');return;}
       showLoading('Finding your location...');
-      var r=await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:location,destination:location,distUnit:'miles'})});
-      var rd=await r.json();
-      waypoints=rd.waypoints||[];
+      var r = await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:location,destination:location,distUnit:'miles'})});
+      var rd = await r.json();
+      waypoints = rd.waypoints || [];
       if(!waypoints.length){showStatus('Could not find that location. Try a postcode or town name.','error');return;}
-      if(map){map.setCenter({lat:waypoints[0].lat,lng:waypoints[0].lng});map.setZoom(12);}
+      centerLat = waypoints[0].lat;
+      centerLng = waypoints[0].lng;
+      if(map){map.setCenter({lat:centerLat,lng:centerLng});map.setZoom(13);}
     } else {
-      var origin=document.getElementById('origin-input').value.trim();
-      var dest=document.getElementById('dest-input').value.trim();
+      var origin = document.getElementById('origin-input').value.trim();
+      var dest = document.getElementById('dest-input').value.trim();
       if(!origin||!dest){showStatus('Please enter both a start and end location.','error');return;}
       showLoading('Calculating your route...');
-      var r=await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:origin,destination:dest,distUnit:'miles'})});
-      routeData=await r.json();
+      var r = await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:origin,destination:dest,distUnit:'miles'})});
+      routeData = await r.json();
       if(routeData.error){showStatus(routeData.error,'error');return;}
-      waypoints=routeData.waypoints||[];
-      window._lastWaypoints=waypoints;
-      // Draw actual road route
-      if(routeData.polyline){
-        drawRoute(routeData.polyline);
-      } else if(waypoints.length){
-        drawRouteFromWaypoints(waypoints);
-      }
+      waypoints = routeData.waypoints || [];
+      lastWaypoints = waypoints;
+      if(routeData.polyline) drawRoute(routeData.polyline);
+      centerLat = waypoints[Math.floor(waypoints.length/2)]?.lat || waypoints[0]?.lat;
+      centerLng = waypoints[Math.floor(waypoints.length/2)]?.lng || waypoints[0]?.lng;
     }
 
-    document.getElementById('search-btn-text').textContent='Finding stations...';
-    showLoading('Finding cheapest fuel stations...');
+    // Fetch based on type
+    if(searchType === 'petrol') {
+      await fetchPetrol(waypoints, routeData, isSingle);
+    } else if(searchType === 'ev') {
+      await fetchEV(centerLat, centerLng, waypoints, isSingle);
+    } else {
+      // Both — fetch in parallel
+      showLoading('Finding fuel stations and EV chargers...');
+      await Promise.all([
+        fetchPetrol(waypoints, routeData, isSingle, true),
+        fetchEV(centerLat, centerLng, waypoints, isSingle, true)
+      ]);
+    }
 
-    var fr=await fetch('/api/fuel-finder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({waypoints:waypoints,fuelType:fuelType})});
-    var fd=await fr.json();
-
-    if(!fd.stations||!fd.stations.length){showStatus('No fuel stations found. UK locations only.','error');return;}
-
-    fd.stations.forEach(function(s,i){addStationMarker(s,i);});
-    renderResults(fd,routeData,isSingle);
-
-  }catch(err){
+  } catch(err) {
     console.error(err);
     showStatus('Something went wrong. Please try again.','error');
-  }finally{
-    btn.disabled=false;
-    document.getElementById('search-btn-text').textContent=searchMode==='single'?'Find cheapest fuel nearby':'Find cheapest fuel on route';
+  } finally {
+    btn.disabled = false;
+    updateSearchBtn();
   }
 }
 
-function renderResults(fuelData,routeData,isSingle){
-  var stations=fuelData.stations;
-  var cheapest=stations[0];
-  var radiusUsed=fuelData.radiusUsed;
-  var fuelLabel=fuelType==='diesel'?'Diesel':'Petrol (E10)';
-  var ukAvg=fuelType==='diesel'?188.8:156.8;
-  var saving=ukAvg-cheapest.price;
-  var radiusLabel=radiusUsed===1?'1 mile':radiusUsed===3?'3 miles':'8 miles';
-  var locationName=isSingle?document.getElementById('location-input').value:(document.getElementById('origin-input').value+' → '+document.getElementById('dest-input').value);
-
-  var html='<div class="summary-card">';
-  html+='<div class="summary-row"><span class="summary-label">'+(isSingle?'Location':'Route')+'</span><span class="summary-value">'+locationName+'</span></div>';
-  if(!isSingle&&routeData&&routeData.distance)html+='<div class="summary-row"><span class="summary-label">Distance</span><span class="summary-value">'+(routeData.distanceMiles||routeData.distance).toFixed(0)+' miles</span></div>';
-  html+='<div class="summary-row"><span class="summary-label">Stations</span><span class="summary-value">'+stations.length+' within '+radiusLabel+'</span></div>';
-  html+='</div>';
-
-  if(saving>0){
-    html+='<div class="saving-box">💡 Filling at <strong>'+cheapest.name+'</strong> ('+cheapest.price.toFixed(1)+'p/L) saves <strong>'+saving.toFixed(1)+'p/litre</strong> vs UK average</div>';
+// ─── Petrol fetch ─────────────────────────────────────────────────────────────
+async function fetchPetrol(waypoints, routeData, isSingle, appendResults) {
+  if(!appendResults) showLoading('Finding cheapest fuel stations...');
+  var fr = await fetch('/api/fuel-finder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({waypoints:waypoints,fuelType:fuelType})});
+  var fd = await fr.json();
+  if(!fd.stations||!fd.stations.length){
+    if(!appendResults) showStatus('No fuel stations found. Petrol prices are UK only.','error');
+    return;
   }
-
-  stations.forEach(function(s,i){
-    html+='<div class="station-card'+(i===0?' cheapest':'')+'" onclick="selectStation('+i+')" id="station-'+i+'">';
-    html+='<div class="station-rank'+(i===0?' top':'')+'">'+( i===0?'⭐':(i+1))+'</div>';
-    html+='<div class="station-info">';
-    html+='<div class="station-name">'+(s.brand?s.brand+' — ':'')+s.name+'</div>';
-    if(s.address)html+='<div class="station-address">'+s.address+'</div>';
-    html+='<div class="station-meta">';
-    if(s.distKm&&s.distKm<100)html+='<span class="station-dist">📍 '+(s.distKm*0.621).toFixed(1)+' mi</span>';
-    if(s.isSupermarket)html+='<span class="station-tag supermarket">🛒 Supermarket</span>';
-    if(s.isMotorway)html+='<span class="station-tag motorway">🛣️ Motorway</span>';
-    html+='</div>';
-    html+='<a href="https://www.google.com/maps/search/'+encodeURIComponent(s.name+' '+(s.address||''))+'" target="_blank" rel="noopener" class="maps-link"><i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps</a>';
-    html+='</div>';
-    html+='<div><div class="station-price">'+s.price.toFixed(1)+'p</div><div class="station-price-label">per litre</div></div>';
-    html+='</div>';
-  });
-
-  html+='<div class="radius-note">Stations within '+radiusLabel+' · UK Gov Fuel Finder · updated within 30 mins</div>';
-  html+='<div style="margin-top:0.75rem;text-align:center;"><a href="/" style="font-size:12px;color:var(--accent);font-weight:600;text-decoration:none;">← Calculate full journey fuel cost</a></div>';
-
-  document.getElementById('results-panel').innerHTML=html;
+  fd.stations.forEach(function(s,i){addPetrolMarker(s,i);});
+  if(!appendResults) renderPetrolResults(fd, routeData, isSingle);
+  else appendPetrolResults(fd, isSingle);
 }
 
-function selectStation(index){
+// ─── EV fetch ─────────────────────────────────────────────────────────────────
+async function fetchEV(lat, lng, waypoints, isSingle, appendResults) {
+  if(!appendResults) showLoading('Finding EV charging points...');
+
+  // For routes, sample a few waypoints along the route and merge results
+  var searchPoints = isSingle ? [{lat,lng}] : sampleWaypoints(waypoints, 5);
+  var allChargers = [];
+  var seen = new Set();
+
+  for(var i=0; i<searchPoints.length; i++) {
+    var pt = searchPoints[i];
+    try {
+      var res = await fetch('/api/ev-chargers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat:pt.lat,lng:pt.lng,distance:isSingle?10:15,maxresults:10})});
+      var data = await res.json();
+      if(data.chargers) {
+        data.chargers.forEach(function(c){
+          if(!seen.has(c.id)){
+            seen.add(c.id);
+            allChargers.push(c);
+          }
+        });
+      }
+    } catch(e) { console.error('EV fetch error:', e); }
+  }
+
+  // Apply speed filter
+  var minKw = {any:0,fast:7,rapid:43,ultra:100}[speedFilter]||0;
+  if(minKw > 0) allChargers = allChargers.filter(function(c){return c.maxKw >= minKw;});
+
+  // Sort by power descending
+  allChargers.sort(function(a,b){return b.maxKw - a.maxKw;});
+  allChargers = allChargers.slice(0, 15);
+
+  if(!allChargers.length){
+    if(!appendResults) showStatus('No EV chargers found near this location.','error');
+    return;
+  }
+
+  allChargers.forEach(function(c){addEVMarker(c);});
+  if(!appendResults) renderEVResults(allChargers, isSingle);
+  else appendEVResults(allChargers, isSingle);
+}
+
+function sampleWaypoints(waypoints, count) {
+  if(waypoints.length <= count) return waypoints;
+  var result = [];
+  var step = Math.floor(waypoints.length / count);
+  for(var i=0; i<count; i++) result.push(waypoints[i*step]);
+  return result;
+}
+
+// ─── Render petrol results ────────────────────────────────────────────────────
+function renderPetrolResults(fuelData, routeData, isSingle) {
+  var stations = fuelData.stations;
+  var cheapest = stations[0];
+  var radiusUsed = fuelData.radiusUsed;
+  var fuelLabel = fuelType==='diesel'?'Diesel':'Petrol (E10)';
+  var ukAvg = fuelType==='diesel'?188.8:156.8;
+  var saving = ukAvg - cheapest.price;
+  var radiusLabel = radiusUsed===1?'1 mile':radiusUsed===3?'3 miles':'8 miles';
+  var locationName = isSingle ? document.getElementById('location-input').value : (document.getElementById('origin-input').value+' → '+document.getElementById('dest-input').value);
+
+  var html = '<div class="summary-card"><div class="summary-row"><span class="summary-label">'+(isSingle?'Location':'Route')+'</span><span class="summary-value">'+locationName+'</span></div>';
+  if(!isSingle&&routeData&&routeData.distance) html+='<div class="summary-row"><span class="summary-label">Distance</span><span class="summary-value">'+(routeData.distanceMiles||routeData.distance).toFixed(0)+' miles</span></div>';
+  html+='<div class="summary-row"><span class="summary-label">Stations</span><span class="summary-value">'+stations.length+' within '+radiusLabel+'</span></div></div>';
+  if(saving>0) html+='<div class="saving-box">💡 Filling at <strong>'+cheapest.name+'</strong> ('+cheapest.price.toFixed(1)+'p/L) saves <strong>'+saving.toFixed(1)+'p/litre</strong> vs UK average</div>';
+  html += petrolStationsHTML(stations);
+  html += '<div class="radius-note">Stations within '+radiusLabel+' · UK Gov Fuel Finder · updated within 30 mins</div>';
+  document.getElementById('results-panel').innerHTML = html;
+}
+
+function petrolStationsHTML(stations) {
+  return stations.map(function(s,i){
+    var h='<div class="station-card'+(i===0?' cheapest':'')+'" onclick="selectStation('+i+')" id="station-'+i+'">';
+    h+='<div class="station-rank'+(i===0?' top':'')+'">'+( i===0?'⭐':(i+1))+'</div>';
+    h+='<div class="station-info"><div class="station-name">'+(s.brand?s.brand+' — ':'')+s.name+'</div>';
+    if(s.address)h+='<div class="station-address">'+s.address+'</div>';
+    h+='<div class="station-meta">';
+    if(s.distKm&&s.distKm<100)h+='<span class="station-dist">📍 '+(s.distKm*0.621).toFixed(1)+' mi</span>';
+    if(s.isSupermarket)h+='<span class="station-tag supermarket">🛒 Supermarket</span>';
+    if(s.isMotorway)h+='<span class="station-tag motorway">🛣️ Motorway</span>';
+    h+='</div><a href="https://www.google.com/maps/search/'+encodeURIComponent(s.name+' '+(s.address||''))+'" target="_blank" rel="noopener" class="maps-link"><i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps</a></div>';
+    h+='<div><div class="station-price">'+s.price.toFixed(1)+'p</div><div class="station-price-label">per litre</div></div></div>';
+    return h;
+  }).join('');
+}
+
+// ─── Render EV results ────────────────────────────────────────────────────────
+function renderEVResults(chargers, isSingle) {
+  var html = '<div class="ev-info-box">⚡ <strong>'+chargers.length+' charging points</strong> found — sorted by power (fastest first). Tap a point on the map for details.</div>';
+  html += evChargersHTML(chargers);
+  html += '<div class="radius-note">Open Charge Map · Global coverage · Community maintained</div>';
+  document.getElementById('results-panel').innerHTML = html;
+}
+
+function evChargersHTML(chargers) {
+  return chargers.map(function(c, i){
+    var speedClass = c.maxKw >= 100 ? 'speed-ultra' : c.maxKw >= 43 ? 'speed-rapid' : c.maxKw >= 7 ? 'speed-fast' : 'speed-slow';
+    var h='<div class="charger-card" onclick="selectEVStation('+i+')" id="charger-'+i+'">';
+    h+='<div style="flex:1;min-width:0;">';
+    h+='<div class="station-name">'+c.name+'</div>';
+    if(c.operator && c.operator !== c.name) h+='<div class="station-address">'+c.operator+'</div>';
+    if(c.address) h+='<div class="station-address">'+c.address+'</div>';
+    h+='<div class="station-meta" style="margin-top:4px;">';
+    h+='<span class="charger-speed '+speedClass+'">'+c.speedLabel+'</span>';
+    if(c.numPoints>1)h+='<span class="station-tag">'+c.numPoints+' points</span>';
+    if(c.isFree)h+='<span class="station-tag free">Free</span>';
+    if(c.connTypes.length)h+='<span class="station-tag">'+c.connTypes[0]+'</span>';
+    h+='</div>';
+    h+='<a href="'+c.mapsUrl+'" target="_blank" rel="noopener" class="maps-link"><i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps</a>';
+    h+='</div>';
+    if(c.maxKw>0){h+='<div><div class="charger-kw">'+c.maxKw+'</div><div class="charger-kw-label">kW max</div></div>';}
+    h+='</div>';
+    return h;
+  }).join('');
+}
+
+// ─── Render both ──────────────────────────────────────────────────────────────
+function appendPetrolResults(fuelData, isSingle) {
+  var existing = document.getElementById('results-panel').innerHTML;
+  var html = '<div style="font-size:12px;font-weight:700;color:var(--accent-text);text-transform:uppercase;letter-spacing:0.05em;margin:12px 0 6px;">⛽ Petrol stations (UK only)</div>';
+  html += petrolStationsHTML(fuelData.stations.slice(0,3));
+  document.getElementById('results-panel').innerHTML = existing + html;
+}
+
+function appendEVResults(chargers, isSingle) {
+  var existing = document.getElementById('results-panel').innerHTML;
+  var html = '<div style="font-size:12px;font-weight:700;color:var(--ev-text);text-transform:uppercase;letter-spacing:0.05em;margin:12px 0 6px;">⚡ EV chargers (global)</div>';
+  html += evChargersHTML(chargers.slice(0,5));
+  document.getElementById('results-panel').innerHTML = existing + html;
+}
+
+// ─── Select station ───────────────────────────────────────────────────────────
+function selectStation(index) {
   document.querySelectorAll('.station-card').forEach(function(el,i){el.classList.toggle('selected',i===index);});
   if(markers[index]){
     map.panTo(markers[index].getPosition());
@@ -399,7 +600,19 @@ function selectStation(index){
     markers[index]._iw.open(map,markers[index]);
   }
 }
-</script>
 
+function selectEVStation(index) {
+  document.querySelectorAll('.charger-card').forEach(function(el,i){el.classList.toggle('selected',i===index);});
+  // Find the EV marker — they come after petrol markers
+  var petrolCount = document.querySelectorAll('.station-card').length;
+  var markerIndex = petrolCount + index;
+  if(markers[markerIndex]){
+    map.panTo(markers[markerIndex].getPosition());
+    map.setZoom(15);
+    markers.forEach(function(m){if(m._iw)m._iw.close();});
+    markers[markerIndex]._iw.open(map,markers[markerIndex]);
+  }
+}
+</script>
 </body>
 </html>
