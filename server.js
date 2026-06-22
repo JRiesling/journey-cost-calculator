@@ -449,6 +449,98 @@ app.post('/api/fuel-finder', async (req, res) => {
   } catch (err) { console.error('Fuel Finder error:', err.message); res.status(500).json({ error: 'Could not fetch fuel prices. ' + err.message }); }
 });
 
+// ── EV Charger API ────────────────────────────────────────────────────────────
+
+const evChargerCache = new Map();
+const EV_CHARGER_TTL = 60 * 60 * 1000; // 1 hour cache
+
+app.post('/api/ev-chargers', async (req, res) => {
+  try {
+    const { lat, lng, distance = 10, maxresults = 10 } = req.body;
+    if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
+
+    const cacheKey = `${Math.round(lat * 100) / 100}_${Math.round(lng * 100) / 100}_${distance}`;
+    const cached = evChargerCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < EV_CHARGER_TTL) {
+      return res.json({ ...cached.data, cached: true });
+    }
+
+    const apiKey = process.env.OPEN_CHARGE_MAP_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'EV charger API not configured' });
+
+    const url = `https://api.openchargemap.io/v3/poi/?output=json&latitude=${lat}&longitude=${lng}&distance=${distance}&distanceunit=KM&maxresults=${maxresults}&compact=true&verbose=false&countrycode=&key=${apiKey}`;
+
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'FuelSmarter/1.0 (fuel-smarter.com)' }
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(`Open Charge Map API error: ${response.status} — ${err}`);
+    }
+
+    const data = await response.json();
+
+    // Normalise the response
+    const chargers = data.map(poi => {
+      const addr = poi.AddressInfo || {};
+      const connections = poi.Connections || [];
+
+      // Get the fastest connection
+      const maxKw = connections.reduce((max, c) => {
+        const kw = c.PowerKW || 0;
+        return kw > max ? kw : max;
+      }, 0);
+
+      // Get connection types
+      const connTypes = [...new Set(connections
+        .map(c => c.ConnectionType && c.ConnectionType.Title)
+        .filter(Boolean)
+      )].slice(0, 3);
+
+      // Speed label
+      let speedLabel = 'Slow';
+      if (maxKw >= 100) speedLabel = 'Ultra-rapid';
+      else if (maxKw >= 43) speedLabel = 'Rapid';
+      else if (maxKw >= 22) speedLabel = 'Fast';
+      else if (maxKw >= 7) speedLabel = 'Fast';
+
+      // Operator
+      const operator = poi.OperatorInfo && poi.OperatorInfo.Title ? poi.OperatorInfo.Title : 'Unknown';
+
+      // Status
+      const statusType = poi.StatusType && poi.StatusType.Title ? poi.StatusType.Title : null;
+      const isOperational = !statusType || statusType.toLowerCase().includes('operational') || statusType.toLowerCase().includes('unknown');
+
+      return {
+        id: poi.ID,
+        name: addr.Title || operator,
+        operator,
+        address: [addr.AddressLine1, addr.Town, addr.Postcode].filter(Boolean).join(', '),
+        lat: addr.Latitude,
+        lng: addr.Longitude,
+        maxKw,
+        speedLabel,
+        connTypes,
+        numPoints: poi.NumberOfPoints || connections.length || 1,
+        isOperational,
+        status: statusType,
+        usageType: poi.UsageType && poi.UsageType.Title ? poi.UsageType.Title : null,
+        isFree: poi.UsageType && poi.UsageType.IsFreeCharge,
+        mapsUrl: `https://www.google.com/maps/search/${encodeURIComponent((addr.Title || operator) + ' ' + (addr.AddressLine1 || '') + ' ' + (addr.Postcode || ''))}`,
+      };
+    }).filter(c => c.lat && c.lng);
+
+    const result = { chargers };
+    evChargerCache.set(cacheKey, { data: result, timestamp: Date.now() });
+    res.json(result);
+
+  } catch (err) {
+    console.error('EV charger error:', err.message);
+    res.status(500).json({ error: 'Could not fetch EV chargers. ' + err.message });
+  }
+});
+
 app.get('/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 app.get('/api/maps-key', (req, res) => res.json({ key: process.env.GOOGLE_MAPS_API_KEY || '' }));
 app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'public', 'about.html')));
