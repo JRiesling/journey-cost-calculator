@@ -477,6 +477,7 @@ app.get('/guides/london-to-cornwall', (req, res) => res.sendFile(path.join(__dir
 app.get('/guides/london-to-edinburgh', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'london-to-edinburgh.html')));
 app.get('/guides/cheapest-day-to-buy-petrol', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'cheapest-day-to-buy-petrol.html')));
 app.get('/guides/why-petrol-prices-vary', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'why-petrol-prices-vary.html')));
+app.get('/car-care', (req, res) => res.sendFile(path.join(__dirname, 'public', 'car-care.html')));
 app.get('/guides/most-fuel-efficient-small-cars', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-small-cars.html')));
 app.get('/guides/most-fuel-efficient-family-cars', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-family-cars.html')));
 app.get('/guides/most-fuel-efficient-suvs', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-suvs.html')));
