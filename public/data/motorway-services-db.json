@@ -1,0 +1,737 @@
+{
+  "version": "1.0",
+  "updated": "2026-06-22",
+  "source": "motorwayservices.uk",
+  "services": {
+    "London Gateway": {
+      "road": "M1", "junction": "J2-J4", "operator": "Welcome Break",
+      "lat": 51.6147, "lng": -0.2482, "postcode": "NW7 3HU",
+      "catering": ["Burger King", "Starbucks", "Subway", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Ramada"],
+      "ev": true, "fuel": true
+    },
+    "Toddington": {
+      "road": "M1", "junction": "J11A-J12", "operator": "Moto",
+      "lat": 51.9419, "lng": -0.5071, "postcode": "LU5 6HR",
+      "catering": ["Burger King", "Costa", "Greggs", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Newport Pagnell": {
+      "road": "M1", "junction": "J14-J15", "operator": "Welcome Break",
+      "lat": 52.0831, "lng": -0.7485, "postcode": "MK16 8DS",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Northampton": {
+      "road": "M1", "junction": "J15A", "operator": "Roadchef",
+      "lat": 52.2186, "lng": -1.0254, "postcode": "NN7 4EX",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith", "Co-op"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Watford Gap": {
+      "road": "M1", "junction": "J16-J17", "operator": "Roadchef",
+      "lat": 52.2804, "lng": -1.1339, "postcode": "NN6 7UZ",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Leicester Forest East": {
+      "road": "M1", "junction": "J21-J21A", "operator": "Welcome Break",
+      "lat": 52.6103, "lng": -1.2121, "postcode": "LE3 3GB",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Donington": {
+      "road": "M1", "junction": "J23A-J24", "operator": "Moto",
+      "lat": 52.8258, "lng": -1.3281, "postcode": "DE74 2TN",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Trowell": {
+      "road": "M1", "junction": "J25-J26", "operator": "Moto",
+      "lat": 52.9679, "lng": -1.2701, "postcode": "NG9 3PL",
+      "catering": ["Burger King", "Costa", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Tibshelf": {
+      "road": "M1", "junction": "J28-J29", "operator": "Roadchef",
+      "lat": 53.1441, "lng": -1.3382, "postcode": "DE55 5TZ",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Woodall": {
+      "road": "M1", "junction": "J30-J31", "operator": "Welcome Break",
+      "lat": 53.3531, "lng": -1.3084, "postcode": "S26 7XR",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Rotherham": {
+      "road": "M1", "junction": "J33", "operator": "Welcome Break",
+      "lat": 53.4344, "lng": -1.3209, "postcode": "S60 5YE",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "McDonald's", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Woolley Edge": {
+      "road": "M1", "junction": "J38-J39", "operator": "Moto",
+      "lat": 53.5961, "lng": -1.5403, "postcode": "WF4 4LQ",
+      "catering": ["Burger King", "Costa", "Greggs", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Leeds Skelton Lake": {
+      "road": "M1", "junction": "J45", "operator": "Extra",
+      "lat": 53.7611, "lng": -1.4821, "postcode": "LS9 0AP",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Greggs", "Chopstix", "West Cornwall Pasty Co.", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Medway": {
+      "road": "M2", "junction": "J4", "operator": "Moto",
+      "lat": 51.3614, "lng": 0.5537, "postcode": "ME8 8PQ",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Fleet": {
+      "road": "M3", "junction": "J4A-J5", "operator": "Welcome Break",
+      "lat": 51.2761, "lng": -1.0044, "postcode": "GU51 1AA",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "PizzaExpress", "Taco Bell", "Chopstix", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Winchester": {
+      "road": "M3", "junction": "J9-J10", "operator": "Moto",
+      "lat": 51.0728, "lng": -1.3157, "postcode": "SO21 1PP",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Heston": {
+      "road": "M4", "junction": "J2-J3", "operator": "Moto",
+      "lat": 51.4833, "lng": -0.3914, "postcode": "TW5 9NB",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Reading": {
+      "road": "M4", "junction": "J11-J12", "operator": "Moto",
+      "lat": 51.4304, "lng": -1.0549, "postcode": "RG30 3UQ",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Chieveley": {
+      "road": "M4", "junction": "J13", "operator": "Moto",
+      "lat": 51.4619, "lng": -1.2819, "postcode": "RG18 9XX",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Membury": {
+      "road": "M4", "junction": "J14-J15", "operator": "Welcome Break",
+      "lat": 51.5177, "lng": -1.5819, "postcode": "SN8 2LF",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Leigh Delamere": {
+      "road": "M4", "junction": "J17-J18", "operator": "Moto",
+      "lat": 51.5199, "lng": -2.1133, "postcode": "SN14 6LB",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Severn View": {
+      "road": "M4/M48", "junction": "M48 J1", "operator": "Moto",
+      "lat": 51.6004, "lng": -2.6496, "postcode": "NP16 7LT",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Magor": {
+      "road": "M4", "junction": "J23A", "operator": "Roadchef",
+      "lat": 51.5713, "lng": -2.8369, "postcode": "NP26 3YL",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Cardiff Gate": {
+      "road": "M4", "junction": "J30", "operator": "Welcome Break",
+      "lat": 51.5296, "lng": -3.1368, "postcode": "CF23 8RA",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Cardiff West": {
+      "road": "M4", "junction": "J33", "operator": "Moto",
+      "lat": 51.4946, "lng": -3.2939, "postcode": "CF5 6XJ",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Sarn Park": {
+      "road": "M4", "junction": "J36", "operator": "Welcome Break",
+      "lat": 51.5367, "lng": -3.5871, "postcode": "CF32 9RW",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "McDonald's", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Swansea West": {
+      "road": "M4", "junction": "J47", "operator": "Moto",
+      "lat": 51.6279, "lng": -3.9979, "postcode": "SA4 9GJ",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Pont Abraham": {
+      "road": "M4", "junction": "J49", "operator": "Roadchef",
+      "lat": 51.7679, "lng": -4.0754, "postcode": "SA4 0FH",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Frankley": {
+      "road": "M5", "junction": "J3-J4", "operator": "Moto",
+      "lat": 52.3844, "lng": -1.9964, "postcode": "B32 4AR",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Strensham": {
+      "road": "M5", "junction": "J7-J8", "operator": "Roadchef",
+      "lat": 52.0689, "lng": -2.1014, "postcode": "WR8 9JB",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Gloucester": {
+      "road": "M5", "junction": "J11A-J12", "operator": "Westmorland",
+      "lat": 51.8184, "lng": -2.2254, "postcode": "GL2 9QW",
+      "catering": ["Local / artisan food only"],
+      "shops": ["Farm shop"],
+      "hotel": [],
+      "ev": true, "fuel": true,
+      "note": "No chain brands — independent artisan food only"
+    },
+    "Michaelwood": {
+      "road": "M5", "junction": "J13-J14", "operator": "Welcome Break",
+      "lat": 51.6499, "lng": -2.3796, "postcode": "GL11 6DD",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Gordano": {
+      "road": "M5", "junction": "J19", "operator": "Welcome Break",
+      "lat": 51.4751, "lng": -2.7299, "postcode": "BS20 7XG",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Sedgemoor North": {
+      "road": "M5", "junction": "J22-J23", "operator": "Welcome Break",
+      "lat": 51.2299, "lng": -2.9864, "postcode": "TA9 4JQ",
+      "catering": ["Burger King", "Starbucks", "Subway", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Sedgemoor South": {
+      "road": "M5", "junction": "J22-J23", "operator": "Roadchef",
+      "lat": 51.2271, "lng": -2.9881, "postcode": "TA9 4JQ",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Bridgwater": {
+      "road": "M5", "junction": "J23-J24", "operator": "Moto",
+      "lat": 51.1619, "lng": -3.0086, "postcode": "TA6 6TS",
+      "catering": ["Costa", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Taunton Deane": {
+      "road": "M5", "junction": "J25-J26", "operator": "Roadchef",
+      "lat": 51.0374, "lng": -3.1244, "postcode": "TA3 7PF",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Cullompton": {
+      "road": "M5", "junction": "J28", "operator": "Extra",
+      "lat": 50.8526, "lng": -3.3811, "postcode": "EX15 1PE",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Chopstix", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Exeter": {
+      "road": "M5", "junction": "J30", "operator": "Moto",
+      "lat": 50.7131, "lng": -3.4474, "postcode": "EX5 1DY",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Rugby": {
+      "road": "M6", "junction": "J1", "operator": "Moto",
+      "lat": 52.3754, "lng": -1.2219, "postcode": "CV23 0RD",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Corley": {
+      "road": "M6", "junction": "J3-J4", "operator": "Welcome Break",
+      "lat": 52.4629, "lng": -1.5484, "postcode": "CV7 8NR",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "McDonald's", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Hilton Park": {
+      "road": "M6", "junction": "J10A-J11", "operator": "Moto",
+      "lat": 52.6101, "lng": -1.9921, "postcode": "WV11 2AT",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Stafford South": {
+      "road": "M6", "junction": "J13-J14", "operator": "Roadchef",
+      "lat": 52.7551, "lng": -2.0644, "postcode": "ST18 0PA",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme", "LEON"],
+      "shops": ["WHSmith", "Co-op"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Stafford North": {
+      "road": "M6", "junction": "J14-J15", "operator": "Moto",
+      "lat": 52.7811, "lng": -2.0634, "postcode": "ST18 0PA",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Keele": {
+      "road": "M6", "junction": "J15-J16", "operator": "Welcome Break",
+      "lat": 53.0074, "lng": -2.2691, "postcode": "ST5 5HG",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Sandbach": {
+      "road": "M6", "junction": "J17-J18", "operator": "Roadchef",
+      "lat": 53.1524, "lng": -2.3611, "postcode": "CW11 4RZ",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Knutsford": {
+      "road": "M6", "junction": "J18-J19", "operator": "Moto",
+      "lat": 53.2874, "lng": -2.3584, "postcode": "WA16 0TL",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Charnock Richard": {
+      "road": "M6", "junction": "J27-J28", "operator": "Welcome Break",
+      "lat": 53.6321, "lng": -2.6584, "postcode": "PR7 5LR",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Lancaster": {
+      "road": "M6", "junction": "J32-J33", "operator": "Moto",
+      "lat": 53.9699, "lng": -2.7304, "postcode": "LA2 9DU",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Burton-in-Kendal": {
+      "road": "M6", "junction": "J35-J36", "operator": "Moto",
+      "lat": 54.1849, "lng": -2.6929, "postcode": "LA6 1JF",
+      "catering": ["Costa", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Killington Lake": {
+      "road": "M6", "junction": "J37-J38", "operator": "Roadchef",
+      "lat": 54.3394, "lng": -2.5791, "postcode": "LA10 5ET",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Tebay": {
+      "road": "M6", "junction": "J38-J39", "operator": "Westmorland",
+      "lat": 54.4299, "lng": -2.5914, "postcode": "CA10 3SS",
+      "catering": ["Local / farm food only"],
+      "shops": ["Farm shop"],
+      "hotel": ["Westmorland Hotel"],
+      "ev": true, "fuel": true,
+      "note": "No chain brands — independent farm food"
+    },
+    "Southwaite": {
+      "road": "M6", "junction": "J41-J42", "operator": "Moto",
+      "lat": 54.7864, "lng": -2.8274, "postcode": "CA4 0NT",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Todhills": {
+      "road": "M6", "junction": "J44", "operator": "Moto",
+      "lat": 54.9524, "lng": -2.9519, "postcode": "CA6 4HA",
+      "catering": ["Costa", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": false, "fuel": true
+    },
+    "Norton Canes": {
+      "road": "M6 Toll", "junction": "T6-T7", "operator": "Roadchef",
+      "lat": 52.6516, "lng": -1.9529, "postcode": "WS11 9UX",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Clacket Lane": {
+      "road": "M25", "junction": "J5-J6", "operator": "Roadchef",
+      "lat": 51.2764, "lng": 0.0454, "postcode": "TN16 2ER",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme", "LEON"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Cobham": {
+      "road": "M25", "junction": "J9-J10", "operator": "Extra",
+      "lat": 51.3284, "lng": -0.3829, "postcode": "KT11 3DB",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Nando's", "PizzaExpress", "LEON", "Chopstix", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Ramada"],
+      "ev": true, "fuel": true
+    },
+    "South Mimms": {
+      "road": "M25/A1(M)", "junction": "J23", "operator": "Welcome Break",
+      "lat": 51.6934, "lng": -0.2199, "postcode": "EN6 3QQ",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Thurrock": {
+      "road": "M25", "junction": "J30-J31", "operator": "Moto",
+      "lat": 51.4826, "lng": 0.3274, "postcode": "RM20 3LD",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Rownhams": {
+      "road": "M27", "junction": "J3", "operator": "Roadchef",
+      "lat": 50.9394, "lng": -1.4234, "postcode": "SO16 8AP",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Beaconsfield": {
+      "road": "M40", "junction": "J2", "operator": "Extra",
+      "lat": 51.6034, "lng": -0.6369, "postcode": "HP9 2SE",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Chopstix", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Oxford": {
+      "road": "M40", "junction": "J8A", "operator": "Welcome Break",
+      "lat": 51.7554, "lng": -1.1409, "postcode": "OX33 1LJ",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Cherwell Valley": {
+      "road": "M40", "junction": "J10", "operator": "Moto",
+      "lat": 51.9574, "lng": -1.2964, "postcode": "OX27 7RD",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Warwick": {
+      "road": "M40", "junction": "J14-J15", "operator": "Welcome Break",
+      "lat": 52.2131, "lng": -1.5454, "postcode": "CV35 0AA",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Hopwood Park": {
+      "road": "M42", "junction": "J2", "operator": "Welcome Break",
+      "lat": 52.3799, "lng": -1.9374, "postcode": "B48 7AU",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Tamworth": {
+      "road": "M42", "junction": "J9-J10", "operator": "Moto",
+      "lat": 52.5779, "lng": -1.6271, "postcode": "B78 3TN",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "Pease Pottage": {
+      "road": "M23", "junction": "J11", "operator": "Moto",
+      "lat": 51.0834, "lng": -0.1874, "postcode": "RH11 9AB",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Telford": {
+      "road": "M54", "junction": "J4", "operator": "Welcome Break",
+      "lat": 52.7001, "lng": -2.4579, "postcode": "TF3 4DY",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Chester": {
+      "road": "M56", "junction": "J14", "operator": "Roadchef",
+      "lat": 53.2221, "lng": -2.8559, "postcode": "CH2 4QZ",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Birchanger Green": {
+      "road": "M11", "junction": "J8", "operator": "Welcome Break",
+      "lat": 51.8851, "lng": 0.1794, "postcode": "CM23 5QZ",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Burtonwood": {
+      "road": "M62", "junction": "J8-J9", "operator": "Welcome Break",
+      "lat": 53.4214, "lng": -2.6521, "postcode": "WA5 3AX",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Birch": {
+      "road": "M62", "junction": "J18-J19", "operator": "Moto",
+      "lat": 53.5711, "lng": -2.2089, "postcode": "OL10 2HQ",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Hartshead Moor": {
+      "road": "M62", "junction": "J25-J26", "operator": "Welcome Break",
+      "lat": 53.7341, "lng": -1.7484, "postcode": "HD6 4JX",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Ferrybridge": {
+      "road": "M62/A1(M)", "junction": "J33", "operator": "Moto",
+      "lat": 53.7011, "lng": -1.2964, "postcode": "WF11 0AF",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Travelodge"],
+      "ev": true, "fuel": true
+    },
+    "South Mimms": {
+      "road": "M25/A1(M)", "junction": "J23", "operator": "Welcome Break",
+      "lat": 51.6934, "lng": -0.2199, "postcode": "EN6 3QQ",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith", "WYE"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Baldock": {
+      "road": "A1(M)", "junction": "J9-J10", "operator": "Extra",
+      "lat": 51.9934, "lng": -0.1709, "postcode": "SG7 5TR",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Chopstix", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Sawtry": {
+      "road": "A1(M)", "junction": "J14-J15", "operator": "Moto",
+      "lat": 52.4279, "lng": -0.2829, "postcode": "PE28 5TE",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Peterborough": {
+      "road": "A1(M)", "junction": "J17", "operator": "Extra",
+      "lat": 52.5726, "lng": -0.2121, "postcode": "PE7 3UQ",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Chopstix", "El Mexicana", "German Doner Kebab", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Ramada"],
+      "ev": true, "fuel": true
+    },
+    "Blyth": {
+      "road": "A1(M)", "junction": "J34", "operator": "Moto",
+      "lat": 53.3981, "lng": -1.0641, "postcode": "S81 8HG",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Wetherby": {
+      "road": "A1(M)", "junction": "J46-J47", "operator": "Moto",
+      "lat": 53.9069, "lng": -1.3879, "postcode": "LS22 5GT",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Durham": {
+      "road": "A1(M)", "junction": "J62", "operator": "Roadchef",
+      "lat": 54.7909, "lng": -1.5279, "postcode": "DH1 1TW",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme", "LEON"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Washington": {
+      "road": "A1(M)", "junction": "J64-J65", "operator": "Moto",
+      "lat": 54.9019, "lng": -1.5299, "postcode": "NE38 8AB",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Stirling": {
+      "road": "M9/M80", "junction": "J9/J9A", "operator": "Moto",
+      "lat": 56.1069, "lng": -3.9384, "postcode": "FK7 8EU",
+      "catering": ["Burger King", "Costa", "Greggs", "KFC", "Pret A Manger", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Rivington": {
+      "road": "M61", "junction": "J6-J8", "operator": "EG Group",
+      "lat": 53.6129, "lng": -2.5734, "postcode": "PR6 9HW",
+      "catering": ["Burger King", "Starbucks", "Subway", "Krispy Kreme"],
+      "shops": ["SPAR"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Blackburn with Darwen": {
+      "road": "M65", "junction": "J4", "operator": "Extra",
+      "lat": 53.7241, "lng": -2.4804, "postcode": "BB1 2HH",
+      "catering": ["Costa", "KFC", "McDonald's", "Starbucks", "Chopstix", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Maidstone": {
+      "road": "M20", "junction": "J8", "operator": "Roadchef",
+      "lat": 51.2894, "lng": 0.5284, "postcode": "ME17 3PJ",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Folkestone": {
+      "road": "M20", "junction": "J11-J12", "operator": "Stop 24",
+      "lat": 51.1201, "lng": 1.0569, "postcode": "CT18 8AX",
+      "catering": ["Costa", "McDonald's", "Greggs", "Taco Bell", "Starbucks"],
+      "shops": ["WHSmith"],
+      "hotel": ["Holiday Inn Express"],
+      "ev": true, "fuel": true
+    },
+    "Abington": {
+      "road": "M74", "junction": "J13", "operator": "Welcome Break",
+      "lat": 55.5601, "lng": -3.6879, "postcode": "ML12 6RG",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Gretna": {
+      "road": "A74(M)", "junction": "J22", "operator": "Welcome Break",
+      "lat": 54.9959, "lng": -3.0554, "postcode": "DG16 5HQ",
+      "catering": ["Burger King", "Starbucks", "Subway", "KFC", "Krispy Kreme"],
+      "shops": ["Waitrose", "WHSmith"],
+      "hotel": ["Days Inn"],
+      "ev": true, "fuel": true
+    },
+    "Annandale Water": {
+      "road": "A74(M)", "junction": "J15", "operator": "Roadchef",
+      "lat": 55.2879, "lng": -3.4094, "postcode": "DG11 2HL",
+      "catering": ["Costa", "McDonald's", "Greggs", "Krispy Kreme"],
+      "shops": ["WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    },
+    "Kinross": {
+      "road": "M90", "junction": "J6", "operator": "Moto",
+      "lat": 56.2044, "lng": -3.4259, "postcode": "KY13 0NQ",
+      "catering": ["Costa", "Greggs", "Krispy Kreme"],
+      "shops": ["M&S Simply Food", "WHSmith"],
+      "hotel": [],
+      "ev": true, "fuel": true
+    }
+  }
+}
