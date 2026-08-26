@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Station Planner — Plan Your Motorway Stops | Fuel Smarter</title>
+  <meta name="description" content="Plan your motorway service stops before you travel. Filter by McDonald's, Costa, Starbucks, KFC and more. Find which motorway services have the brands you want on your route." />
+  <meta name="keywords" content="motorway service station planner UK, which motorway services has McDonald's, motorway services with Costa, plan motorway stops, service station brands UK" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/service-station-planner" />
+  <meta property="og:title" content="Service Station Planner | Fuel Smarter" />
+  <meta property="og:description" content="Find which motorway services have the brands you want on your route — McDonald's, Costa, Starbucks, KFC and more." />
+  <meta property="og:url" content="https://fuel-smarter.com/service-station-planner" />
+  <meta property="og:type" content="website" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Fuel Smarter — Service Station Planner","description":"Plan your motorway service stops. Filter by brand to find which services have what you want on your route.","url":"https://fuel-smarter.com/service-station-planner","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"}}</script>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MPGYCEEDJQ');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});
+    (function(){var c=localStorage.getItem('fs_cookie_consent');if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});}})();
+  </script>
+
+  <!-- Maps loaded dynamically -->
+  <script>
+    var map=null,mapsLoaded=false;
+    function showMapFallback(){var m=document.getElementById('map');if(m)m.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#A8A29E;font-family:Inter,sans-serif;font-size:14px;"><span style="font-size:40px;">🗺️</span><p>Map unavailable</p></div>';}
+    fetch('/api/maps-key').then(r=>r.json()).then(function(d){
+      if(!d.key){showMapFallback();return;}
+      window.initMap=function(){
+        mapsLoaded=true;
+        map=new google.maps.Map(document.getElementById('map'),{
+          center:{lat:52.5,lng:-1.5},zoom:6,
+          styles:[{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'transit',elementType:'labels',stylers:[{visibility:'off'}]}],
+          mapTypeControl:false,streetViewControl:false,fullscreenControl:false
+        });
+      };
+      var s=document.createElement('script');
+      s.src='https://maps.googleapis.com/maps/api/js?key='+d.key+'&libraries=geometry&callback=initMap';
+      s.async=true;s.onerror=showMapFallback;
+      document.head.appendChild(s);
+    }).catch(showMapFallback);
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#F4F1EA;--card:#FDFCFA;--border:rgba(0,0,0,0.08);
+      --text:#1C1917;--text-secondary:#6B6560;--text-tertiary:#A8A29E;
+      --accent:#2D6A4F;--accent-light:#EAF4EE;--accent-border:#95C9A8;--accent-text:#1A4731;
+      --info-bg:#e6f1fb;--info-border:#b5d4f4;--info-text:#0c447c;
+      --radius:10px;--radius-lg:16px;
+      --shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);
+      --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    @media(prefers-color-scheme:dark){
+      :root{--bg:#171512;--card:#1F1E1B;--border:rgba(255,255,255,0.08);--text:#E8E4DC;--text-secondary:#9B9690;--text-tertiary:#6B6560;--accent:#40916C;--accent-light:#1A2E22;--accent-border:#2D6A4F;--accent-text:#95C9A8;--info-bg:#0c2a44;--info-border:#185fa5;--info-text:#85b7eb;}
+    }
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+    /* ── Header ── */
+    header{background:var(--card);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+    nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;}
+    nav::-webkit-scrollbar{display:none;}
+    nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
+    nav a:hover{color:var(--text);}
+    nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+    /* ── Layout ── */
+    .page{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 60px);}
+    @media(max-width:768px){.page{grid-template-columns:1fr;}}
+    .panel{padding:1.25rem;overflow-y:auto;max-height:calc(100vh - 60px);}
+    @media(max-width:768px){.panel{max-height:none;}}
+    #map{width:100%;height:calc(100vh - 60px);position:sticky;top:60px;}
+    @media(max-width:768px){#map{height:300px;position:relative;top:0;}}
+
+    /* ── Hero ── */
+    .hero{margin-bottom:1.25rem;}
+    .hero h1{font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:5px;}
+    .hero p{font-size:13px;color:var(--text-secondary);}
+    .live-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent-light);color:var(--accent-text);border:1px solid var(--accent-border);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;margin-bottom:8px;}
+
+    /* ── Cards ── */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:1rem;box-shadow:var(--shadow);}
+    label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+    input[type="text"]{width:100%;height:42px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:15px;padding:0 12px;font-family:var(--font);outline:none;transition:border-color 0.15s;}
+    input[type="text"]:focus{border-color:var(--accent);}
+
+    /* ── Brand filter pills ── */
+    .brand-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+    .brand-pill{display:flex;align-items:center;gap:6px;padding:6px 12px 6px 6px;border:1.5px solid var(--border);border-radius:20px;background:var(--bg);cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary);transition:all 0.15s;user-select:none;-webkit-tap-highlight-color:transparent;}
+    .brand-pill:hover{border-color:var(--accent-border);color:var(--text);}
+    .brand-pill.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent-text);}
+    .brand-pill img{width:20px;height:20px;border-radius:4px;object-fit:contain;background:#fff;flex-shrink:0;}
+    .brand-pill .brand-fallback{width:20px;height:20px;border-radius:4px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-text);flex-shrink:0;}
+
+    /* ── Category sections ── */
+    .brand-category{margin-bottom:14px;}
+    .brand-category-label{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+
+    /* ── Search button ── */
+    .search-btn{width:100%;height:46px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;margin-top:4px;}
+    .search-btn:hover{background:#235c42;}
+    .search-btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+    /* ── Results ── */
+    .status{padding:1rem;text-align:center;font-size:14px;color:var(--text-tertiary);}
+    .loading{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--accent-text);font-size:13px;padding:1rem;}
+
+    .service-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow);}
+    .service-card:hover{border-color:var(--accent-border);}
+    .service-card.selected{border-color:var(--accent);border-width:2px;}
+    .service-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+    .service-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+    .service-meta{font-size:12px;color:var(--text-tertiary);margin-top:2px;}
+    .operator-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--bg);border:1px solid var(--border);color:var(--text-secondary);flex-shrink:0;}
+    .brand-logos{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .brand-logo-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
+    .brand-logo-img{width:32px;height:32px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border);padding:2px;}
+    .brand-logo-name{font-size:9px;color:var(--text-tertiary);text-align:center;max-width:36px;line-height:1.2;}
+    .brand-logo-fallback{width:32px;height:32px;border-radius:6px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-text);}
+    .matched-brands{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+    .matched-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--accent-light);color:var(--accent-text);border:1px solid var(--accent-border);}
+    .hotel-tag{background:#fef3c7;color:#78350f;border-color:#fde68a;}
+    .ev-tag{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);}
+    .maps-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--accent);font-weight:600;text-decoration:none;margin-top:6px;}
+    .results-header{font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+    .no-match-note{font-size:12px;color:var(--text-tertiary);font-style:italic;margin-top:4px;}
+    .select-all-btn{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;border:none;background:none;font-family:var(--font);padding:0;}
+    .clear-btn{font-size:12px;color:var(--text-tertiary);cursor:pointer;border:none;background:none;font-family:var(--font);padding:0;}
+
+    /* ── Footer ── */
+    footer{background:var(--card);border-top:1px solid var(--border);padding:1.25rem;text-align:center;font-size:12px;color:var(--text-tertiary);}
+    footer a{color:inherit;text-decoration:none;}
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;">
+    <span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span>
+  </a>
+  <nav>
+    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a>
+    <a href="/">Calculator</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/guides">Guides</a>
+    <a href="/service-station-planner" class="active">🛣️ Service Station Planner</a>
+    <a href="/ev-calculator">EV</a>
+    <a href="/car-care">Car Care</a>
+    <a href="/faq">FAQ</a>
+  </nav>
+</header>
+
+<div class="page">
+  <div class="panel">
+
+    <div class="hero">
+      <div class="live-badge">🛣️ UK Motorway Services</div>
+      <h1>Service Station Planner</h1>
+      <p>Find which motorway services have the brands you want — on your exact route.</p>
+    </div>
+
+    <div class="card">
+      <!-- Route inputs -->
+      <div style="margin-bottom:12px;">
+        <label for="origin-input">From</label>
+        <input type="text" id="origin-input" placeholder="e.g. London" autocomplete="off" />
+      </div>
+      <div style="margin-bottom:14px;">
+        <label for="dest-input">To</label>
+        <input type="text" id="dest-input" placeholder="e.g. Manchester" autocomplete="off" />
+      </div>
+
+      <!-- Brand filters -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="margin:0;">Filter by brand (optional)</label>
+        <div style="display:flex;gap:10px;">
+          <button class="select-all-btn" onclick="selectAllBrands()">Select all</button>
+          <button class="clear-btn" onclick="clearBrands()">Clear</button>
+        </div>
+      </div>
+
+      <div class="brand-category">
+        <div class="brand-category-label">☕ Coffee & snacks</div>
+        <div class="brand-grid" id="grid-coffee"></div>
+      </div>
+      <div class="brand-category">
+        <div class="brand-category-label">🍔 Food</div>
+        <div class="brand-grid" id="grid-food"></div>
+      </div>
+      <div class="brand-category">
+        <div class="brand-category-label">🛍️ Shops</div>
+        <div class="brand-grid" id="grid-shops"></div>
+      </div>
+      <div class="brand-category">
+        <div class="brand-category-label">🏨 Hotel</div>
+        <div class="brand-grid" id="grid-hotel"></div>
+      </div>
+
+      <button class="search-btn" id="search-btn" onclick="doSearch()">
+        <i class="ti ti-route" aria-hidden="true"></i> Find service stations on route
+      </button>
+    </div>
+
+    <div id="results-panel">
+      <div class="status">Enter your route above to find matching service stations.</div>
+    </div>
+
+  </div>
+
+  <div id="map"></div>
+</div>
+
+<footer>
+  <p>Service station data sourced from motorwayservices.uk · Updated June 2026</p>
+  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Home</a> · <a href="/fuel-finder">Fuel & Charging Finder</a> · <a href="/guides">Guides</a> · <a href="/privacy">Privacy</a></p>
+</footer>
+
+<!-- Cookie consent banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+  <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">We use cookies to see how people use Fuel Smarter. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;font-family:var(--font);">No thanks</button>
+      <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:1px solid var(--accent-border);border-radius:8px;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);">Yes, happy to help</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Cookie consent ────────────────────────────────────────────────────────────
+(function(){if(!localStorage.getItem('fs_cookie_consent'))document.getElementById('cookie-banner').style.display='block';})();
+function handleConsent(d){localStorage.setItem('fs_cookie_consent',d);document.getElementById('cookie-banner').style.display='none';if(d==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});gtag('event','page_view');}}
+
+// ── Brand definitions ─────────────────────────────────────────────────────────
+const BRANDS = {
+  coffee: [
+    { name: "Costa",        domain: "costa.co.uk" },
+    { name: "Starbucks",    domain: "starbucks.com" },
+    { name: "Pret A Manger",domain: "pret.com" },
+    { name: "Greggs",       domain: "greggs.co.uk" },
+    { name: "Krispy Kreme", domain: "krispykreme.co.uk" },
+  ],
+  food: [
+    { name: "McDonald's",   domain: "mcdonalds.com" },
+    { name: "Burger King",  domain: "burgerking.co.uk" },
+    { name: "KFC",          domain: "kfc.co.uk" },
+    { name: "Subway",       domain: "subway.com" },
+    { name: "LEON",         domain: "leon.co" },
+    { name: "Taco Bell",    domain: "tacobell.co.uk" },
+    { name: "PizzaExpress", domain: "pizzaexpress.com" },
+    { name: "Nando's",      domain: "nandos.co.uk" },
+    { name: "Chopstix",     domain: "chopstixnoodlebar.com" },
+    { name: "West Cornwall Pasty Co.", domain: "westcornwallpasty.co.uk" },
+  ],
+  shops: [
+    { name: "M&S Simply Food", domain: "marksandspencer.com" },
+    { name: "WHSmith",         domain: "whsmith.co.uk" },
+    { name: "Waitrose",        domain: "waitrose.com" },
+  ],
+  hotel: [
+    { name: "Days Inn",    domain: "daysinn.com" },
+    { name: "Travelodge",  domain: "travelodge.co.uk" },
+    { name: "Ramada",      domain: "ramada.com" },
+  ]
+};
+
+// All brand names flattened
+const ALL_BRAND_NAMES = Object.values(BRANDS).flat().map(b => b.name);
+
+// Selected brands state
+var selectedBrands = new Set();
+var markers = [];
+var routePolyline = null;
+
+// ── Build brand pills ─────────────────────────────────────────────────────────
+function buildBrandPills() {
+  Object.entries(BRANDS).forEach(function([cat, brands]) {
+    var grid = document.getElementById('grid-' + cat);
+    brands.forEach(function(brand) {
+      var pill = document.createElement('div');
+      pill.className = 'brand-pill';
+      pill.dataset.brand = brand.name;
+      pill.onclick = function() { toggleBrand(brand.name, pill); };
+
+      var imgEl = document.createElement('img');
+      imgEl.src = 'https://logo.clearbit.com/' + brand.domain;
+      imgEl.alt = brand.name;
+      imgEl.style.cssText = 'width:20px;height:20px;border-radius:4px;object-fit:contain;background:#fff;flex-shrink:0;';
+      imgEl.onerror = function() {
+        var fb = document.createElement('span');
+        fb.className = 'brand-fallback';
+        fb.style.cssText = 'width:20px;height:20px;border-radius:4px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-text);flex-shrink:0;';
+        fb.textContent = brand.name.charAt(0);
+        pill.replaceChild(fb, imgEl);
+      };
+
+      var label = document.createElement('span');
+      label.textContent = brand.name;
+
+      pill.appendChild(imgEl);
+      pill.appendChild(label);
+      grid.appendChild(pill);
+    });
+  });
+}
+
+function toggleBrand(name, pill) {
+  if (selectedBrands.has(name)) {
+    selectedBrands.delete(name);
+    pill.classList.remove('selected');
+  } else {
+    selectedBrands.add(name);
+    pill.classList.add('selected');
+  }
+}
+
+function selectAllBrands() {
+  ALL_BRAND_NAMES.forEach(function(name) {
+    selectedBrands.add(name);
+    var pill = document.querySelector('[data-brand="' + name + '"]');
+    if (pill) pill.classList.add('selected');
+  });
+}
+
+function clearBrands() {
+  selectedBrands.clear();
+  document.querySelectorAll('.brand-pill').forEach(function(p) { p.classList.remove('selected'); });
+}
+
+// ── Map helpers ───────────────────────────────────────────────────────────────
+function clearMap() {
+  markers.forEach(function(m) { try { m.setMap(null); } catch(e) {} });
+  markers = [];
+  if (routePolyline) { try { routePolyline.setMap(null); } catch(e) {} routePolyline = null; }
+}
+
+function drawRoute(encodedPolyline) {
+  if (!map || !encodedPolyline) return;
+  if (google && google.maps && google.maps.geometry) {
+    var path = google.maps.geometry.encoding.decodePath(encodedPolyline);
+    routePolyline = new google.maps.Polyline({
+      path: path, geodesic: false,
+      strokeColor: '#2D6A4F', strokeOpacity: 0.7, strokeWeight: 5, map: map
+    });
+    var bounds = new google.maps.LatLngBounds();
+    path.forEach(function(p) { bounds.extend(p); });
+    map.fitBounds(bounds, {top:60, right:40, bottom:60, left:40});
+  }
+}
+
+function addServiceMarker(service, index, isMatch) {
+  if (!map || !service.lat || !service.lng) return;
+  var colour = isMatch ? '#2D6A4F' : '#A8A29E';
+  var marker = new google.maps.Marker({
+    position: {lat: service.lat, lng: service.lng},
+    map: map,
+    title: service.name,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: isMatch ? 12 : 8,
+      fillColor: colour, fillOpacity: 1,
+      strokeColor: '#fff', strokeWeight: 2
+    },
+    zIndex: isMatch ? 10 : 1
+  });
+  var brands = [].concat(service.catering || [], service.shops || [], service.hotel || []).join(', ');
+  var iw = new google.maps.InfoWindow({
+    content: '<div style="font-family:Inter,sans-serif;padding:4px;max-width:220px;">' +
+      '<div style="font-weight:700;font-size:13px;margin-bottom:4px;">' + service.name + '</div>' +
+      '<div style="font-size:11px;color:#6B6560;margin-bottom:4px;">' + service.road + ' · ' + service.operator + '</div>' +
+      '<div style="font-size:11px;color:#1C1917;">' + brands + '</div>' +
+      '<a href="https://www.google.com/maps/search/' + encodeURIComponent(service.name + ' services ' + service.road) + '" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;">Open in Maps →</a>' +
+      '</div>'
+  });
+  marker.addListener('click', function() {
+    markers.forEach(function(m) { if (m._iw) m._iw.close(); });
+    iw.open(map, marker);
+  });
+  marker._iw = iw;
+  markers.push(marker);
+}
+
+// ── Status ────────────────────────────────────────────────────────────────────
+function showStatus(msg) { document.getElementById('results-panel').innerHTML = '<div class="status">' + msg + '</div>'; }
+function showLoading(msg) { document.getElementById('results-panel').innerHTML = '<div class="loading"><i class="ti ti-loader"></i> ' + msg + '</div>'; }
+
+// ── Haversine distance (km) ───────────────────────────────────────────────────
+function distKm(lat1, lng1, lat2, lng2) {
+  var R = 6371;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
+    Math.sin(dLng/2) * Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ── Check if service is near any waypoint ─────────────────────────────────────
+function isOnRoute(service, waypoints, thresholdKm) {
+  thresholdKm = thresholdKm || 15;
+  for (var i = 0; i < waypoints.length; i++) {
+    if (distKm(service.lat, service.lng, waypoints[i].lat, waypoints[i].lng) <= thresholdKm) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// ── Main search ───────────────────────────────────────────────────────────────
+async function doSearch() {
+  var origin = document.getElementById('origin-input').value.trim();
+  var dest = document.getElementById('dest-input').value.trim();
+  if (!origin || !dest) { showStatus('Please enter both a start and end location.'); return; }
+
+  var btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  clearMap();
+  showLoading('Calculating your route...');
+
+  try {
+    var r = await fetch('/api/route', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({origin: origin, destination: dest, distUnit: 'miles'})
+    });
+    var routeData = await r.json();
+    if (routeData.error) { showStatus('Could not find that route. Please check your locations.'); return; }
+
+    var waypoints = routeData.waypoints || [];
+    if (routeData.polyline) drawRoute(routeData.polyline);
+
+    showLoading('Finding service stations on your route...');
+
+    // Load database
+    var dbRes = await fetch('/data/motorway-services-db.json');
+    var db = await dbRes.json();
+    var services = db.services;
+
+    // Find services on route
+    var onRoute = [];
+    Object.entries(services).forEach(function([name, service]) {
+      if (service.lat && service.lng && isOnRoute(service, waypoints)) {
+        onRoute.push(Object.assign({}, service, {name: name}));
+      }
+    });
+
+    if (!onRoute.length) {
+      showStatus('No motorway services found on this route. Try a longer motorway journey.');
+      return;
+    }
+
+    // Filter by selected brands (if any selected)
+    var hasBrandFilter = selectedBrands.size > 0;
+    var matchingServices = [];
+    var otherServices = [];
+
+    onRoute.forEach(function(service) {
+      if (!hasBrandFilter) {
+        matchingServices.push({service: service, matchedBrands: []});
+        return;
+      }
+      var allBrands = [].concat(service.catering || [], service.shops || [], service.hotel || []);
+      var matched = Array.from(selectedBrands).filter(function(b) {
+        return allBrands.some(function(sb) { return sb.toLowerCase().includes(b.toLowerCase()) || b.toLowerCase().includes(sb.toLowerCase()); });
+      });
+      if (matched.length === selectedBrands.size) {
+        matchingServices.push({service: service, matchedBrands: matched});
+      } else if (matched.length > 0) {
+        otherServices.push({service: service, matchedBrands: matched});
+      } else {
+        otherServices.push({service: service, matchedBrands: []});
+      }
+    });
+
+    // Sort by rough position along route (use distance from origin waypoint)
+    var origin_wp = waypoints[0];
+    function sortByRoute(a, b) {
+      return distKm(a.service.lat, a.service.lng, origin_wp.lat, origin_wp.lng) -
+             distKm(b.service.lat, b.service.lng, origin_wp.lat, origin_wp.lng);
+    }
+    matchingServices.sort(sortByRoute);
+    otherServices.sort(sortByRoute);
+
+    // Add markers
+    matchingServices.forEach(function(item) { addServiceMarker(item.service, 0, true); });
+    otherServices.forEach(function(item) { addServiceMarker(item.service, 0, false); });
+
+    // Render results
+    renderResults(matchingServices, otherServices, hasBrandFilter, routeData);
+
+  } catch(err) {
+    console.error(err);
+    showStatus('Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── Render results ────────────────────────────────────────────────────────────
+function getBrandLogo(brandName) {
+  var allBrands = Object.values(BRANDS).flat();
+  var found = allBrands.find(function(b) {
+    return b.name.toLowerCase() === brandName.toLowerCase() ||
+           brandName.toLowerCase().includes(b.name.toLowerCase()) ||
+           b.name.toLowerCase().includes(brandName.toLowerCase());
+  });
+  return found ? 'https://logo.clearbit.com/' + found.domain : null;
+}
+
+function serviceCardHTML(item, isMatch) {
+  var s = item.service;
+  var allBrands = [].concat(s.catering || [], s.shops || [], s.hotel || []);
+  var mapsUrl = 'https://www.google.com/maps/search/' + encodeURIComponent(s.name + ' motorway services ' + (s.postcode || ''));
+
+  var html = '<div class="service-card' + (isMatch ? '' : '') + '" onclick="selectService(this, ' + s.lat + ', ' + s.lng + ')">';
+  html += '<div class="service-card-header">';
+  html += '<div><div class="service-name">' + s.name + '</div>';
+  html += '<div class="service-meta">' + s.road + ' · ' + (s.junction || '') + '</div></div>';
+  html += '<span class="operator-badge">' + s.operator + '</span>';
+  html += '</div>';
+
+  // Brand logos row
+  html += '<div class="brand-logos">';
+  allBrands.forEach(function(brand) {
+    if (brand === 'Local / artisan food only' || brand === 'Local / farm food only') return;
+    var logoUrl = getBrandLogo(brand);
+    html += '<div class="brand-logo-item">';
+    if (logoUrl) {
+      html += '<img class="brand-logo-img" src="' + logoUrl + '" alt="' + brand + '" onerror="this.parentNode.innerHTML=\'<div class=brand-logo-fallback>' + brand.charAt(0) + '</div><div class=brand-logo-name>' + brand + '</div>\'" />';
+    } else {
+      html += '<div class="brand-logo-fallback">' + brand.charAt(0) + '</div>';
+    }
+    html += '<div class="brand-logo-name">' + brand + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Tags
+  html += '<div class="matched-brands">';
+  if (item.matchedBrands && item.matchedBrands.length) {
+    item.matchedBrands.forEach(function(b) {
+      html += '<span class="matched-tag">✓ ' + b + '</span>';
+    });
+  }
+  if (s.hotel && s.hotel.length) html += '<span class="matched-tag hotel-tag">🏨 ' + s.hotel[0] + '</span>';
+  if (s.ev) html += '<span class="matched-tag ev-tag">⚡ EV charging</span>';
+  if (s.note) html += '<span class="matched-tag" style="background:var(--bg);color:var(--text-secondary);border-color:var(--border);">ℹ️ ' + s.note + '</span>';
+  html += '</div>';
+
+  html += '<a href="' + mapsUrl + '" target="_blank" rel="noopener" class="maps-link" onclick="event.stopPropagation()"><i class="ti ti-map-pin"></i> Open in Maps</a>';
+  html += '</div>';
+  return html;
+}
+
+function renderResults(matchingServices, otherServices, hasBrandFilter, routeData) {
+  var html = '';
+  var total = matchingServices.length + otherServices.length;
+  var distLabel = routeData.distanceMiles ? Math.round(routeData.distanceMiles) + ' mile route' : '';
+
+  if (hasBrandFilter) {
+    html += '<div class="results-header">' + matchingServices.length + ' services with all selected brands · ' + total + ' total on route · ' + distLabel + '</div>';
+    if (matchingServices.length) {
+      html += '<div style="font-size:12px;font-weight:600;color:var(--accent-text);margin-bottom:8px;">✓ Matches your filters</div>';
+      matchingServices.forEach(function(item) { html += serviceCardHTML(item, true); });
+    }
+    if (otherServices.length) {
+      html += '<div style="font-size:12px;font-weight:600;color:var(--text-tertiary);margin:12px 0 8px;">Other services on route</div>';
+      otherServices.forEach(function(item) { html += serviceCardHTML(item, false); });
+    }
+    if (!matchingServices.length) {
+      html += '<div style="text-align:center;padding:16px;color:var(--text-tertiary);font-size:13px;">No services on this route have all the brands you selected.<br><span style="font-size:12px;">Try removing some filters to see partial matches.</span></div>';
+    }
+  } else {
+    html += '<div class="results-header">' + total + ' services on route · ' + distLabel + '</div>';
+    matchingServices.forEach(function(item) { html += serviceCardHTML(item, false); });
+  }
+
+  document.getElementById('results-panel').innerHTML = html;
+}
+
+function selectService(card, lat, lng) {
+  document.querySelectorAll('.service-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  if (map && lat && lng) {
+    map.panTo({lat: lat, lng: lng});
+    map.setZoom(13);
+    markers.forEach(function(m) {
+      if (m._iw) m._iw.close();
+      var pos = m.getPosition();
+      if (Math.abs(pos.lat() - lat) < 0.001 && Math.abs(pos.lng() - lng) < 0.001) {
+        m._iw.open(map, m);
+      }
+    });
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+buildBrandPills();
+</script>
+</body>
+</html>
