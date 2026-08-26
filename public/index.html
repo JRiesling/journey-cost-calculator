@@ -1102,7 +1102,8 @@ localStorage.setItem('fs_saved_route', JSON.stringify({ origin, destination }));
         </button>
         <p class="tip" style="margin-top:8px;color:var(--accent-text);">Powered by the UK Government Fuel Finder — live prices from all major forecourts · UK routes only</p>`;
     } else {
-      fuelFinderEl.classList.add('hidden');
+  fuelFinderEl.classList.add('hidden');
+  document.getElementById('service-planner-section').classList.add('hidden');
     }
 
     showDistResult(`<i class="ti ti-check" style="color:var(--success-text)" aria-hidden="true"></i> <strong>${r.distance.toFixed(1)} ${country.distUnit}</strong> — ${r.typical_route}`, true);
