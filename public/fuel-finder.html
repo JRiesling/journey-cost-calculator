@@ -262,6 +262,46 @@ var routePolyline = null;
 var markers = [];
 var lastWaypoints = [];
 
+function useMyLocation() {
+  if(!navigator.geolocation) {
+    showStatus('Geolocation is not supported by your browser.', 'error');
+    return;
+  }
+  var btn = event.target.closest('button');
+  if(btn) { btn.textContent = 'Finding your location...'; btn.disabled = true; }
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      document.getElementById('location-input').value = 'My location';
+      if(btn) { btn.innerHTML = '<i class="ti ti-location" aria-hidden="true"></i> Using your location'; btn.disabled = false; }
+
+      // Search immediately using coordinates
+      clearMap();
+      if(map) { map.setCenter({lat:lat, lng:lng}); map.setZoom(13); }
+      showLoading('Finding stations near you...');
+
+      var searchFn = searchType === 'ev' ? fetchEV : searchType === 'both'
+        ? function() { return Promise.all([fetchPetrol([{lat,lng}], null, true, false), fetchEV(lat, lng, [{lat,lng}], true, false)]); }
+        : function() { return fetchPetrol([{lat,lng}], null, true, false); };
+
+      if(searchType === 'ev') fetchEV(lat, lng, [{lat,lng}], true, false);
+      else if(searchType === 'both') {
+        document.getElementById('results-panel').innerHTML = '';
+        Promise.all([fetchPetrol([{lat,lng}], null, true, true), fetchEV(lat, lng, [{lat,lng}], true, true)]);
+      }
+      else fetchPetrol([{lat,lng}], null, true, false);
+    },
+    function(error) {
+      if(btn) { btn.innerHTML = '<i class="ti ti-location" aria-hidden="true"></i> Use my current location'; btn.disabled = false; }
+      var msg = error.code === 1 ? 'Location access denied — please type your location instead.' : 'Could not get your location. Please type it instead.';
+      showStatus(msg, 'error');
+    },
+    { timeout: 10000, maximumAge: 60000 }
+  );
+}
+
 // ─── Check for URL param to pre-select EV mode ────────────────────────────────
 (function(){
   if(window.location.search.includes('type=ev')) setType('ev');
