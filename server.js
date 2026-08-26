@@ -587,6 +587,7 @@ app.get('/ads.txt', (req, res) => { res.setHeader('Content-Type', 'text/plain');
 app.get('/robots.txt', (req, res) => { res.setHeader('Content-Type', 'text/plain'); res.sendFile(path.join(__dirname, 'public', 'robots.txt')); });
 app.get('/ev-charger-finder', (req, res) => res.sendFile(path.join(__dirname, 'public', 'ev-charger-finder.html')));
 app.get('/91addefa64b146dea96e677938a4c432.txt', (req, res) => { res.setHeader('Content-Type', 'text/plain'); res.sendFile(path.join(__dirname, 'public', '91addefa64b146dea96e677938a4c432.txt')); });
+app.get('/service-station-planner', (req, res) => res.sendFile(path.join(__dirname, 'public', 'service-station-planner.html')));
 app.use((req, res) => res.status(404).sendFile(path.join(__dirname, 'public', '404.html')));
 
 app.listen(PORT, () => {
