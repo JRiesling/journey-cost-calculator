@@ -1073,6 +1073,8 @@ async function calculateRoute() {
     });
     if (r.error) { showDistResult('Could not find that route. Try more specific locations.', false); return; }
     distanceMiles = r.distance;
+// Save route for other tabs
+localStorage.setItem('fs_saved_route', JSON.stringify({ origin, destination }));
 
     // Store waypoints for Fuel Finder (UK only)
     routeWaypoints = r.waypoints || [];
