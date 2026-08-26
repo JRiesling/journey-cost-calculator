@@ -1093,7 +1093,8 @@ localStorage.setItem('fs_saved_route', JSON.stringify({ origin, destination }));
     const isUK = country.name === 'United Kingdom';
     const fuelFinderEl = document.getElementById('fuel-finder-section');
     if (isUK && routeWaypoints.length) {
-      fuelFinderEl.classList.remove('hidden');
+  fuelFinderEl.classList.remove('hidden');
+  document.getElementById('service-planner-section').classList.remove('hidden');
       // Reset the fuel finder button
       document.getElementById('fuel-finder-results').innerHTML = `
         <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:0;">
