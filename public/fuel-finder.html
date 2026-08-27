@@ -709,6 +709,12 @@ function loadSavedRoute() {
   } catch(e) { console.error('Could not load saved route:', e); }
 }
 loadSavedRoute();
+  function saveFuelStation(station, btn) {
+  localStorage.setItem('fs_selected_fuel_station', JSON.stringify(station));
+  document.querySelectorAll('.save-fuel-btn').forEach(function(b){ b.textContent='⛽ Save as fuel stop for planner'; b.style.background='transparent'; });
+  btn.textContent = '✓ Saved — go to Service Station Planner';
+  btn.style.background = '#FEF3C7';
+}
 </script>
 </body>
 </html>
