@@ -162,7 +162,14 @@
     .how-to-step:last-child{margin-bottom:0;}
     .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
     .step-text{font-size:13px;color:var(--text-secondary);line-height:1.5;}
-    .step-text strong{color:var(--text);}
+      .step-text strong{color:var(--text);}
+    @media(max-width:600px){
+      #export-bar{padding:8px 12px;}
+      .export-chip{font-size:11px;padding:2px 8px;}
+      .export-btn{height:38px;padding:0 14px;font-size:13px;}
+      .export-clear-btn{height:38px;padding:0 10px;font-size:12px;}
+      .export-selections-title{display:none;}
+    }
   </style>
 </head>
 <body>
