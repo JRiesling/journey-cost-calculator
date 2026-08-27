@@ -615,6 +615,7 @@ function petrolStationsHTML(stations) {
     if(s.distKm&&s.distKm<100)h+='<span class="station-dist">📍 '+(s.distKm*0.621).toFixed(1)+' mi</span>';
     if(s.isSupermarket)h+='<span class="station-tag supermarket">🛒 Supermarket</span>';
     if(s.isMotorway)h+='<span class="station-tag motorway">🛣️ Motorway</span>';
+    h+='<button onclick="saveFuelStation('+JSON.stringify({name:s.name,address:s.address||'',lat:s.lat,lng:s.lng,price:s.price}).replace(/"/g,\'\'\'\')+',this)" style="width:100%;margin-top:8px;height:34px;border:1.5px solid #F59E0B;border-radius:8px;background:transparent;color:#78350F;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);">⛽ Save as fuel stop for planner</button>';
     h+='</div><a href="https://www.google.com/maps/search/'+encodeURIComponent(s.name+' '+(s.address||''))+'" target="_blank" rel="noopener" class="maps-link"><i class="ti ti-map-pin" aria-hidden="true"></i> Open in Maps</a></div>';
     h+='<div><div class="station-price">'+s.price.toFixed(1)+'p</div><div class="station-price-label">per litre</div></div></div>';
     return h;
