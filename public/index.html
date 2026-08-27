@@ -1095,11 +1095,11 @@ localStorage.setItem('fs_saved_route', JSON.stringify({ origin, destination }));
     if (isUK && routeWaypoints.length) {
   fuelFinderEl.classList.remove('hidden');
   document.getElementById('service-planner-section').classList.remove('hidden');
-      // Reset the fuel finder button
+ // Reset the fuel finder button
       document.getElementById('fuel-finder-results').innerHTML = `
-        <button onclick="findCheapestFuel()" class="calc-btn primary" style="margin-top:0;">
-          <i class="ti ti-search" aria-hidden="true"></i> Find cheapest petrol stations on my route
-        </button>
+        <a href="/fuel-finder" class="calc-btn primary" style="margin-top:0;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <i class="ti ti-gas-station" aria-hidden="true"></i> Find cheapest petrol stations on your route
+        </a>
         <p class="tip" style="margin-top:8px;color:var(--accent-text);">Powered by the UK Government Fuel Finder — live prices from all major forecourts · UK routes only</p>`;
     } else {
   fuelFinderEl.classList.add('hidden');
