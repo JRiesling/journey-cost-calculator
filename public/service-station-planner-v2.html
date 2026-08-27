@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Station Planner — Plan Your Motorway Stops | Fuel Smarter</title>
+  <meta name="description" content="Plan your motorway service stops before you travel. Filter by McDonald's, Costa, Starbucks, KFC and more. Export your planned route to Google Maps." />
+  <meta name="keywords" content="motorway service station planner UK, plan motorway stops, export route google maps, motorway services McDonald's Costa KFC" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/service-station-planner" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MPGYCEEDJQ');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});
+    (function(){var c=localStorage.getItem('fs_cookie_consent');if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});}})();
+  </script>
+
+  <script>
+    var map=null,mapsLoaded=false;
+    function showMapFallback(){var m=document.getElementById('map');if(m)m.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#A8A29E;font-family:Inter,sans-serif;font-size:14px;"><span style="font-size:40px;">🗺️</span><p>Map unavailable</p></div>';}
+    fetch('/api/maps-key').then(r=>r.json()).then(function(d){
+      if(!d.key){showMapFallback();return;}
+      window.initMap=function(){
+        mapsLoaded=true;
+        map=new google.maps.Map(document.getElementById('map'),{
+          center:{lat:52.5,lng:-1.5},zoom:6,
+          styles:[{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'transit',elementType:'labels',stylers:[{visibility:'off'}]}],
+          mapTypeControl:false,streetViewControl:false,fullscreenControl:false
+        });
+      };
+      var s=document.createElement('script');
+      s.src='https://maps.googleapis.com/maps/api/js?key='+d.key+'&libraries=geometry&callback=initMap';
+      s.async=true;s.onerror=showMapFallback;
+      document.head.appendChild(s);
+    }).catch(showMapFallback);
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#F4F1EA;--card:#FDFCFA;--border:rgba(0,0,0,0.08);
+      --text:#1C1917;--text-secondary:#6B6560;--text-tertiary:#A8A29E;
+      --accent:#2D6A4F;--accent-light:#EAF4EE;--accent-border:#95C9A8;--accent-text:#1A4731;
+      --info-bg:#e6f1fb;--info-border:#b5d4f4;--info-text:#0c447c;
+      --radius:10px;--radius-lg:16px;
+      --shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);
+      --font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    @media(prefers-color-scheme:dark){
+      :root{--bg:#171512;--card:#1F1E1B;--border:rgba(255,255,255,0.08);--text:#E8E4DC;--text-secondary:#9B9690;--text-tertiary:#6B6560;--accent:#40916C;--accent-light:#1A2E22;--accent-border:#2D6A4F;--accent-text:#95C9A8;--info-bg:#0c2a44;--info-border:#185fa5;--info-text:#85b7eb;}
+    }
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;}
+
+    header{background:var(--card);border-bottom:1px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+    nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;}
+    nav::-webkit-scrollbar{display:none;}
+    nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
+    nav a:hover{color:var(--text);}
+    nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+    .page{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 60px);}
+    @media(max-width:768px){.page{grid-template-columns:1fr;}}
+    .panel{padding:1.25rem;overflow-y:auto;max-height:calc(100vh - 60px);padding-bottom:120px;}
+    @media(max-width:768px){.panel{max-height:none;padding-bottom:140px;}}
+    #map{width:100%;height:calc(100vh - 60px);position:sticky;top:60px;}
+    @media(max-width:768px){#map{height:300px;position:relative;top:0;}}
+
+    .hero{margin-bottom:1.25rem;}
+    .hero h1{font-size:22px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:5px;}
+    .hero p{font-size:13px;color:var(--text-secondary);}
+    .live-badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent-light);color:var(--accent-text);border:1px solid var(--accent-border);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;margin-bottom:8px;}
+
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:1rem;box-shadow:var(--shadow);}
+    label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+    input[type="text"]{width:100%;height:42px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:15px;padding:0 12px;font-family:var(--font);outline:none;transition:border-color 0.15s;}
+    input[type="text"]:focus{border-color:var(--accent);}
+
+    .brand-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+    .brand-pill{display:flex;align-items:center;gap:6px;padding:6px 12px 6px 6px;border:1.5px solid var(--border);border-radius:20px;background:var(--bg);cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary);transition:all 0.15s;user-select:none;}
+    .brand-pill:hover{border-color:var(--accent-border);color:var(--text);}
+    .brand-pill.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent-text);}
+    .brand-pill img{width:20px;height:20px;border-radius:4px;object-fit:contain;background:#fff;flex-shrink:0;}
+
+    .brand-category{margin-bottom:14px;}
+    .brand-category-label{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+
+    .search-btn{width:100%;height:46px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;margin-top:4px;}
+    .search-btn:hover{background:#235c42;}
+    .search-btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+    .status{padding:1rem;text-align:center;font-size:14px;color:var(--text-tertiary);}
+    .loading{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--accent-text);font-size:13px;padding:1rem;}
+
+    /* ── Service cards ── */
+    .service-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;transition:all 0.15s;box-shadow:var(--shadow);}
+    .service-card.selected{border-color:var(--accent);background:var(--accent-light);}
+    .service-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+    .service-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+    .service-meta{font-size:12px;color:var(--text-tertiary);margin-top:2px;}
+    .operator-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--bg);border:1px solid var(--border);color:var(--text-secondary);flex-shrink:0;}
+    .brand-logos{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .brand-logo-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
+    .brand-logo-img{width:32px;height:32px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border);padding:2px;}
+    .brand-logo-name{font-size:9px;color:var(--text-tertiary);text-align:center;max-width:36px;line-height:1.2;}
+    .brand-logo-fallback{width:32px;height:32px;border-radius:6px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent-text);}
+    .matched-brands{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+    .matched-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--accent-light);color:var(--accent-text);border:1px solid var(--accent-border);}
+    .hotel-tag{background:#fef3c7;color:#78350f;border-color:#fde68a;}
+    .ev-tag{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);}
+    .maps-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--accent);font-weight:600;text-decoration:none;margin-top:6px;}
+    .results-header{font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+    .select-all-btn{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;border:none;background:none;font-family:var(--font);padding:0;}
+    .clear-btn{font-size:12px;color:var(--text-tertiary);cursor:pointer;border:none;background:none;font-family:var(--font);padding:0;}
+
+    /* ── Add to route button ── */
+    .add-to-route-btn{width:100%;margin-top:10px;height:36px;border:1.5px solid var(--accent);border-radius:var(--radius);background:transparent;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;}
+    .add-to-route-btn:hover{background:var(--accent);color:#fff;}
+    .add-to-route-btn.added{background:var(--accent);color:#fff;border-color:var(--accent);}
+    .add-to-route-btn.added:hover{background:#235c42;}
+
+    /* ── Sticky export bar ── */
+    #export-bar{position:fixed;bottom:0;left:0;right:0;z-index:500;background:var(--card);border-top:2px solid var(--accent-border);padding:12px 16px;box-shadow:0 -4px 24px rgba(0,0,0,0.12);display:none;animation:slideUp 0.2s ease;}
+    @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    .export-bar-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .export-selections{flex:1;min-width:0;}
+    .export-selections-title{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+    .export-chips{display:flex;flex-wrap:wrap;gap:4px;}
+    .export-chip{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:500;display:flex;align-items:center;gap:4px;}
+    .export-chip.fuel{background:#FEF3C7;color:#78350F;border:1px solid #FDE68A;}
+    .export-chip.service{background:var(--accent-light);color:var(--accent-text);border:1px solid var(--accent-border);}
+    .export-chip .remove-chip{cursor:pointer;font-size:14px;line-height:1;margin-left:2px;opacity:0.7;}
+    .export-chip .remove-chip:hover{opacity:1;}
+    .export-btn{height:44px;padding:0 20px;background:#4285F4;color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;transition:background 0.15s;}
+    .export-btn:hover{background:#3367D6;}
+    .export-btn svg{width:18px;height:18px;flex-shrink:0;}
+    .export-clear-btn{height:44px;padding:0 14px;background:transparent;color:var(--text-tertiary);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:var(--font);white-space:nowrap;flex-shrink:0;}
+    .export-clear-btn:hover{color:var(--text);}
+
+    /* ── Fuel station section ── */
+    .fuel-station-card{background:var(--card);border:1.5px solid #FDE68A;border-radius:var(--radius);padding:12px;margin-bottom:8px;transition:all 0.15s;}
+    .fuel-station-card.selected{background:#FEF3C7;border-color:#F59E0B;}
+    .fuel-name{font-size:14px;font-weight:700;color:var(--text);}
+    .fuel-price-badge{font-size:20px;font-weight:700;color:var(--accent);}
+
+    footer{background:var(--card);border-top:1px solid var(--border);padding:1.25rem;text-align:center;font-size:12px;color:var(--text-tertiary);}
+    footer a{color:inherit;text-decoration:none;}
+
+    /* ── How to use guide ── */
+    .how-to{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;margin-bottom:1rem;}
+    .how-to-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+    .how-to-step:last-child{margin-bottom:0;}
+    .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .step-text{font-size:13px;color:var(--text-secondary);line-height:1.5;}
+    .step-text strong{color:var(--text);}
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;">
+    <span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span>
+  </a>
+  <nav>
+    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a>
+    <a href="/service-station-planner" class="active">🛣️ Service Station Planner</a>
+    <a href="/">Calculator</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/guides">Guides</a>
+    <a href="/ev-calculator">EV</a>
+    <a href="/car-care">Car Care</a>
+    <a href="/faq">FAQ</a>
+  </nav>
+</header>
+
+<div class="page">
+  <div class="panel">
+
+    <div class="hero">
+      <div class="live-badge">🛣️ UK Motorway Services</div>
+      <h1>Service Station Planner</h1>
+      <p>Find the stops you want on your route — then export your full journey to Google Maps in one tap.</p>
+    </div>
+
+    <!-- How to use -->
+    <div class="how-to">
+      <div class="how-to-step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>Enter your route</strong> and search to see all motorway services along the way</div>
+      </div>
+      <div class="how-to-step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Filter by brand</strong> to find services with the shops or restaurants you want</div>
+      </div>
+      <div class="how-to-step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Add stops to your route</strong> by tapping "Add to route" on any service station card</div>
+      </div>
+      <div class="how-to-step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Export to Google Maps</strong> — your full journey with all selected stops opens in one tap</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="margin-bottom:12px;">
+        <label for="origin-input">From</label>
+        <input type="text" id="origin-input" placeholder="e.g. London" autocomplete="off" />
+      </div>
+      <div style="margin-bottom:14px;">
+        <label for="dest-input">To</label>
+        <input type="text" id="dest-input" placeholder="e.g. Manchester" autocomplete="off" />
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="margin:0;">Filter by brand (optional)</label>
+        <div style="display:flex;gap:10px;">
+          <button class="select-all-btn" onclick="selectAllBrands()">Select all</button>
+          <button class="clear-btn" onclick="clearBrands()">Clear</button>
+        </div>
+      </div>
+
+      <div class="brand-category">
+        <div class="brand-category-label">☕ Coffee & snacks</div>
+        <div class="brand-grid" id="grid-coffee"></div>
+      </div>
+      <div class="brand-category">
+        <div class="brand-category-label">🍔 Food</div>
+        <div class="brand-grid" id="grid-food"></div>
+      </div>
+      <div class="brand-category">
+        <div class="brand-category-label">🛍️ Shops</div>
+        <div class="brand-grid" id="grid-shops"></div>
+      </div>
+      <div class="brand-category">
+        <div class="brand-category-label">🏨 Hotel</div>
+        <div class="brand-grid" id="grid-hotel"></div>
+      </div>
+
+      <button class="search-btn" id="search-btn" onclick="doSearch()">
+        <i class="ti ti-route" aria-hidden="true"></i> Find service stations on route
+      </button>
+    </div>
+
+    <div id="results-panel">
+      <div class="status">Enter your route above to find matching service stations.</div>
+    </div>
+
+  </div>
+
+  <div id="map"></div>
+</div>
+
+<!-- Sticky export bar -->
+<div id="export-bar">
+  <div class="export-bar-inner">
+    <div class="export-selections">
+      <div class="export-selections-title">Your planned stops</div>
+      <div class="export-chips" id="export-chips"></div>
+    </div>
+    <button class="export-clear-btn" onclick="clearAllSelections()">Clear all</button>
+    <button class="export-btn" onclick="exportToGoogleMaps()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      Open in Google Maps
+    </button>
+  </div>
+</div>
+
+<footer>
+  <p>Service station data sourced from motorwayservices.uk · Updated June 2026</p>
+  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Home</a> · <a href="/fuel-finder">Fuel & Charging Finder</a> · <a href="/guides">Guides</a> · <a href="/privacy">Privacy</a></p>
+</footer>
+
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+  <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">We use cookies to see how people use Fuel Smarter. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;font-family:var(--font);">No thanks</button>
+      <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:1px solid var(--accent-border);border-radius:8px;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);">Yes, happy to help</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Cookie consent ────────────────────────────────────────────────────────────
+(function(){if(!localStorage.getItem('fs_cookie_consent'))document.getElementById('cookie-banner').style.display='block';})();
+function handleConsent(d){localStorage.setItem('fs_cookie_consent',d);document.getElementById('cookie-banner').style.display='none';if(d==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});gtag('event','page_view');}}
+
+// ── Brand definitions ─────────────────────────────────────────────────────────
+var BRANDS = {
+  coffee: [
+    {name:'Costa', domain:'costa.co.uk'},
+    {name:'Starbucks', domain:'starbucks.com'},
+    {name:'Pret A Manger', domain:'pret.com'},
+    {name:'Greggs', domain:'greggs.co.uk'},
+    {name:'Krispy Kreme', domain:'krispykreme.co.uk'},
+  ],
+  food: [
+    {name:"McDonald's", domain:'mcdonalds.com'},
+    {name:'Burger King', domain:'burgerking.co.uk'},
+    {name:'KFC', domain:'kfc.co.uk'},
+    {name:'Subway', domain:'subway.com'},
+    {name:'LEON', domain:'leon.co'},
+    {name:'Taco Bell', domain:'tacobell.co.uk'},
+    {name:'PizzaExpress', domain:'pizzaexpress.com'},
+    {name:"Nando's", domain:'nandos.co.uk'},
+    {name:'Chopstix', domain:'chopstixnoodlebar.com'},
+    {name:'West Cornwall Pasty Co.', domain:'westcornwallpasty.co.uk'},
+  ],
+  shops: [
+    {name:'M&S Simply Food', domain:'marksandspencer.com'},
+    {name:'WHSmith', domain:'whsmith.co.uk'},
+    {name:'Waitrose', domain:'waitrose.com'},
+  ],
+  hotel: [
+    {name:'Days Inn', domain:'daysinn.com'},
+    {name:'Travelodge', domain:'travelodge.co.uk'},
+    {name:'Ramada', domain:'ramada.com'},
+  ]
+};
+
+var ALL_BRAND_NAMES = Object.values(BRANDS).flat().map(function(b){return b.name;});
+var selectedBrands = new Set();
+var markers = [];
+var routePolyline = null;
+var currentOrigin = '';
+var currentDest = '';
+var currentWaypoints = [];
+
+// ── Selection state ───────────────────────────────────────────────────────────
+var selectedFuelStation = null;   // {name, address, lat, lng, price}
+var selectedServiceStations = []; // [{name, road, lat, lng}]
+
+// ── Build brand pills ─────────────────────────────────────────────────────────
+function buildBrandPills() {
+  Object.entries(BRANDS).forEach(function(entry) {
+    var cat = entry[0], brands = entry[1];
+    var grid = document.getElementById('grid-' + cat);
+    brands.forEach(function(brand) {
+      var pill = document.createElement('div');
+      pill.className = 'brand-pill';
+      pill.dataset.brand = brand.name;
+      pill.onclick = function(){ toggleBrand(brand.name, pill); };
+
+      var img = document.createElement('img');
+      img.src = 'https://logo.clearbit.com/' + brand.domain;
+      img.alt = brand.name;
+      img.style.cssText = 'width:20px;height:20px;border-radius:4px;object-fit:contain;background:#fff;flex-shrink:0;';
+      img.onerror = function(){
+        var fb = document.createElement('span');
+        fb.style.cssText = 'width:20px;height:20px;border-radius:4px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent-text);flex-shrink:0;';
+        fb.textContent = brand.name.charAt(0);
+        pill.replaceChild(fb, img);
+      };
+
+      var lbl = document.createElement('span');
+      lbl.textContent = brand.name;
+      pill.appendChild(img);
+      pill.appendChild(lbl);
+      grid.appendChild(pill);
+    });
+  });
+}
+
+function toggleBrand(name, pill) {
+  if(selectedBrands.has(name)){selectedBrands.delete(name);pill.classList.remove('selected');}
+  else{selectedBrands.add(name);pill.classList.add('selected');}
+}
+function selectAllBrands(){ALL_BRAND_NAMES.forEach(function(n){selectedBrands.add(n);var p=document.querySelector('[data-brand="'+n+'"]');if(p)p.classList.add('selected');});}
+function clearBrands(){selectedBrands.clear();document.querySelectorAll('.brand-pill').forEach(function(p){p.classList.remove('selected');});}
+
+// ── Map helpers ───────────────────────────────────────────────────────────────
+function clearMap(){markers.forEach(function(m){try{m.setMap(null);}catch(e){}});markers=[];if(routePolyline){try{routePolyline.setMap(null);}catch(e){}routePolyline=null;}}
+
+function drawRoute(encodedPolyline){
+  if(!map||!encodedPolyline)return;
+  if(google&&google.maps&&google.maps.geometry){
+    var path=google.maps.geometry.encoding.decodePath(encodedPolyline);
+    routePolyline=new google.maps.Polyline({path:path,geodesic:false,strokeColor:'#2D6A4F',strokeOpacity:0.7,strokeWeight:5,map:map});
+    var bounds=new google.maps.LatLngBounds();
+    path.forEach(function(p){bounds.extend(p);});
+    map.fitBounds(bounds,{top:60,right:40,bottom:60,left:40});
+  }
+}
+
+function addServiceMarker(service, isMatch){
+  if(!map||!service.lat||!service.lng)return;
+  var colour=isMatch?'#2D6A4F':'#A8A29E';
+  var marker=new google.maps.Marker({
+    position:{lat:service.lat,lng:service.lng},map:map,title:service.name,
+    icon:{path:google.maps.SymbolPath.CIRCLE,scale:isMatch?12:8,fillColor:colour,fillOpacity:1,strokeColor:'#fff',strokeWeight:2},
+    zIndex:isMatch?10:1
+  });
+  var allBrands=[].concat(service.catering||[],service.shops||[],service.hotel||[]).join(', ');
+  var iw=new google.maps.InfoWindow({content:'<div style="font-family:Inter,sans-serif;padding:4px;max-width:220px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+service.name+'</div><div style="font-size:11px;color:#6B6560;margin-bottom:4px;">'+service.road+' · '+service.operator+'</div><div style="font-size:11px;color:#1C1917;">'+allBrands+'</div><a href="https://www.google.com/maps/search/'+encodeURIComponent(service.name+' services '+service.road)+'" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;">Open in Maps →</a></div>'});
+  marker.addListener('click',function(){markers.forEach(function(m){if(m._iw)m._iw.close();});iw.open(map,marker);});
+  marker._iw=iw;
+  markers.push(marker);
+}
+
+function showStatus(msg){document.getElementById('results-panel').innerHTML='<div class="status">'+msg+'</div>';}
+function showLoading(msg){document.getElementById('results-panel').innerHTML='<div class="loading"><i class="ti ti-loader"></i> '+msg+'</div>';}
+
+function distKm(lat1,lng1,lat2,lng2){var R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180,a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+
+function isOnRoute(service,waypoints,thresholdKm){thresholdKm=thresholdKm||15;for(var i=0;i<waypoints.length;i++){if(distKm(service.lat,service.lng,waypoints[i].lat,waypoints[i].lng)<=thresholdKm)return true;}return false;}
+
+// ── Main search ───────────────────────────────────────────────────────────────
+async function doSearch(){
+  var origin=document.getElementById('origin-input').value.trim();
+  var dest=document.getElementById('dest-input').value.trim();
+  if(!origin||!dest){showStatus('Please enter both a start and end location.');return;}
+
+  var btn=document.getElementById('search-btn');
+  btn.disabled=true;
+  clearMap();
+  showLoading('Calculating your route...');
+
+  // Save route
+  localStorage.setItem('fs_saved_route',JSON.stringify({origin:origin,destination:dest}));
+
+  try{
+    var r=await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:origin,destination:dest,distUnit:'miles'})});
+    var routeData=await r.json();
+    if(routeData.error){showStatus('Could not find that route. Please check your locations.');return;}
+
+    currentOrigin=origin;
+    currentDest=dest;
+    currentWaypoints=routeData.waypoints||[];
+    if(routeData.polyline)drawRoute(routeData.polyline);
+
+    showLoading('Finding service stations on your route...');
+
+    var dbRes=await fetch('/data/motorway-services-db.json');
+    var db=await dbRes.json();
+    var services=db.services;
+
+    var onRoute=[];
+    Object.entries(services).forEach(function(entry){
+      var name=entry[0],service=entry[1];
+      if(service.lat&&service.lng&&isOnRoute(service,currentWaypoints)){
+        onRoute.push(Object.assign({},service,{name:name}));
+      }
+    });
+
+    if(!onRoute.length){showStatus('No motorway services found on this route. Try a longer motorway journey.');return;}
+
+    var hasBrandFilter=selectedBrands.size>0;
+    var matchingServices=[],otherServices=[];
+
+    onRoute.forEach(function(service){
+      if(!hasBrandFilter){matchingServices.push({service:service,matchedBrands:[]});return;}
+      var allBrands=[].concat(service.catering||[],service.shops||[],service.hotel||[]);
+      var matched=Array.from(selectedBrands).filter(function(b){return allBrands.some(function(sb){return sb.toLowerCase().includes(b.toLowerCase())||b.toLowerCase().includes(sb.toLowerCase());});});
+      if(matched.length===selectedBrands.size)matchingServices.push({service:service,matchedBrands:matched});
+      else otherServices.push({service:service,matchedBrands:matched});
+    });
+
+    var origin_wp=currentWaypoints[0];
+    function sortByRoute(a,b){return distKm(a.service.lat,a.service.lng,origin_wp.lat,origin_wp.lng)-distKm(b.service.lat,b.service.lng,origin_wp.lat,origin_wp.lng);}
+    matchingServices.sort(sortByRoute);
+    otherServices.sort(sortByRoute);
+
+    matchingServices.forEach(function(item){addServiceMarker(item.service,true);});
+    otherServices.forEach(function(item){addServiceMarker(item.service,false);});
+
+    renderResults(matchingServices,otherServices,hasBrandFilter,routeData);
+
+  }catch(err){
+    console.error(err);
+    showStatus('Something went wrong. Please try again.');
+  }finally{
+    btn.disabled=false;
+  }
+}
+
+// ── Brand logo helper ─────────────────────────────────────────────────────────
+function getBrandLogo(brandName){
+  var allBrands=Object.values(BRANDS).flat();
+  var found=allBrands.find(function(b){return b.name.toLowerCase()===brandName.toLowerCase()||brandName.toLowerCase().includes(b.name.toLowerCase())||b.name.toLowerCase().includes(brandName.toLowerCase());});
+  return found?'https://logo.clearbit.com/'+found.domain:null;
+}
+
+// ── Service card HTML ─────────────────────────────────────────────────────────
+function serviceCardHTML(item){
+  var s=item.service;
+  var isSelected=selectedServiceStations.some(function(ss){return ss.name===s.name;});
+  var allBrands=[].concat(s.catering||[],s.shops||[],s.hotel||[]);
+  var mapsUrl='https://www.google.com/maps/search/'+encodeURIComponent(s.name+' motorway services '+(s.postcode||''));
+  var cardId='card-'+s.name.replace(/[^a-z0-9]/gi,'-');
+
+  var html='<div class="service-card'+(isSelected?' selected':'')+'" id="'+cardId+'">';
+  html+='<div class="service-card-header">';
+  html+='<div><div class="service-name">'+s.name+'</div><div class="service-meta">'+s.road+' · '+(s.junction||'')+'</div></div>';
+  html+='<span class="operator-badge">'+s.operator+'</span>';
+  html+='</div>';
+
+  // Brand logos
+  html+='<div class="brand-logos">';
+  allBrands.forEach(function(brand){
+    if(brand==='Local / artisan food only'||brand==='Local / farm food only')return;
+    var logoUrl=getBrandLogo(brand);
+    html+='<div class="brand-logo-item">';
+    if(logoUrl){
+      html+='<img class="brand-logo-img" src="'+logoUrl+'" alt="'+brand+'" onerror="this.style.display=\'none\'" />';
+    }else{
+      html+='<div class="brand-logo-fallback">'+brand.charAt(0)+'</div>';
+    }
+    html+='<div class="brand-logo-name">'+brand+'</div></div>';
+  });
+  html+='</div>';
+
+  // Tags
+  html+='<div class="matched-brands">';
+  if(item.matchedBrands&&item.matchedBrands.length){item.matchedBrands.forEach(function(b){html+='<span class="matched-tag">✓ '+b+'</span>';});}
+  if(s.hotel&&s.hotel.length)html+='<span class="matched-tag hotel-tag">🏨 '+s.hotel[0]+'</span>';
+  if(s.ev)html+='<span class="matched-tag ev-tag">⚡ EV charging</span>';
+  if(s.note)html+='<span class="matched-tag" style="background:var(--bg);color:var(--text-secondary);border-color:var(--border);">ℹ️ '+s.note+'</span>';
+  html+='</div>';
+
+  html+='<a href="'+mapsUrl+'" target="_blank" rel="noopener" class="maps-link" onclick="event.stopPropagation()"><i class="ti ti-map-pin"></i> Open in Maps</a>';
+
+  // Add to route button
+  var btnLabel=isSelected?'✓ Added to route — tap to remove':'+ Add to route';
+  html+='<button class="add-to-route-btn'+(isSelected?' added':'')+'" onclick="toggleServiceStation(\''+s.name+'\','+s.lat+','+s.lng+',\''+s.road+'\',\''+cardId+'\',this)">'+btnLabel+'</button>';
+
+  html+='</div>';
+  return html;
+}
+
+// ── Render results ────────────────────────────────────────────────────────────
+function renderResults(matchingServices,otherServices,hasBrandFilter,routeData){
+  var total=matchingServices.length+otherServices.length;
+  var distLabel=routeData.distanceMiles?Math.round(routeData.distanceMiles)+' mile route':'';
+  var html='';
+
+  // Saved fuel station from fuel finder
+  var savedFuel=null;
+  try{var sf=localStorage.getItem('fs_selected_fuel_station');if(sf)savedFuel=JSON.parse(sf);}catch(e){}
+  if(savedFuel){
+    html+='<div style="font-size:12px;font-weight:600;color:#78350F;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">⛽ Your selected fuel stop</div>';
+    var fuelSelected=selectedFuelStation&&selectedFuelStation.name===savedFuel.name;
+    html+='<div class="fuel-station-card'+(fuelSelected?' selected':'')+'" id="fuel-card">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;">';
+    html+='<div><div class="fuel-name">'+savedFuel.name+'</div><div style="font-size:11px;color:var(--text-tertiary);">'+savedFuel.address+'</div></div>';
+    if(savedFuel.price)html+='<div><div class="fuel-price-badge">'+savedFuel.price.toFixed(1)+'p</div><div style="font-size:10px;color:var(--text-tertiary);text-align:right;">per litre</div></div>';
+    html+='</div>';
+    html+='<button class="add-to-route-btn'+(fuelSelected?' added':'')+'" style="border-color:#F59E0B;color:#78350F;" onclick="toggleFuelStation('+JSON.stringify(savedFuel).replace(/"/g,"'")+',this)" >'+(fuelSelected?'✓ Added — tap to remove':'⛽ Add fuel stop to route')+'</button>';
+    html+='</div>';
+    html+='<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:10px;font-style:italic;">Saved from Fuel & Charging Finder · <a href="/fuel-finder" style="color:var(--accent);">change</a></div>';
+  }
+
+  if(hasBrandFilter){
+    html+='<div class="results-header">'+matchingServices.length+' matching · '+total+' total on route · '+distLabel+'</div>';
+    if(matchingServices.length){
+      html+='<div style="font-size:12px;font-weight:600;color:var(--accent-text);margin-bottom:8px;">✓ Has all your selected brands</div>';
+      matchingServices.forEach(function(item){html+=serviceCardHTML(item);});
+    }
+    if(otherServices.length){
+      html+='<div style="font-size:12px;font-weight:600;color:var(--text-tertiary);margin:12px 0 8px;">Other services on route</div>';
+      otherServices.forEach(function(item){html+=serviceCardHTML(item);});
+    }
+    if(!matchingServices.length){
+      html+='<div style="text-align:center;padding:16px;color:var(--text-tertiary);font-size:13px;">No services on this route have all the brands you selected.<br><span style="font-size:12px;">Try removing some filters.</span></div>';
+      otherServices.forEach(function(item){html+=serviceCardHTML(item);});
+    }
+  }else{
+    html+='<div class="results-header">'+total+' services on route · '+distLabel+'</div>';
+    matchingServices.forEach(function(item){html+=serviceCardHTML(item);});
+  }
+
+  document.getElementById('results-panel').innerHTML=html;
+}
+
+// ── Toggle service station selection ──────────────────────────────────────────
+function toggleServiceStation(name,lat,lng,road,cardId,btn){
+  var idx=selectedServiceStations.findIndex(function(s){return s.name===name;});
+  if(idx>=0){
+    selectedServiceStations.splice(idx,1);
+    btn.textContent='+ Add to route';
+    btn.classList.remove('added');
+    document.getElementById(cardId).classList.remove('selected');
+  }else{
+    selectedServiceStations.push({name:name,lat:lat,lng:lng,road:road});
+    btn.textContent='✓ Added to route — tap to remove';
+    btn.classList.add('added');
+    document.getElementById(cardId).classList.add('selected');
+  }
+  updateExportBar();
+}
+
+function toggleFuelStation(station,btn){
+  if(selectedFuelStation&&selectedFuelStation.name===station.name){
+    selectedFuelStation=null;
+    btn.textContent='⛽ Add fuel stop to route';
+    btn.classList.remove('added');
+    document.getElementById('fuel-card').classList.remove('selected');
+  }else{
+    selectedFuelStation=station;
+    btn.textContent='✓ Added — tap to remove';
+    btn.classList.add('added');
+    document.getElementById('fuel-card').classList.add('selected');
+  }
+  updateExportBar();
+}
+
+// ── Export bar ────────────────────────────────────────────────────────────────
+function updateExportBar(){
+  var bar=document.getElementById('export-bar');
+  var chips=document.getElementById('export-chips');
+  var hasSelections=selectedFuelStation||selectedServiceStations.length>0;
+
+  if(!hasSelections){bar.style.display='none';return;}
+  bar.style.display='block';
+
+  var html='';
+  if(selectedFuelStation){
+    html+='<span class="export-chip fuel">⛽ '+selectedFuelStation.name+'<span class="remove-chip" onclick="removeFuelFromExport()">×</span></span>';
+  }
+  selectedServiceStations.forEach(function(s,i){
+    html+='<span class="export-chip service">🛣️ '+s.name+'<span class="remove-chip" onclick="removeServiceFromExport('+i+')">×</span></span>';
+  });
+  chips.innerHTML=html;
+}
+
+function removeFuelFromExport(){
+  selectedFuelStation=null;
+  var card=document.getElementById('fuel-card');
+  if(card){card.classList.remove('selected');var btn=card.querySelector('.add-to-route-btn');if(btn){btn.textContent='⛽ Add fuel stop to route';btn.classList.remove('added');}}
+  updateExportBar();
+}
+
+function removeServiceFromExport(index){
+  var s=selectedServiceStations[index];
+  selectedServiceStations.splice(index,1);
+  var cardId='card-'+s.name.replace(/[^a-z0-9]/gi,'-');
+  var card=document.getElementById(cardId);
+  if(card){card.classList.remove('selected');var btn=card.querySelector('.add-to-route-btn');if(btn){btn.textContent='+ Add to route';btn.classList.remove('added');}}
+  updateExportBar();
+}
+
+function clearAllSelections(){
+  selectedFuelStation=null;
+  selectedServiceStations=[];
+  document.querySelectorAll('.service-card.selected').forEach(function(c){c.classList.remove('selected');});
+  document.querySelectorAll('.fuel-station-card.selected').forEach(function(c){c.classList.remove('selected');});
+  document.querySelectorAll('.add-to-route-btn.added').forEach(function(b){b.classList.remove('added');b.textContent=b.classList.contains('fuel')?'⛽ Add fuel stop to route':'+ Add to route';});
+  updateExportBar();
+}
+
+// ── Google Maps export ────────────────────────────────────────────────────────
+function exportToGoogleMaps(){
+  if(!currentOrigin||!currentDest){alert('Please search for a route first.');return;}
+
+  // Build waypoints in route order
+  // Sort service stations by distance from origin
+  var origin_wp=currentWaypoints[0];
+  var stops=[];
+
+  // Add fuel station if selected
+  if(selectedFuelStation){
+    stops.push({name:selectedFuelStation.name+(selectedFuelStation.address?' '+selectedFuelStation.address:''),distFromOrigin:distKm(selectedFuelStation.lat,selectedFuelStation.lng,origin_wp.lat,origin_wp.lng)});
+  }
+
+  // Add service stations
+  selectedServiceStations.forEach(function(s){
+    stops.push({name:s.name+' Services '+s.road,distFromOrigin:distKm(s.lat,s.lng,origin_wp.lat,origin_wp.lng)});
+  });
+
+  // Sort by distance from origin (route order)
+  stops.sort(function(a,b){return a.distFromOrigin-b.distFromOrigin;});
+
+  // Build Google Maps URL
+  // Format: https://www.google.com/maps/dir/Origin/Stop1/Stop2/Destination
+  var parts=[currentOrigin];
+  stops.forEach(function(s){parts.push(s.name);});
+  parts.push(currentDest);
+
+  var url='https://www.google.com/maps/dir/'+parts.map(function(p){return encodeURIComponent(p);}).join('/');
+
+  // Track the export
+  gtag('event','google_maps_export',{stops:stops.length});
+
+  // Open in new tab
+  window.open(url,'_blank');
+}
+
+// ── Load saved route ──────────────────────────────────────────────────────────
+function loadSavedRoute(){
+  try{
+    var saved=localStorage.getItem('fs_saved_route');
+    if(!saved)return;
+    var route=JSON.parse(saved);
+    if(!route.origin||!route.destination)return;
+    var originEl=document.getElementById('origin-input');
+    var destEl=document.getElementById('dest-input');
+    if(originEl)originEl.value=route.origin;
+    if(destEl)destEl.value=route.destination;
+    var banner=document.createElement('div');
+    banner.style.cssText='background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--accent-text);display:flex;align-items:center;justify-content:space-between;gap:8px;';
+    banner.innerHTML='<span>🛣️ Route loaded: <strong>'+route.origin+' → '+route.destination+'</strong></span><button onclick="this.parentNode.remove()" style="border:none;background:none;cursor:pointer;color:var(--accent-text);font-size:16px;line-height:1;">×</button>';
+    var card=document.querySelector('.card');
+    if(card)card.parentNode.insertBefore(banner,card);
+  }catch(e){console.error('Could not load saved route:',e);}
+}
+
+buildBrandPills();
+loadSavedRoute();
+</script>
+</body>
+</html>
