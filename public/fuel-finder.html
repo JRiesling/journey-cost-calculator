@@ -703,7 +703,7 @@ function loadSavedRoute() {
     if (destEl) destEl.value = route.destination;
     var banner = document.createElement('div');
     banner.style.cssText = 'background:var(--accent-light);border:1px solid var(--accent-border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--accent-text);display:flex;align-items:center;justify-content:space-between;gap:8px;';
-    banner.innerHTML = '<span>🛣️ Route loaded: <strong>' + route.origin + ' → ' + route.destination + '</strong></span><button onclick="this.parentNode.remove()" style="border:none;background:none;cursor:pointer;color:var(--accent-text);font-size:16px;line-height:1;">×</button>';
+    banner.innerHTML = '<span>Route loaded: <strong>' + route.origin + ' to ' + route.destination + '</strong></span><button onclick="this.parentNode.remove()" style="border:none;background:none;cursor:pointer;font-size:16px;line-height:1;">x</button>';
     var card = document.querySelector('.card');
     if (card) card.parentNode.insertBefore(banner, card);
   } catch(e) { console.error('Could not load saved route:', e); }
