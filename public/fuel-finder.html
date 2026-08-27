@@ -696,6 +696,7 @@ function loadSavedRoute() {
     if (!saved) return;
     var route = JSON.parse(saved);
     if (!route.origin || !route.destination) return;
+    setMode('route');
     var originEl = document.getElementById('origin-input');
     var destEl = document.getElementById('dest-input');
     if (originEl) originEl.value = route.origin;
