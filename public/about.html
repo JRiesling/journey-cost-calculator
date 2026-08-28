@@ -3,182 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Fuel Smarter — Free Fuel Cost Calculator</title>
-  <meta name="description" content="Fuel Smarter is a free tool that helps drivers calculate the true cost of any journey — including fuel costs, CO2 emissions, and the impact of driving speed." />
+  <title>About FuelSmarter — The UK's Journey Planning Tool</title>
+  <meta name="description" content="FuelSmarter is a free journey planning tool for UK drivers. Calculate fuel costs, find cheapest petrol, plan motorway stops and locate EV chargers — all in one place." />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/about" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MPGYCEEDJQ');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});
+    (function(){var c=localStorage.getItem('fs_cookie_consent');if(c==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});}})();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <link rel="canonical" href="https://fuel-smarter.com/about" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1); --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97; --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a; --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c; --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --text: #e8e6e0; --text-secondary: #9b9b97; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; } }
-    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
-    header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
-    header a { text-decoration: none; color: var(--text); font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-    main { max-width: 680px; margin: 0 auto; padding: 2rem 1rem 4rem; }
-    h2 { font-size: 28px; font-weight: 700; margin-bottom: 1rem; }
-    h3 { font-size: 18px; font-weight: 600; margin: 2rem 0 0.5rem; }
-    p { color: var(--text-secondary); margin-bottom: 1rem; }
-    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.5rem 0; }
-    .feature { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; }
-    .feature-icon { font-size: 24px; margin-bottom: 8px; }
-    .feature-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .feature-desc { font-size: 13px; color: var(--text-tertiary); }
-    .cta { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 14px; font-weight: 500; margin-top: 2rem; }
-    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
-    footer a { color: inherit; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#f8f7f4;--card:#ffffff;--border:rgba(0,0,0,0.1);--text:#1a1a18;--text-secondary:#6b6b68;--text-tertiary:#9b9b97;--accent:#2D6A4F;--accent-light:#eaf3de;--accent-border:#c0dd97;--accent-text:#27500a;--radius:8px;--radius-lg:12px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+    @media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--card:#252523;--border:rgba(255,255,255,0.1);--text:#e8e6e0;--text-secondary:#9b9b97;--text-tertiary:#6b6b68;--accent-light:#173404;--accent-border:#3b6d11;--accent-text:#c0dd97;}}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+    /* ── Header ── */
+    header{background:var(--card);border-bottom:0.5px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+    nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;gap:0;}
+    nav::-webkit-scrollbar{display:none;}
+    nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
+    nav a:hover{color:var(--text);}
+    nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+    /* ── Page ── */
+    main{max-width:720px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+
+    h1{font-size:36px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:0.5rem;}
+    h2{font-size:20px;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);}
+    p{color:var(--text-secondary);margin-bottom:1rem;font-size:16px;}
+    blockquote{border-left:3px solid var(--accent);padding:12px 20px;margin:1.5rem 0;font-style:italic;color:var(--text-secondary);font-size:17px;background:var(--accent-light);border-radius:0 var(--radius) var(--radius) 0;}
+
+    .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1.5rem 0;}
+    @media(max-width:600px){.feature-grid{grid-template-columns:1fr;}}
+    .feature-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;}
+    .feature-icon{font-size:24px;margin-bottom:8px;}
+    .feature-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+    .feature-desc{font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0;}
+
+    .always-free{background:var(--accent-light);border:0.5px solid var(--accent-border);border-radius:var(--radius-lg);padding:1.5rem;margin:2rem 0;}
+    .always-free h2{margin-top:0;}
+    .always-free p{color:var(--accent-text);}
+
+    .cta{display:block;text-align:center;background:var(--accent);color:#fff;text-decoration:none;border-radius:var(--radius);padding:14px;font-weight:600;margin-top:2.5rem;font-size:16px;}
+    .cta:hover{opacity:0.9;}
+
+    footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--text-tertiary);border-top:0.5px solid var(--border);}
+    footer a{color:inherit;text-decoration:none;}
+    footer a:hover{color:var(--text);}
   </style>
-  <!-- Google Consent Mode v2 — must load before GA -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-
-    // Set default consent state — denied until user accepts
-    gtag('consent', 'default', {
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'analytics_storage': 'denied',
-      'wait_for_update': 500
-    });
-
-    // Check if user has already consented
-    (function() {
-      var consent = localStorage.getItem('fs_cookie_consent');
-      if (consent === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-      }
-    })();
-  </script>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-MPGYCEEDJQ');
-  </script>
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/style.css" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
+
 <header>
-  <a href="/" style="display:flex;align-items:center;text-decoration:none;"><span style="font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-size:20px;font-weight:800;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span></a>
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;">
+    <span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span>
+  </a>
+  <nav>
+    <a href="/">Calculator</a>
+    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a>
+    <a href="/service-station-planner">🛣️ Service Station Planner</a>
+    <a href="/fuel-prices">Fuel Prices</a>
+    <a href="/guides">Guides</a>
+    <a href="/ev-calculator">EV</a>
+    <a href="/car-care">Car Care</a>
+    <a href="/about" class="active">About</a>
+  </nav>
 </header>
+
 <main>
-  <h2>About Fuel Smarter</h2>
-  <p>Fuel Smarter is a free tool that helps drivers understand the true cost of any car journey — not just the price at the pump, but how speed, road type, vehicle choice, and driving style all affect what you actually spend.</p>
+  <h1>About FuelSmarter</h1>
+  <p style="font-size:18px;color:var(--text-secondary);margin-bottom:2rem;">A free journey planning tool that helps drivers spend less, stress less, and hit the road with everything sorted.</p>
 
-  <h3>The person behind it</h3>
-  <p style="font-style:italic;color:var(--text-secondary);">"I built Fuel Smarter out of frustration — and a lot of time on the M4."</p>
-  <p>I found myself making regular trips up and down the M4 and becoming increasingly curious about how much my speed was actually costing me. I'd watch the fuel gauge and notice it dropping faster when I pushed on — but I had no real way of quantifying it. Was driving at 80mph instead of 70mph costing me an extra £2? £5? More?</p>
-  <p>So I started doing what any curious person does — I looked for a tool that could tell me. I couldn't find one. Every fuel calculator I tried just asked for distance and MPG and gave you a single number. None of them accounted for speed, road type, or the actual difference between a motorway cruise and stop-start urban driving.</p>
+  <h2>The person behind it</h2>
+  <blockquote>"I built FuelSmarter out of frustration — and a lot of time on the M4."</blockquote>
+
+  <p>I found myself making regular trips up and down the M4, increasingly curious about how much my speed was actually costing me. I'd watch the fuel gauge drop faster when I pushed on — but had no way of quantifying it. Was driving at 80mph instead of 70mph costing me an extra £2? £5? More?</p>
+
+  <p>So I looked for a tool that could tell me. I couldn't find one. Every fuel calculator I tried just asked for distance and MPG and spat out a single number. None of them accounted for speed, road type, or the difference between a motorway cruise and stop-start city driving.</p>
+
   <p>So I built one.</p>
-  <p>Fuel Smarter started as a personal project to answer my own question. It's grown into something I hope is genuinely useful for any driver who's ever wondered what their journeys actually cost — and what small changes could save them money every time they get behind the wheel.</p>
 
-  <h3>What Fuel Smarter does</h3>
+  <p>The same frustration came up on longer trips. You're on the motorway, you need a break, and you're squinting at those blue service station signs trying to work out if there's a Costa or a Greggs before you've already committed to the slip road. Half the time the signs are wrong, out of date, or just don't tell you what you actually want to know. So you pull in hoping for a flat white and a sausage roll, and find yourself staring at a Starbucks and a Upper Crust. Not ideal.</p>
+
+  <p>What started as a personal project to answer my own question has grown into something much bigger — a one-stop journey planner for any driver who wants to spend less, stress less, and arrive having actually thought their trip through.</p>
+
+  <h2>What FuelSmarter does</h2>
   <div class="feature-grid">
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">🗺️</div>
       <div class="feature-title">Real route calculation</div>
-      <div class="feature-desc">Powered by Google Maps for accurate distances and road type breakdowns — not guesswork.</div>
+      <p class="feature-desc">Powered by Google Maps for accurate distances and road type breakdowns — not guesswork.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">⛽</div>
-      <div class="feature-title">Live fuel prices</div>
-      <div class="feature-desc">Current petrol and diesel prices for 30+ countries, updated regularly.</div>
+      <div class="feature-title">Live fuel prices & petrol finder</div>
+      <p class="feature-desc">Find the cheapest petrol or diesel on your exact route — updated within 30 minutes by law.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
+      <div class="feature-icon">🛣️</div>
+      <div class="feature-title">Service station planner</div>
+      <p class="feature-desc">Filter motorway services by the brands you want — Costa, McDonald's, M&S and more — then add your chosen stops to your route.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">EV charger finder</div>
+      <p class="feature-desc">Find rapid charging points near you or along your route. Works worldwide.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">Export to your map app</div>
+      <p class="feature-desc">Select your fuel stop and service stations, then export your whole planned journey to your map app in one tap.</p>
+    </div>
+    <div class="feature-card">
       <div class="feature-icon">🚗</div>
       <div class="feature-title">Vehicle MPG lookup</div>
-      <div class="feature-desc">Enter your number plate or make and model — we estimate your real-world fuel economy automatically.</div>
+      <p class="feature-desc">Enter your number plate or make and model — we estimate your real-world fuel economy automatically.</p>
     </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">🌱</div>
-      <div class="feature-title">CO2 emissions</div>
-      <div class="feature-desc">See the environmental impact of your journey and how much you'd save by slowing down.</div>
+      <div class="feature-title">CO₂ emissions</div>
+      <p class="feature-desc">See the environmental impact of your journey and how driving style affects it.</p>
     </div>
-    <div class="feature">
-      <div class="feature-icon">⚡</div>
-      <div class="feature-title">Speed comparison</div>
-      <div class="feature-desc">Compare your speed against the national limit and 10mph below — with real cost and time differences.</div>
-    </div>
-    <div class="feature">
+    <div class="feature-card">
       <div class="feature-icon">🌍</div>
-      <div class="feature-title">30+ countries</div>
-      <div class="feature-desc">Full support for different units, speed limits, fuel types and currencies worldwide.</div>
+      <div class="feature-title">Global coverage</div>
+      <p class="feature-desc">Full support for 30+ countries, different units, speed limits, fuel types and currencies.</p>
     </div>
   </div>
 
-  <h3>Always free</h3>
-  <p>Fuel Smarter is and will always be free to use. We don't require an account, we don't track you, and we don't sell your data. If we ever add advertising it will be clearly labelled and non-intrusive.</p>
+  <div class="always-free">
+    <h2>Always free</h2>
+    <p>FuelSmarter is and always will be free to use. No account needed, no data sold, no nonsense. If we ever add advertising it will be clearly labelled and non-intrusive.</p>
+  </div>
 
-  <h3>Coming soon</h3>
-  <p>We're currently working on proper number plate lookup using the official DVLA database, and a Fuel Finder integration to show the cheapest petrol stations along your route. An "is it worth your time?" wage comparison feature is also in development — so you can see whether the time you save by driving faster is actually worth the extra fuel cost.</p>
+  <h2>Coming soon</h2>
+  <p>Parking finder at your destination, toll cost calculator, and drive vs train cost comparison — so your whole journey is planned before you leave the driveway.</p>
 
-  <a href="/" class="cta"><i class="ti ti-calculator" aria-hidden="true"></i> Try the fuel cost calculator</a>
+  <a href="/" class="cta">Hit the road, smarter →</a>
 </main>
+
 <footer>
-  <p>© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Home</a> · <a href="/privacy">Privacy Policy</a></p>
+  <p>© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Calculator</a> · <a href="/fuel-finder">Fuel & Charging Finder</a> · <a href="/guides">Guides</a> · <a href="/privacy">Privacy Policy</a></p>
 </footer>
-  <!-- Cookie consent banner -->
-  <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
-    <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-      <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
-        We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
-      </p>
-      <div style="display:flex;gap:8px;flex-shrink:0;">
-        <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">
-          Decline
-        </button>
-        <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">
-          Accept cookies
-        </button>
-      </div>
+
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+  <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">We use cookies to see how people use Fuel Smarter. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+      <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;font-family:var(--font);">No thanks</button>
+      <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--accent-border);border-radius:8px;background:var(--accent-light);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);">Yes, happy to help</button>
     </div>
   </div>
-
-  <script>
-    // Show banner if no consent decision yet
-    (function() {
-      if (!localStorage.getItem('fs_cookie_consent')) {
-        document.getElementById('cookie-banner').style.display = 'block';
-      }
-    })();
-
-    function handleConsent(decision) {
-      localStorage.setItem('fs_cookie_consent', decision);
-      document.getElementById('cookie-banner').style.display = 'none';
-
-      if (decision === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-        // Fire a page view now that consent is granted
-        gtag('event', 'page_view');
-      }
-    }
-  </script>
-  <!-- Skimlinks affiliate tracking -->
-  
+</div>
+<script>
+(function(){if(!localStorage.getItem('fs_cookie_consent'))document.getElementById('cookie-banner').style.display='block';})();
+function handleConsent(d){localStorage.setItem('fs_cookie_consent',d);document.getElementById('cookie-banner').style.display='none';if(d==='accepted'){gtag('consent','update',{'analytics_storage':'granted','ad_storage':'granted','ad_user_data':'granted','ad_personalization':'granted'});gtag('event','page_view');}}
+</script>
 </body>
 </html>
