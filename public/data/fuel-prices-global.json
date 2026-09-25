@@ -1,0 +1,25 @@
+{
+  "updated": "September 2026",
+  "us": {
+    "national_avg_usd": 4.00,
+    "cheapest_state": "Indiana",
+    "cheapest_price": 3.37,
+    "expensive_state": "California",
+    "expensive_price": 5.46
+  },
+  "france": {
+    "petrol_eur": 1.92,
+    "diesel_eur": 1.95
+  },
+  "germany": {
+    "petrol_eur": 1.59,
+    "diesel_eur": 1.41
+  },
+  "australia": {
+    "national_avg_cpl": 205,
+    "cheapest_city": "Adelaide",
+    "cheapest_cpl": 193,
+    "expensive_city": "Darwin",
+    "expensive_cpl": 215
+  }
+}
