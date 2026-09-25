@@ -1,250 +1,175 @@
 <!DOCTYPE html>
-<html lang="en-AU">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fuel Cost Calculator Australia 2026 — Petrol & Diesel Journey Costs | Fuel Smarter</title>
-  <meta name="description" content="Free Australian fuel cost calculator for 2026. Calculate exactly how much your petrol or diesel journey will cost based on your car's fuel consumption, current Australian pump prices, and your driving speed." />
-  <meta name="keywords" content="fuel cost calculator Australia, petrol cost calculator Australia, how much will my journey cost Australia, L/100km calculator, fuel cost road trip Australia 2026" />
+  <title>Australia Petrol Price Calculator — Fuel Costs & Road Trip Guide | FuelSmarter</title>
+  <meta name="description" content="Calculate the cost of driving in Australia. Current Australian petrol prices by city, the weekly fuel price cycle explained, road trip costs, and tips to save at the bowser." />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/australia" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MPGYCEEDJQ');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <link rel="canonical" href="https://fuel-smarter.com/australia" />
-  <meta property="og:title" content="Fuel Cost Calculator Australia 2026 — How Much Will Your Journey Cost?" />
-  <meta property="og:description" content="Free Australian fuel cost calculator. Enter your route and car to instantly see petrol or diesel costs and CO2 emissions." />
-  <meta property="og:url" content="https://fuel-smarter.com/australia" />
-  <meta property="og:type" content="article" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Fuel Cost Calculator Australia 2026",
-    "description": "Free Australian fuel cost calculator for petrol and diesel journey costs.",
-    "url": "https://fuel-smarter.com/australia",
-    "publisher": { "@type": "Organization", "name": "Fuel Smarter", "url": "https://fuel-smarter.com" },
-    "dateModified": "2026-05-10"
-  }
-  </script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1); --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97; --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a; --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c; --warning-bg: #faeeda; --warning-text: #633806; --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; --warning-bg: #412402; --warning-text: #fac775; } }
-    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
-    header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
-    header .logo { text-decoration: none; display: flex; align-items: center; gap: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-header .logo .fuel { color: #1C1917; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; text-decoration: underline; text-decoration-color: #2D6A4F; text-decoration-thickness: 2px; text-underline-offset: 3px; }
-    nav { margin-left: auto; display: flex; gap: 1.5rem; }
-    nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; }
-    nav a:hover { color: var(--text); }
-    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
-    h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
-    h2 { font-size: 22px; font-weight: 600; margin: 2.5rem 0 1rem; }
-    p { color: var(--text-secondary); margin-bottom: 1rem; }
-    .meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2rem; }
-    .price-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.5rem 0; }
-    .price-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
-    .price-card .fuel-type { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .price-card .price { font-size: 36px; font-weight: 700; color: var(--text); }
-    .price-card .unit { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-    .journey-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 14px; }
-    .journey-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-secondary); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 0.5px solid var(--border); }
-    .journey-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
-    .journey-table tr:last-child td { border-bottom: none; }
-    .journey-table td:first-child { color: var(--text); font-weight: 500; }
-    .faq { margin: 1rem 0; }
-    .faq-item { border-bottom: 0.5px solid var(--border); padding: 1rem 0; }
-    .faq-item:last-child { border-bottom: none; }
-    .faq-q { font-weight: 600; color: var(--text); margin-bottom: 0.5rem; font-size: 15px; }
-    .faq-a { color: var(--text-secondary); font-size: 14px; margin: 0; }
-    .tip-box { background: var(--success-bg); border: 0.5px solid var(--success-border); border-radius: var(--radius-lg); padding: 1.25rem; margin: 1.5rem 0; }
-    .tip-box p { color: var(--success-text); margin-bottom: 0.5rem; }
-    .tip-box p:last-child { margin-bottom: 0; }
-    .cta-primary { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 16px; font-weight: 600; margin: 1.5rem 0; font-size: 16px; }
-    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
-    footer a { color: inherit; text-decoration: none; }
-    @media (max-width: 600px) { .price-box { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#f8f7f4;--card:#fff;--border:rgba(0,0,0,0.1);--text:#1a1a18;--text-secondary:#6b6b68;--text-tertiary:#9b9b97;--accent:#2D6A4F;--accent-light:#eaf3de;--accent-border:#c0dd97;--accent-text:#27500a;--radius:8px;--radius-lg:12px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+    @media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--card:#252523;--border:rgba(255,255,255,0.1);--text:#e8e6e0;--text-secondary:#9b9b97;--text-tertiary:#6b6b68;--accent-light:#173404;--accent-border:#3b6d11;--accent-text:#c0dd97;}}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.7;}
+    header{background:var(--card);border-bottom:0.5px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+    nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;}
+    nav::-webkit-scrollbar{display:none;}
+    nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
+    nav a:hover{color:var(--text);}
+    nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+    main{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+    h1{font-size:34px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:0.5rem;}
+    h2{font-size:20px;font-weight:700;margin:2.5rem 0 1rem;}
+    h3{font-size:16px;font-weight:700;margin:1.5rem 0 0.5rem;}
+    p{color:var(--text-secondary);margin-bottom:1rem;}
+    .subtitle{font-size:18px;color:var(--text-secondary);margin-bottom:2rem;}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1.5rem 0;}
+    @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr;}}
+    .stat{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;}
+    .stat-num{font-size:26px;font-weight:800;color:var(--text);}
+    .stat-label{font-size:12px;color:var(--text-tertiary);margin-top:4px;line-height:1.4;}
+    .price-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:14px;background:var(--card);border-radius:var(--radius-lg);overflow:hidden;border:0.5px solid var(--border);}
+    .price-table th{background:var(--accent);color:#fff;padding:10px 14px;text-align:left;font-weight:600;}
+    .price-table td{padding:10px 14px;border-bottom:0.5px solid var(--border);color:var(--text-secondary);}
+    .price-table tr:last-child td{border-bottom:none;}
+    .tip-box{background:var(--accent-light);border:0.5px solid var(--accent-border);border-radius:var(--radius-lg);padding:1.25rem;margin:1.5rem 0;}
+    .tip-box h3{color:var(--accent-text);margin-top:0;margin-bottom:0.75rem;}
+    .tip-item{display:flex;gap:10px;margin-bottom:8px;font-size:14px;color:var(--accent-text);}
+    .tip-item:last-child{margin-bottom:0;}
+    .cycle-box{background:#eff6ff;border:0.5px solid #bfdbfe;border-radius:var(--radius-lg);padding:1.25rem;margin:1.5rem 0;}
+    .cycle-box h3{color:#1e3a8a;margin-top:0;margin-bottom:0.75rem;}
+    .cycle-box p{color:#1e3a8a;margin:0;font-size:14px;}
+    .faq-item{border-bottom:0.5px solid var(--border);padding:18px 0;}
+    .faq-item h3{font-size:15px;margin:0 0 6px;color:var(--text);}
+    .faq-item p{margin:0;font-size:14px;}
+    .cta{display:block;text-align:center;background:var(--accent);color:#fff;text-decoration:none;border-radius:var(--radius);padding:14px;font-weight:600;margin-top:2.5rem;font-size:16px;}
+    footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--text-tertiary);border-top:0.5px solid var(--border);}
+    footer a{color:inherit;text-decoration:none;}
   </style>
-  <!-- Google Consent Mode v2 — must load before GA -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-
-    // Set default consent state — denied until user accepts
-    gtag('consent', 'default', {
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'analytics_storage': 'denied',
-      'wait_for_update': 500
-    });
-
-    // Check if user has already consented
-    (function() {
-      var consent = localStorage.getItem('fs_cookie_consent');
-      if (consent === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-      }
-    })();
-  </script>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-MPGYCEEDJQ');
-  </script>
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/style.css" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
 <header>
-  <a href="/" class="logo"><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span></a>
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;">
+    <span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span>
+  </a>
   <nav>
     <a href="/">Calculator</a>
-    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a><a href="/service-station-planner">🛣️ Service Station Planner</a>
+    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a>
     <a href="/fuel-prices">Fuel Prices</a>
-    <a href="/environment">Environment</a>
     <a href="/guides">Guides</a>
-    <a href="/faq">FAQ</a><a href="/about">About</a>
-    <a href="/uk">UK</a>
-<a href="/car-care">Car Care</a>
+    <a href="/ev-calculator">EV</a>
+    <a href="/about">About</a>
   </nav>
 </header>
+
 <main>
-  <h1>Fuel Cost Calculator Australia 🇦🇺</h1>
-  <p class="meta">Australian petrol & diesel prices, journey costs, and fuel saving tips — updated May 2026</p>
+  <h1>🇦🇺 Australian Petrol Price Calculator</h1>
+  <p class="subtitle">Calculate the cost of any Australian road trip, understand the weekly petrol price cycle, and find out how to save money at the bowser.</p>
 
-  <p>Whether you're planning a road trip across the outback or just want to know what your daily commute costs, Fuel Smarter calculates your exact fuel cost based on your car's real-world fuel consumption (L/100km), current Australian pump prices, and how you drive. We use real route data to break your journey down by road type — urban, state roads, and motorways — since each affects fuel use differently.</p>
+  <h2>Australian petrol prices right now</h2>
+  <p>The national average for unleaded petrol (ULP) in Australia is around <strong>205 cents per litre (c/L)</strong> in 2026 — up 3.5% year on year. Prices vary significantly between cities, with Adelaide consistently the cheapest capital city and Darwin the most expensive. Australia measures fuel in cents per litre and sells it in litres, unlike the US which uses gallons.</p>
 
-  <a href="/?country=AU" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your fuel cost now</a>
-
-  <h2>Current Australian fuel prices — May 2026</h2>
-  <div class="price-box">
-    <div class="price-card">
-      <div class="fuel-type">Unleaded (ULP 91)</div>
-      <div class="price">A$1.90</div>
-      <div class="unit">per litre · national average</div>
-    </div>
-    <div class="price-card">
-      <div class="fuel-type">Diesel</div>
-      <div class="price">A$2.00</div>
-      <div class="unit">per litre · national average</div>
-    </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-num">205 c/L</div><div class="stat-label">National average ULP — 2026</div></div>
+    <div class="stat"><div class="stat-num">193 c/L</div><div class="stat-label">Cheapest city — Adelaide</div></div>
+    <div class="stat"><div class="stat-num">215 c/L</div><div class="stat-label">Most expensive — Darwin</div></div>
   </div>
 
-  <p>Australian fuel prices follow a well-known weekly cycle in major cities — prices typically rise sharply on Thursdays and Fridays before falling back through the following week. Filling up on a Tuesday or Wednesday generally gives you the lowest price of the cycle. Regional and remote areas often pay significantly more than city averages due to transport costs.</p>
-
-  <h2>How much does a typical Australian journey cost?</h2>
-  <p>Based on A$1.90/litre and a typical Australian car consuming 10L/100km:</p>
-
-  <table class="journey-table" aria-label="Typical Australian journey fuel costs">
-    <thead>
-      <tr><th>Journey</th><th>Distance</th><th>Fuel cost (10L/100km)</th><th>Fuel cost (8L/100km)</th></tr>
-    </thead>
+  <h2>Petrol prices by city — 2026</h2>
+  <table class="price-table">
+    <thead><tr><th>City</th><th>Average ULP (c/L)</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>Sydney to Melbourne</td><td>877 km</td><td>~A$166.60</td><td>~A$133.30</td></tr>
-      <tr><td>Melbourne to Adelaide</td><td>728 km</td><td>~A$138.30</td><td>~A$110.60</td></tr>
-      <tr><td>Sydney to Brisbane</td><td>924 km</td><td>~A$175.60</td><td>~A$140.45</td></tr>
-      <tr><td>Perth to Fremantle</td><td>19 km</td><td>~A$3.60</td><td>~A$2.90</td></tr>
-      <tr><td>Brisbane to Gold Coast</td><td>78 km</td><td>~A$14.80</td><td>~A$11.85</td></tr>
-      <tr><td>Adelaide to Melbourne</td><td>728 km</td><td>~A$138.30</td><td>~A$110.60</td></tr>
+      <tr><td>Adelaide</td><td>193 c/L</td><td>Consistently cheapest capital</td></tr>
+      <tr><td>Perth</td><td>~216 c/L</td><td>FuelWatch regulated — rises Wednesday</td></tr>
+      <tr><td>Melbourne</td><td>~207 c/L</td><td>Strong weekly price cycle</td></tr>
+      <tr><td>Sydney</td><td>~207 c/L</td><td>Strong weekly price cycle</td></tr>
+      <tr><td>Brisbane</td><td>~207 c/L</td><td>Strong weekly price cycle</td></tr>
+      <tr><td>Hobart</td><td>~208 c/L</td><td>Less predictable cycle</td></tr>
+      <tr><td>Darwin</td><td>215 c/L</td><td>Most expensive — remote location</td></tr>
     </tbody>
   </table>
-  <p style="font-size:13px;color:var(--text-tertiary);">Based on A$1.90/litre national average. Use our calculator for your specific vehicle and local price.</p>
 
-  <h2>Understanding L/100km — Australia's fuel economy measure</h2>
-  <p>Australia uses litres per 100 kilometres (L/100km) to measure fuel economy — unlike the UK and US which use miles per gallon (MPG). A lower L/100km number means better fuel economy. A typical Australian family car uses around 9-11L/100km in combined driving, while fuel-efficient small cars can achieve 6-7L/100km and larger SUVs and utes may use 12-15L/100km.</p>
+  <h2>The weekly petrol price cycle — Australia's unique fuel market</h2>
+  <p>Australia has one of the world's most distinctive fuel pricing systems. In the major east coast cities (Sydney, Melbourne, Brisbane), petrol prices follow a predictable weekly cycle — rising sharply at the start of the week, then falling steadily until they bottom out mid-week before rising again.</p>
+
+  <div class="cycle-box">
+    <h3>⏰ Best days to fill up in Australia</h3>
+    <p><strong>Tuesday to Thursday</strong> — prices are typically at their lowest mid-week. Filling up on a Thursday instead of a Sunday can save up to 15 cents per litre, or around $8 on a 55-litre tank. In Perth, FuelWatch regulates the cycle, with prices rising on Wednesday mornings — fill up on Tuesday in Perth.</p>
+  </div>
+
+  <p>The cycle isn't perfectly consistent — some weeks run 7 days, others stretch to 10-14 days. The best approach is to check a price comparison app before filling up rather than assuming a specific day will always be cheapest.</p>
+
+  <h2>Australian road trip fuel costs</h2>
+  <p>Australia's vast distances make fuel costs a significant part of any road trip budget. Based on a typical 10L/100km vehicle at 205 c/L:</p>
+
+  <table class="price-table">
+    <thead><tr><th>Route</th><th>Distance</th><th>Estimated fuel cost</th></tr></thead>
+    <tbody>
+      <tr><td>Sydney to Melbourne</td><td>880 km</td><td>~$180</td></tr>
+      <tr><td>Melbourne to Adelaide</td><td>730 km</td><td>~$150</td></tr>
+      <tr><td>Sydney to Brisbane</td><td>920 km</td><td>~$188</td></tr>
+      <tr><td>Perth to Broome</td><td>2,240 km</td><td>~$459</td></tr>
+      <tr><td>Sydney to Cairns (coastal)</td><td>2,900 km</td><td>~$595</td></tr>
+      <tr><td>Darwin to Alice Springs</td><td>1,500 km</td><td>~$308</td></tr>
+    </tbody>
+  </table>
+  <p>For outback routes, always carry extra fuel — petrol stations can be 200-300km apart in remote areas, and prices at remote roadhouses can be 50-100 cents per litre above city prices.</p>
+
+  <h2>Australian speed limits</h2>
+  <table class="price-table">
+    <thead><tr><th>Road type</th><th>Speed limit</th></tr></thead>
+    <tbody>
+      <tr><td>Motorways and highways</td><td>100-110 km/h (varies by state)</td></tr>
+      <tr><td>Rural roads</td><td>100 km/h</td></tr>
+      <tr><td>Suburban areas</td><td>50 km/h</td></tr>
+      <tr><td>School zones</td><td>40 km/h (during school hours)</td></tr>
+      <tr><td>Shared zones</td><td>10 km/h</td></tr>
+    </tbody>
+  </table>
+  <p>The Northern Territory removed its open speed limit in 2016 — all NT roads now have posted limits. The Stuart Highway, once famous for unlimited speed, is now 130 km/h.</p>
 
   <div class="tip-box">
-    <p><strong>Converting L/100km to MPG:</strong> Divide 282.5 by your L/100km figure. So 10L/100km ≈ 28 MPG, 8L/100km ≈ 35 MPG, 6L/100km ≈ 47 MPG.</p>
-    <p><strong>Speed limits in Australia</strong> are 100 km/h on most state roads and 110 km/h on motorways in most states. Driving at 110 km/h uses noticeably more fuel than 100 km/h — our calculator shows you exactly how much on your specific journey.</p>
+    <h3>💡 Tips to save money on petrol in Australia</h3>
+    <div class="tip-item">📱 <span><strong>Use GasBuddy or MotorMouth</strong> — Australia's best apps for finding the cheapest petrol near you, with prices updated by the community.</span></div>
+    <div class="tip-item">🏪 <span><strong>Woolworths and Coles fuel discounts</strong> — both supermarket chains offer 4 cents per litre off fuel with their loyalty cards. Stack with shopper dockets for bigger savings.</span></div>
+    <div class="tip-item">📅 <span><strong>Fill up Tuesday to Thursday</strong> — prices are consistently lowest mid-week in Sydney, Melbourne, and Brisbane due to the weekly price cycle.</span></div>
+    <div class="tip-item">🚐 <span><strong>Plan fuel stops on outback routes</strong> — remote roadhouses charge a significant premium. Carry a jerry can for long outback legs where stations are scarce.</span></div>
+    <div class="tip-item">🚗 <span><strong>Check tyre pressure</strong> — Australian roads can be long and hot. Under-inflated tyres increase fuel consumption and blowout risk, particularly in summer.</span></div>
   </div>
 
   <h2>Frequently asked questions</h2>
-  <div class="faq">
-    <div class="faq-item">
-      <div class="faq-q">How do I calculate fuel cost for a road trip in Australia?</div>
-      <div class="faq-a">Multiply your trip distance (in km) by your car's fuel consumption (L/100km), then divide by 100 to get litres used. Multiply by the fuel price to get the cost. For example: 500km × 10L/100km ÷ 100 = 50 litres × A$1.90 = A$95. Our calculator does this automatically with road type adjustments.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">Why do Australian fuel prices change so much each week?</div>
-      <div class="faq-a">Major Australian cities experience a regular weekly fuel price cycle driven by competition between retailers. Prices typically peak on Thursday or Friday and are lowest mid-week. This cycle is most pronounced in Sydney, Melbourne, Brisbane, and Adelaide.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">What is the most fuel-efficient speed to drive in Australia?</div>
-      <div class="faq-a">Most cars achieve best fuel economy between 80-100 km/h. At 110 km/h, efficiency typically drops by 10-15% compared to 100 km/h. On long outback drives where speed limits allow higher speeds, sticking to 100 km/h can save meaningful amounts of fuel over hundreds of kilometres.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">How much does fuel cost per km in Australia?</div>
-      <div class="faq-a">At A$1.90/litre and 10L/100km, fuel costs approximately A$0.19 per km (19 cents per km). At 8L/100km it drops to about A$0.152 per km. These are fuel-only figures and don't include other running costs.</div>
-    </div>
+  <div class="faq-item">
+    <h3>What is the average petrol price in Australia in 2026?</h3>
+    <p>Around 205 cents per litre (c/L) nationally, with Adelaide the cheapest capital at 193 c/L and Darwin the most expensive at 215 c/L. Remote areas can be significantly higher.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What is the cheapest day to buy petrol in Australia?</h3>
+    <p>Tuesday to Thursday in the major east coast cities, where the weekly price cycle bottoms out mid-week. In Perth, fill up on Tuesday before Wednesday morning when FuelWatch allows prices to rise.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Why is petrol so expensive in remote Australia?</h3>
+    <p>Remote roadhouses face much higher distribution and transport costs — fuel has to be trucked hundreds of kilometres from the nearest terminal. Lower competition and higher operating costs also contribute. Expect to pay 50-100 c/L more in outback areas than in capital cities.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Does Australia use litres or gallons for fuel?</h3>
+    <p>Litres — all Australian fuel is priced and sold in litres. Fuel economy is typically expressed as litres per 100 kilometres (L/100km) rather than miles per gallon. Our calculator supports both measurement systems.</p>
   </div>
 
-  <a href="/?country=AU" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your Australian journey cost — free</a>
+  <a href="/" class="cta">Calculate your Australian road trip cost →</a>
 </main>
+
 <footer>
-  <p>Fuel prices are approximate national averages. Prices vary by city, region, and day of the week. Updated May 2026.</p>
-  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Home</a> · <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a><a href="/service-station-planner">🛣️ Service Station Planner</a><a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/about">About</a> · <a href="/privacy">Privacy Policy</a></p>
+  <p>Petrol price data sourced from Australian Institute of Petroleum and FuelWatch · Updated September 2026</p>
+  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;">Smarter</span> · <a href="/">Calculator</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/guides">Guides</a> · <a href="/privacy">Privacy</a></p>
 </footer>
-  <!-- Cookie consent banner -->
-  <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
-    <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-      <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
-        We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
-      </p>
-      <div style="display:flex;gap:8px;flex-shrink:0;">
-        <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">
-          Decline
-        </button>
-        <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">
-          Accept cookies
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Show banner if no consent decision yet
-    (function() {
-      if (!localStorage.getItem('fs_cookie_consent')) {
-        document.getElementById('cookie-banner').style.display = 'block';
-      }
-    })();
-
-    function handleConsent(decision) {
-      localStorage.setItem('fs_cookie_consent', decision);
-      document.getElementById('cookie-banner').style.display = 'none';
-
-      if (decision === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-        // Fire a page view now that consent is granted
-        gtag('event', 'page_view');
-      }
-    }
-  </script>
-  <!-- Skimlinks affiliate tracking -->
-  
 </body>
 </html>

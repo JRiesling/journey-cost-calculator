@@ -1,252 +1,168 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gas Cost Calculator USA 2026 — How Much Will Your Road Trip Cost? | Fuel Smarter</title>
-  <meta name="description" content="Free US gas cost calculator for 2026. Calculate exactly how much your road trip or daily drive will cost in gasoline or diesel, based on your car's MPG and current US gas prices." />
-  <meta name="keywords" content="gas cost calculator USA, how much will my road trip cost, fuel cost calculator US, MPG calculator USA, gas price calculator, road trip cost calculator 2026" />
+  <title>US Gas Price Calculator — Journey Cost & Gas Finder | FuelSmarter</title>
+  <meta name="description" content="Calculate the cost of any US road trip in dollars. See gas costs by state, how speed affects your fuel bill, and tips to save money at the pump across America." />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fuel-smarter.com/us" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MPGYCEEDJQ');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <link rel="canonical" href="https://fuel-smarter.com/us" />
-  <meta property="og:title" content="Gas Cost Calculator USA 2026 — How Much Will Your Road Trip Cost?" />
-  <meta property="og:description" content="Free US gas cost calculator. Enter your route and car to instantly see gasoline costs and how much you'd save by driving at the speed limit." />
-  <meta property="og:url" content="https://fuel-smarter.com/us" />
-  <meta property="og:type" content="article" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Gas Cost Calculator USA 2026",
-    "description": "Free US gas cost calculator. Calculate gasoline and diesel journey costs based on your car, route and driving speed.",
-    "url": "https://fuel-smarter.com/us",
-    "publisher": { "@type": "Organization", "name": "Fuel Smarter", "url": "https://fuel-smarter.com" },
-    "dateModified": "2026-05-10"
-  }
-  </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.3.0/dist/tabler-icons.min.css" media="print" onload="this.media='all'" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --bg: #f8f7f4; --card: #ffffff; --border: rgba(0,0,0,0.1); --text: #1a1a18; --text-secondary: #6b6b68; --text-tertiary: #9b9b97; --success-bg: #eaf3de; --success-border: #c0dd97; --success-text: #27500a; --info-bg: #e6f1fb; --info-border: #b5d4f4; --info-text: #0c447c; --warning-bg: #faeeda; --warning-text: #633806; --radius: 8px; --radius-lg: 12px; --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #1a1a18; --card: #252523; --border: rgba(255,255,255,0.1); --text: #e8e6e0; --text-secondary: #9b9b97; --text-tertiary: #6b6b68; --success-bg: #173404; --success-border: #3b6d11; --success-text: #c0dd97; --info-bg: #0c2a44; --info-border: #185fa5; --info-text: #85b7eb; --warning-bg: #412402; --warning-text: #fac775; } }
-    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
-    header { background: var(--card); border-bottom: 0.5px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 10px; }
-    header .logo { text-decoration: none; display: flex; align-items: center; gap: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-header .logo .fuel { color: #1C1917; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; text-decoration: underline; text-decoration-color: #2D6A4F; text-decoration-thickness: 2px; text-underline-offset: 3px; }
-    nav { margin-left: auto; display: flex; gap: 1.5rem; }
-    nav a { text-decoration: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; }
-    nav a:hover { color: var(--text); }
-    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
-    h1 { font-size: 32px; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
-    h2 { font-size: 22px; font-weight: 600; margin: 2.5rem 0 1rem; }
-    h3 { font-size: 17px; font-weight: 600; margin: 1.5rem 0 0.5rem; }
-    p { color: var(--text-secondary); margin-bottom: 1rem; }
-    .meta { font-size: 13px; color: var(--text-tertiary); margin-bottom: 2rem; }
-    .price-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.5rem 0; }
-    .price-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
-    .price-card .fuel-type { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .price-card .price { font-size: 36px; font-weight: 700; color: var(--text); }
-    .price-card .unit { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-    .journey-table { width: 100%; border-collapse: collapse; margin: 1rem 0 2rem; font-size: 14px; }
-    .journey-table th { text-align: left; padding: 10px 12px; background: var(--bg); color: var(--text-secondary); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 0.5px solid var(--border); }
-    .journey-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); color: var(--text-secondary); }
-    .journey-table tr:last-child td { border-bottom: none; }
-    .journey-table td:first-child { color: var(--text); font-weight: 500; }
-    .faq { margin: 1rem 0; }
-    .faq-item { border-bottom: 0.5px solid var(--border); padding: 1rem 0; }
-    .faq-item:last-child { border-bottom: none; }
-    .faq-q { font-weight: 600; color: var(--text); margin-bottom: 0.5rem; font-size: 15px; }
-    .faq-a { color: var(--text-secondary); font-size: 14px; margin: 0; }
-    .tip-box { background: var(--success-bg); border: 0.5px solid var(--success-border); border-radius: var(--radius-lg); padding: 1.25rem; margin: 1.5rem 0; }
-    .tip-box p { color: var(--success-text); margin-bottom: 0.5rem; }
-    .tip-box p:last-child { margin-bottom: 0; }
-    .cta-primary { display: block; text-align: center; background: var(--info-bg); border: 0.5px solid var(--info-border); color: var(--info-text); text-decoration: none; border-radius: var(--radius); padding: 16px; font-weight: 600; margin: 1.5rem 0; font-size: 16px; }
-    footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-tertiary); border-top: 0.5px solid var(--border); }
-    footer a { color: inherit; text-decoration: none; }
-    @media (max-width: 600px) { .price-box { grid-template-columns: 1fr; } h1 { font-size: 24px; } }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#f8f7f4;--card:#fff;--border:rgba(0,0,0,0.1);--text:#1a1a18;--text-secondary:#6b6b68;--text-tertiary:#9b9b97;--accent:#2D6A4F;--accent-light:#eaf3de;--accent-border:#c0dd97;--accent-text:#27500a;--radius:8px;--radius-lg:12px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+    @media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--card:#252523;--border:rgba(255,255,255,0.1);--text:#e8e6e0;--text-secondary:#9b9b97;--text-tertiary:#6b6b68;--accent-light:#173404;--accent-border:#3b6d11;--accent-text:#c0dd97;}}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.7;}
+    header{background:var(--card);border-bottom:0.5px solid var(--border);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+    nav{margin-left:auto;display:flex;overflow-x:auto;scrollbar-width:none;}
+    nav::-webkit-scrollbar{display:none;}
+    nav a{text-decoration:none;color:var(--text-secondary);font-size:13px;font-weight:500;padding:0 12px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;white-space:nowrap;}
+    nav a:hover{color:var(--text);}
+    nav a.active{color:var(--accent);border-bottom-color:var(--accent);}
+    main{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+    h1{font-size:34px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:0.5rem;}
+    h2{font-size:20px;font-weight:700;margin:2.5rem 0 1rem;color:var(--text);}
+    h3{font-size:16px;font-weight:700;margin:1.5rem 0 0.5rem;}
+    p{color:var(--text-secondary);margin-bottom:1rem;}
+    .subtitle{font-size:18px;color:var(--text-secondary);margin-bottom:2rem;}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:1.5rem 0;}
+    @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr;}}
+    .stat{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;}
+    .stat-num{font-size:26px;font-weight:800;color:var(--text);}
+    .stat-label{font-size:12px;color:var(--text-tertiary);margin-top:4px;line-height:1.4;}
+    .price-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:14px;background:var(--card);border-radius:var(--radius-lg);overflow:hidden;border:0.5px solid var(--border);}
+    .price-table th{background:var(--accent);color:#fff;padding:10px 14px;text-align:left;font-weight:600;}
+    .price-table td{padding:10px 14px;border-bottom:0.5px solid var(--border);color:var(--text-secondary);}
+    .price-table tr:last-child td{border-bottom:none;}
+    .tip-box{background:var(--accent-light);border:0.5px solid var(--accent-border);border-radius:var(--radius-lg);padding:1.25rem;margin:1.5rem 0;}
+    .tip-box h3{color:var(--accent-text);margin-top:0;margin-bottom:0.75rem;}
+    .tip-item{display:flex;gap:10px;margin-bottom:8px;font-size:14px;color:var(--accent-text);}
+    .tip-item:last-child{margin-bottom:0;}
+    .faq-item{border-bottom:0.5px solid var(--border);padding:18px 0;}
+    .faq-item h3{font-size:15px;margin:0 0 6px;color:var(--text);}
+    .faq-item p{margin:0;font-size:14px;}
+    .cta{display:block;text-align:center;background:var(--accent);color:#fff;text-decoration:none;border-radius:var(--radius);padding:14px;font-weight:600;margin-top:2.5rem;font-size:16px;}
+    footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--text-tertiary);border-top:0.5px solid var(--border);}
+    footer a{color:inherit;text-decoration:none;}
   </style>
-  <!-- Google Consent Mode v2 — must load before GA -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-
-    // Set default consent state — denied until user accepts
-    gtag('consent', 'default', {
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'analytics_storage': 'denied',
-      'wait_for_update': 500
-    });
-
-    // Check if user has already consented
-    (function() {
-      var consent = localStorage.getItem('fs_cookie_consent');
-      if (consent === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-      }
-    })();
-  </script>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPGYCEEDJQ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-MPGYCEEDJQ');
-  </script>
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3147475685110872" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/style.css" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
 <header>
-  <a href="/" class="logo"><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span></a>
+  <a href="/" style="text-decoration:none;display:flex;align-items:center;">
+    <span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#1C1917;font-family:-apple-system,sans-serif;">Fuel</span><span style="font-weight:800;font-size:20px;letter-spacing:-0.5px;color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;font-family:-apple-system,sans-serif;">Smarter</span>
+  </a>
   <nav>
     <a href="/">Calculator</a>
-    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a><a href="/service-station-planner">🛣️ Service Station Planner</a>
+    <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a>
+    <a href="/service-station-planner">🛣️ Service Station Planner</a>
     <a href="/fuel-prices">Fuel Prices</a>
-    <a href="/environment">Environment</a>
     <a href="/guides">Guides</a>
-    <a href="/faq">FAQ</a><a href="/about">About</a>
-    <a href="/uk">UK</a>
-<a href="/car-care">Car Care</a>
+    <a href="/ev-calculator">EV</a>
+    <a href="/car-care">Car Care</a>
+    <a href="/about">About</a>
   </nav>
 </header>
+
 <main>
-  <h1>Gas Cost Calculator USA 🇺🇸</h1>
-  <p class="meta">US gasoline & diesel prices, road trip costs, and MPG tips — updated May 2026</p>
+  <h1>🇺🇸 US Gas Price Calculator</h1>
+  <p class="subtitle">Calculate the cost of any American road trip, see gas prices by state, and find out how your driving speed affects what you spend at the pump.</p>
 
-  <p>Planning a road trip or want to know exactly what your daily commute costs in gas? Fuel Smarter calculates your exact fuel cost based on your car's real-world MPG, current US gas prices, your route, and how fast you drive — including a breakdown by road type and a speed comparison so you can see how much you'd save by easing off the gas.</p>
+  <h2>Gas prices in the US right now</h2>
+  <p>The US national average for regular unleaded gas is around <strong>$4.00 per gallon</strong> as of mid-2026 — up roughly 21% from a year earlier, driven largely by geopolitical tensions affecting global oil supply. Prices vary enormously by state, from around $3.37 in Indiana to $5.46 in California.</p>
 
-  <a href="/?country=US" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your gas cost now</a>
-
-  <h2>Current US gas prices — May 2026</h2>
-  <div class="price-box">
-    <div class="price-card">
-      <div class="fuel-type">Regular Gasoline</div>
-      <div class="price">$3.50</div>
-      <div class="unit">per gallon · national average</div>
-    </div>
-    <div class="price-card">
-      <div class="fuel-type">Diesel</div>
-      <div class="price">$3.80</div>
-      <div class="unit">per gallon · national average</div>
-    </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-num">$4.00</div><div class="stat-label">National average per gallon (mid-2026)</div></div>
+    <div class="stat"><div class="stat-num">$5.46</div><div class="stat-label">Most expensive state (California)</div></div>
+    <div class="stat"><div class="stat-num">$3.37</div><div class="stat-label">Cheapest state (Indiana)</div></div>
   </div>
 
-  <p>US gas prices vary significantly by state — California typically runs $0.80-1.00 per gallon higher than the national average due to state taxes and cleaner fuel requirements, while states like Texas and Mississippi often have the cheapest prices. Our calculator uses the national average by default but you can edit the price field to match your local pump price.</p>
+  <h2>Gas prices by state — 2026</h2>
+  <p>Gas prices differ significantly across the US, driven by state taxes, proximity to refineries, and distribution costs. Here's how the major states compare:</p>
 
-  <h2>How much does a typical US road trip cost in gas?</h2>
-  <p>Based on the national average gas price of $3.50/gallon and a typical car achieving 28 MPG:</p>
-
-  <table class="journey-table" aria-label="Typical US road trip fuel costs">
-    <thead>
-      <tr><th>Route</th><th>Distance</th><th>Gas cost (28 MPG)</th><th>Gas cost (35 MPG)</th></tr>
-    </thead>
+  <table class="price-table">
+    <thead><tr><th>State</th><th>Regular (per gallon)</th><th>vs National Average</th></tr></thead>
     <tbody>
-      <tr><td>New York to Washington DC</td><td>225 miles</td><td>~$10.00</td><td>~$8.00</td></tr>
-      <tr><td>Los Angeles to San Francisco</td><td>380 miles</td><td>~$16.90</td><td>~$13.50</td></tr>
-      <tr><td>Chicago to Detroit</td><td>280 miles</td><td>~$12.50</td><td>~$10.00</td></tr>
-      <tr><td>Miami to Orlando</td><td>235 miles</td><td>~$10.45</td><td>~$8.35</td></tr>
-      <tr><td>Dallas to Houston</td><td>240 miles</td><td>~$10.70</td><td>~$8.55</td></tr>
-      <tr><td>New York to Boston</td><td>215 miles</td><td>~$9.55</td><td>~$7.65</td></tr>
-      <tr><td>Seattle to Portland</td><td>175 miles</td><td>~$7.80</td><td>~$6.25</td></tr>
-      <tr><td>Las Vegas to Los Angeles</td><td>270 miles</td><td>~$12.00</td><td>~$9.60</td></tr>
+      <tr><td>California</td><td>$5.46</td><td>+36%</td></tr>
+      <tr><td>Hawaii</td><td>$5.43</td><td>+36%</td></tr>
+      <tr><td>Washington</td><td>$5.01</td><td>+25%</td></tr>
+      <tr><td>Nevada</td><td>$4.62</td><td>+16%</td></tr>
+      <tr><td>Oregon</td><td>$4.56</td><td>+14%</td></tr>
+      <tr><td>New York</td><td>$4.15</td><td>+4%</td></tr>
+      <tr><td>Illinois</td><td>$4.15</td><td>+4%</td></tr>
+      <tr><td>Texas</td><td>$3.60</td><td>-10%</td></tr>
+      <tr><td>Florida</td><td>$3.55</td><td>-11%</td></tr>
+      <tr><td>Indiana</td><td>$3.37</td><td>-16%</td></tr>
     </tbody>
   </table>
-  <p style="font-size:13px;color:var(--text-tertiary);">Based on $3.50/gallon national average. Use our calculator for your specific vehicle and local gas price.</p>
 
-  <h2>How speed affects your gas costs in the US</h2>
+  <h2>Why do gas prices vary so much by state?</h2>
+  <p>The biggest factor is state fuel taxes, which range from around 9 cents per gallon in Alaska to over 68 cents per gallon in California. Proximity to Gulf Coast refineries also plays a major role — states in the South and Midwest benefit from shorter distribution chains, while West Coast states face higher costs due to limited pipeline access and stricter environmental regulations that require specially blended fuel.</p>
+  <p>Crude oil makes up roughly 51% of the price of a gallon of gas in the US, with taxes accounting for 17%, distribution and marketing 18%, and refining costs 14%, according to the US Energy Information Administration.</p>
+
+  <h2>What does a US road trip actually cost?</h2>
+  <p>Using the FuelSmarter calculator with the US selected, you can calculate the exact cost of any American road trip based on your vehicle's MPG (or L/100km), your driving speed, and current gas prices. Here are some example costs based on a typical 25 MPG vehicle at $4.00/gallon:</p>
+
+  <table class="price-table">
+    <thead><tr><th>Route</th><th>Distance</th><th>Estimated gas cost</th></tr></thead>
+    <tbody>
+      <tr><td>New York to Los Angeles</td><td>2,790 miles</td><td>~$447</td></tr>
+      <tr><td>Chicago to Miami</td><td>1,380 miles</td><td>~$221</td></tr>
+      <tr><td>Los Angeles to Las Vegas</td><td>270 miles</td><td>~$43</td></tr>
+      <tr><td>Seattle to San Francisco</td><td>810 miles</td><td>~$130</td></tr>
+      <tr><td>Boston to Washington DC</td><td>440 miles</td><td>~$70</td></tr>
+    </tbody>
+  </table>
+  <p>These are estimates based on highway driving at 65mph. Use our calculator for your exact vehicle and route.</p>
+
+  <h2>How speed affects your gas bill</h2>
+  <p>Driving faster uses significantly more fuel. At highway speeds, aerodynamic drag increases with the square of your speed — meaning going from 65mph to 80mph doesn't just add 23% more distance covered per hour, it increases fuel consumption by considerably more than that. Most vehicles achieve their best fuel economy between 45mph and 60mph.</p>
+  <p>On a cross-country drive from New York to LA, driving at 75mph instead of 65mph could add $30-50 to your gas bill — on top of the speeding ticket risk.</p>
+
   <div class="tip-box">
-    <p><strong>The 65 mph sweet spot:</strong> Most American cars get their best highway fuel economy between 55-65 mph. Driving at 75 mph instead of 65 mph typically reduces fuel economy by 10-15%, adding $5-10 to a 300-mile trip.</p>
-    <p><strong>Interstate speed limits</strong> vary by state — typically 65-80 mph. States like Texas allow 85 mph on some toll roads. Our calculator sets the default to 65 mph but you can adjust to match your typical interstate speed.</p>
-    <p><strong>Cruise control saves gas.</strong> Maintaining a steady speed on highways is more efficient than constant small speed changes. Studies suggest cruise control can improve fuel economy by 7-14% on flat terrain.</p>
+    <h3>💡 Tips to save money on gas in the US</h3>
+    <div class="tip-item">⛽ <span><strong>Use GasBuddy</strong> — the best free app for finding the cheapest gas station near you. Prices are crowd-sourced and updated in real time.</span></div>
+    <div class="tip-item">🏷️ <span><strong>Supermarket loyalty programs</strong> — Kroger, Safeway, and other chains offer fuel discounts of 10-30 cents per gallon with their loyalty cards.</span></div>
+    <div class="tip-item">💳 <span><strong>Gas credit cards</strong> — cards from Costco, Sam's Club, or branded station cards can save 3-5 cents per gallon consistently.</span></div>
+    <div class="tip-item">🛣️ <span><strong>Avoid motorway service stations</strong> — gas at highway rest stops is typically 15-30 cents per gallon more expensive than nearby off-highway stations.</span></div>
+    <div class="tip-item">🚗 <span><strong>Check your tyre pressure</strong> — under-inflated tyres reduce fuel economy by 0.2% for every 1 PSI drop. Check monthly.</span></div>
+    <div class="tip-item">⏰ <span><strong>Fill up mid-week</strong> — gas prices tend to be lower on Tuesdays and Wednesdays than on weekends when demand peaks.</span></div>
   </div>
+
+  <h2>US vs UK gas prices — how do they compare?</h2>
+  <p>American drivers pay significantly less for gas than their UK counterparts. At $4.00 per gallon (roughly £3.20/gallon or 70p/litre), US gas is about half the price of UK petrol at around 157p/litre. The main reason is taxation — UK fuel duty and VAT add around 85p to every litre, while US federal gas tax is just 18.4 cents per gallon with varying state taxes on top.</p>
 
   <h2>Frequently asked questions</h2>
-  <div class="faq">
-    <div class="faq-item">
-      <div class="faq-q">How do I calculate the gas cost for a road trip?</div>
-      <div class="faq-a">Divide your trip distance by your car's MPG to get gallons used, then multiply by the gas price. For example, a 300-mile trip in a 30 MPG car uses 10 gallons — at $3.50/gallon that's $35. Our calculator does this automatically, adjusting for road type and driving speed.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">What is the average MPG for a US car?</div>
-      <div class="faq-a">The average fuel economy of new cars sold in the US is around 28-32 MPG combined. SUVs and trucks typically achieve 20-26 MPG, while sedans and hybrids can reach 35-50 MPG or more. Real-world figures are usually 10-15% lower than the EPA-rated estimate.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">Why are gas prices so much cheaper in the US than Europe?</div>
-      <div class="faq-a">The main reason is taxes. US federal gas tax is just 18.4 cents per gallon, with state taxes adding another 20-60 cents. In the UK, fuel duty alone is equivalent to around $2.50 per gallon — making up over half the pump price. The US also has significant domestic oil production which reduces import costs.</div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q">How much does it cost to drive per mile in the US?</div>
-      <div class="faq-a">At $3.50/gallon and 28 MPG, fuel costs around 12.5 cents per mile. At 35 MPG it drops to 10 cents per mile. These figures cover fuel only — the AAA estimates the full cost of car ownership (including depreciation, insurance, and maintenance) at around 60-80 cents per mile.</div>
-    </div>
+  <div class="faq-item">
+    <h3>What is the average gas price in the US in 2026?</h3>
+    <p>The national average for regular unleaded is around $4.00 per gallon as of mid-2026, up from around $3.30 a year earlier. California is the most expensive state at $5.46/gallon; Indiana is the cheapest at $3.37/gallon.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I calculate the gas cost of a road trip?</h3>
+    <p>Use our free calculator above — enter your route, your vehicle's MPG, and select United States. We'll calculate the exact cost based on current gas prices and your driving speed.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Why is gas so expensive in California?</h3>
+    <p>California has the highest state gas taxes in the US, strict environmental regulations requiring a unique fuel blend, limited pipeline connections to Gulf Coast refineries, and high distribution costs. These combine to push prices consistently $1-2 above the national average.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What's the cheapest state for gas?</h3>
+    <p>Southern and Midwestern states consistently have the cheapest gas — Indiana, Oklahoma, Texas, and Mississippi regularly come in well below the national average due to lower state taxes and proximity to Gulf Coast refineries.</p>
   </div>
 
-  <a href="/?country=US" class="cta-primary"><i class="ti ti-calculator" aria-hidden="true"></i> Calculate your road trip gas cost — free</a>
+  <a href="/" class="cta">Calculate your US road trip cost →</a>
 </main>
+
 <footer>
-  <p>Gas prices are approximate national averages. Prices vary significantly by state and location. Updated May 2026.</p>
-  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Home</a> · <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a><a href="/service-station-planner">🛣️ Service Station Planner</a><a href="/fuel-prices">Fuel Prices</a> · <a href="/environment">Environment</a> · <a href="/about">About</a> · <a href="/privacy">Privacy Policy</a></p>
+  <p>Gas price data sourced from AAA and US Energy Information Administration · Updated September 2026</p>
+  <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;">Smarter</span> · <a href="/">Calculator</a> · <a href="/fuel-prices">Fuel Prices</a> · <a href="/guides">Guides</a> · <a href="/privacy">Privacy</a></p>
 </footer>
-  <!-- Cookie consent banner -->
-  <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:0.5px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
-    <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-      <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">
-        We use cookies to see how people use Fuel Smarter — the data helps us fix what's not working and build features people actually want. It's what keeps the tool free and getting better. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.
-      </p>
-      <div style="display:flex;gap:8px;flex-shrink:0;">
-        <button onclick="handleConsent('declined')" style="height:36px;padding:0 16px;border:0.5px solid var(--border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;cursor:pointer;">
-          Decline
-        </button>
-        <button onclick="handleConsent('accepted')" style="height:36px;padding:0 16px;border:0.5px solid var(--info-border);border-radius:8px;background:var(--info-bg);color:var(--info-text);font-size:13px;font-weight:500;cursor:pointer;">
-          Accept cookies
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Show banner if no consent decision yet
-    (function() {
-      if (!localStorage.getItem('fs_cookie_consent')) {
-        document.getElementById('cookie-banner').style.display = 'block';
-      }
-    })();
-
-    function handleConsent(decision) {
-      localStorage.setItem('fs_cookie_consent', decision);
-      document.getElementById('cookie-banner').style.display = 'none';
-
-      if (decision === 'accepted') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted',
-          'ad_user_data': 'granted',
-          'ad_personalization': 'granted'
-        });
-        // Fire a page view now that consent is granted
-        gtag('event', 'page_view');
-      }
-    }
-  </script>
-  <!-- Skimlinks affiliate tracking -->
-  
 </body>
 </html>
