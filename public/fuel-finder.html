@@ -720,7 +720,9 @@ loadSavedRoute();
   document.querySelectorAll('.save-fuel-btn').forEach(function(b){ b.textContent='Save as fuel stop for planner'; b.style.background='transparent'; });
   btn.textContent = 'Saved - go to Service Station Planner';
   btn.style.background = '#FEF3C7';
+  if (window.FSJourney) FSJourney.render();
 }
 </script>
+<script src="/journey-bar.js?v=1" defer></script>
 </body>
 </html>
