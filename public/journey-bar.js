@@ -171,7 +171,9 @@
       if (built.stops > 3) h += '<p class="note">Some map apps show fewer stops on mobile. Check all your stops appear.</p>';
 
       var offers = '';
-      if (!s.park && dest) {
+      if (s.park && s.park.lat) {
+        offers += '<a class="offer" href="' + AFF.justpark(s.park.name, s.park.lat, s.park.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Secure your space near ' + esc(s.park.name) + '</b><span>Pre-book on JustPark so it\'s waiting when you arrive</span></div></a>';
+      } else if (dest) {
         var dc = s.route.destCoords || {};
         offers += '<a class="offer" href="' + AFF.justpark(dest, dc.lat, dc.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Need parking in ' + esc(dest) + '?</b><span>Pre-book a space on JustPark</span></div></a>';
       }
