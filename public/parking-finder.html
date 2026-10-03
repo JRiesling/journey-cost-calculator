@@ -29,7 +29,7 @@
 
   <!-- Maps loaded dynamically -->
   <script>
-    var map=null,mapsLoaded=false,placesService=null;
+    var map=null,mapsLoaded=false;
     function showMapFallback(){var m=document.getElementById('map');if(m)m.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:12px;color:#A8A29E;font-family:Inter,sans-serif;font-size:14px;"><span style="font-size:40px;">🗺️</span><p>Map unavailable</p></div>';}
     fetch('/api/maps-key').then(r=>r.json()).then(function(d){
       if(!d.key){showMapFallback();return;}
@@ -40,7 +40,6 @@
           styles:[{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},{featureType:'transit',elementType:'labels',stylers:[{visibility:'off'}]}],
           mapTypeControl:false,streetViewControl:false,fullscreenControl:false
         });
-        placesService=new google.maps.places.PlacesService(map);
       };
       var s=document.createElement('script');
       s.src='https://maps.googleapis.com/maps/api/js?key='+d.key+'&libraries=places,geometry&callback=initMap';
@@ -168,7 +167,7 @@
   <nav>
     <a href="/">Calculator</a>
     <a href="/fuel-finder">⛽⚡ Fuel & Charging Finder</a>
-    Before you go<a href="/service-station-planner">🛣️ Service Station Planner</a><a href="/parking-finder">🅿️ Parking Finder</a>
+    <a href="/service-station-planner">🛣️ Service Station Planner</a>
     <a href="/parking-finder" class="active">🅿️ Parking Finder</a>
     <a href="/fuel-prices">Fuel Prices</a>
     <a href="/guides">Guides</a>
@@ -293,151 +292,127 @@ function showStatus(msg){ document.getElementById('results-panel').innerHTML='<d
 function showLoading(msg){ document.getElementById('results-panel').innerHTML='<div class="loading"><i class="ti ti-loader"></i> '+msg+'</div>'; }
 
 // ── Main search ───────────────────────────────────────────────────────────────
-function doSearch() {
+async function doSearch() {
   var destination = document.getElementById('destination-input').value.trim();
   if(!destination){ showStatus('Please enter a destination.'); return; }
+  if(!map){ showStatus('Map is still loading — try again in a moment.'); return; }
 
   var btn = document.getElementById('search-btn');
   btn.disabled = true;
   clearMarkers();
   showLoading('Finding your destination...');
 
-  // Geocode the destination
-  var geocoder = new google.maps.Geocoder();
-  geocoder.geocode({address: destination}, function(results, status) {
-    if(status !== 'OK' || !results.length) {
-      showStatus('Could not find that location. Try a postcode or town name.');
-      btn.disabled = false;
-      return;
-    }
-
-    var loc = results[0].geometry.location;
-    destLat = loc.lat();
-    destLng = loc.lng();
+  try {
+    // Geocode via existing backend (same as Fuel Finder)
+    var r = await fetch('/api/route',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({origin:destination,destination:destination,distUnit:'miles'})});
+    var rd = await r.json();
+    var wp = (rd.waypoints||[])[0];
+    if(!wp){ showStatus('Could not find that location. Try a postcode or town name.'); return; }
+    destLat = wp.lat; destLng = wp.lng;
+    var loc = new google.maps.LatLng(destLat, destLng);
 
     // Save destination
     try {
-      var saved = localStorage.getItem('fs_saved_route');
-      var route = saved ? JSON.parse(saved) : {};
+      var route = JSON.parse(localStorage.getItem('fs_saved_route')||'{}');
       route.destination = destination;
       localStorage.setItem('fs_saved_route', JSON.stringify(route));
     } catch(e){}
 
     map.setCenter(loc);
     map.setZoom(15);
-
-    // Add destination marker
-    new google.maps.Marker({
+    markers.push(new google.maps.Marker({
       position: loc, map: map, title: destination,
       icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#1C1917', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
       zIndex: 20
-    });
+    }));
 
     showLoading('Finding car parks nearby...');
-    searchCarParks(loc);
+    await searchCarParks(loc);
+  } catch(err) {
+    console.error(err);
+    showStatus('Something went wrong. Please try again.');
+  } finally {
     btn.disabled = false;
-  });
+  }
 }
 
-// ── Google Places car park search ─────────────────────────────────────────────
-function searchCarParks(location) {
-  var radiusMetres = searchRadius * 1609.34;
-
-  placesService.nearbySearch({
-    location: location,
-    radius: radiusMetres,
-    type: 'parking'
-  }, function(results, status) {
-    if(status !== google.maps.places.PlacesServiceStatus.OK || !results.length) {
-      showStatus('No car parks found within ' + searchRadius + ' mile' + (searchRadius !== 1 ? 's' : '') + '. Try increasing the search radius.');
-      return;
-    }
-
-    // Sort by distance from destination
-    results.forEach(function(r){
-      var d = google.maps.geometry.spherical.computeDistanceBetween(
-        location, r.geometry.location
-      );
-      r._distM = d;
-      r._distMiles = (d / 1609.34).toFixed(2);
-    });
-    results.sort(function(a,b){ return a._distM - b._distM; });
-    results = results.slice(0, 10);
-
-    renderResults(results, location);
+// ── Places API (New) car park search ──────────────────────────────────────────
+async function searchCarParks(location) {
+  var lib = await google.maps.importLibrary('places');
+  var res = await lib.Place.searchNearby({
+    fields: ['id','displayName','location','formattedAddress','rating'],
+    locationRestriction: { center: location, radius: Math.min(searchRadius * 1609.34, 50000) },
+    includedPrimaryTypes: ['parking'],
+    maxResultCount: 10,
+    rankPreference: lib.SearchNearbyRankPreference.DISTANCE
   });
+  var places = (res && res.places) || [];
+  if(!places.length) {
+    showStatus('No car parks found within ' + searchRadius + ' mile' + (searchRadius !== 1 ? 's' : '') + '. Try increasing the search radius.');
+    return;
+  }
+  places.forEach(function(p){
+    var d = google.maps.geometry.spherical.computeDistanceBetween(location, p.location);
+    p._distMiles = (d / 1609.34).toFixed(2);
+  });
+  renderResults(places);
 }
 
 // ── Render results ────────────────────────────────────────────────────────────
-function renderResults(results, destLocation) {
+function renderResults(places) {
   var destination = document.getElementById('destination-input').value.trim();
   var justparkUrl = 'https://www.justpark.com/search/?location=' + encodeURIComponent(destination);
 
-  var html = '<div class="results-header">' + results.length + ' car parks within ' + searchRadius + ' mile' + (searchRadius !== 1 ? 's' : '') + '</div>';
+  var html = '<div class="results-header">' + places.length + ' car parks within ' + searchRadius + ' mile' + (searchRadius !== 1 ? 's' : '') + '</div>';
 
-  // JustPark CTA card — always shown first
+  // JustPark CTA — always first
   html += '<div class="parking-card justpark">';
   html += '<div class="parking-name">🅿️ Book parking on JustPark</div>';
-  html += '<div class="parking-address">Compare pre-bookable parking spaces near ' + destination + ' — prices and availability guaranteed</div>';
-  html += '<div class="parking-meta"><span class="parking-tag justpark-tag">Pre-bookable</span><span class="parking-tag open">Prices from £3/day</span></div>';
-  html += '<div class="parking-actions">';
-  html += '<a href="' + justparkUrl + '" target="_blank" rel="noopener sponsored" class="btn-justpark">🅿️ Search JustPark →</a>';
-  html += '</div></div>';
+  html += '<div class="parking-address">Compare pre-bookable spaces near ' + destination + ' — your space is guaranteed</div>';
+  html += '<div class="parking-meta"><span class="parking-tag justpark-tag">Pre-bookable</span></div>';
+  html += '<div class="parking-actions"><a href="' + justparkUrl + '" target="_blank" rel="noopener sponsored" class="btn-justpark">🅿️ Search JustPark →</a></div>';
+  html += '</div>';
 
-  // Google Places results
-  results.forEach(function(place, i) {
-    var isOpen = place.opening_hours && place.opening_hours.open_now;
-    var mapsUrl = 'https://www.google.com/maps/place/?q=place_id:' + place.place_id;
+  places.forEach(function(p, i) {
+    var name = (p.displayName || 'Car park').replace(/'/g,'');
+    var lat = p.location.lat(), lng = p.location.lng();
+    var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(name) + '&query_place_id=' + p.id;
     var cardId = 'park-' + i;
-    var isSelected = selectedParking && selectedParking.place_id === place.place_id;
+    var isSelected = selectedParking && selectedParking.place_id === p.id;
 
     html += '<div class="parking-card' + (isSelected ? ' selected' : '') + '" id="' + cardId + '">';
-    html += '<div class="parking-name">' + place.name + '</div>';
-    if(place.vicinity) html += '<div class="parking-address">' + place.vicinity + '</div>';
-    html += '<div class="parking-meta">';
-    html += '<span class="parking-tag distance">📍 ' + place._distMiles + ' mi</span>';
-    if(isOpen !== undefined) html += '<span class="parking-tag ' + (isOpen ? 'open' : '') + '">' + (isOpen ? '✓ Open now' : 'Check hours') + '</span>';
-    if(place.rating) html += '<span class="parking-tag">⭐ ' + place.rating + '</span>';
+    html += '<div class="parking-name">' + name + '</div>';
+    if(p.formattedAddress) html += '<div class="parking-address">' + p.formattedAddress + '</div>';
+    html += '<div class="parking-meta"><span class="parking-tag distance">📍 ' + p._distMiles + ' mi</span>';
+    if(p.rating) html += '<span class="parking-tag">⭐ ' + p.rating + '</span>';
     html += '</div>';
     html += '<div class="parking-actions">';
     html += '<a href="' + justparkUrl + '" target="_blank" rel="noopener sponsored" class="btn-justpark" style="font-size:12px;">Book on JustPark</a>';
     html += '<a href="' + mapsUrl + '" target="_blank" rel="noopener" class="btn-gmaps"><i class="ti ti-map-pin"></i> Maps</a>';
     html += '</div>';
-    html += '<button class="btn-add' + (isSelected ? ' added' : '') + '" onclick="toggleParking(\'' + place.place_id + '\',\'' + place.name.replace(/'/g,'') + '\',' + place.geometry.location.lat() + ',' + place.geometry.location.lng() + ',\'' + cardId + '\',this)">' + (isSelected ? '✓ Added to route — tap to remove' : '+ Add to route') + '</button>';
+    html += '<button class="btn-add' + (isSelected ? ' added' : '') + '" onclick="toggleParking(\'' + p.id + '\',\'' + name + '\',' + lat + ',' + lng + ',\'' + cardId + '\',this)">' + (isSelected ? '✓ Added to route — tap to remove' : '+ Add to route') + '</button>';
     html += '</div>';
 
-    // Add marker
-    addParkingMarker(place, i, isSelected);
+    addParkingMarker(name, p.location, mapsUrl, justparkUrl, isSelected);
   });
 
   document.getElementById('results-panel').innerHTML = html;
 }
 
-function addParkingMarker(place, index, isSelected) {
+function addParkingMarker(name, position, mapsUrl, justparkUrl, isSelected) {
   if(!map) return;
   var marker = new google.maps.Marker({
-    position: place.geometry.location, map: map,
-    title: place.name,
-    label: { text: '🅿️', fontSize: '14px' },
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: isSelected ? 14 : 10,
-      fillColor: isSelected ? '#2D6A4F' : '#1D4ED8',
-      fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2
-    },
+    position: position, map: map, title: name,
+    label: { text: 'P', color: '#fff', fontSize: '11px', fontWeight: '700' },
+    icon: { path: google.maps.SymbolPath.CIRCLE, scale: isSelected ? 14 : 11, fillColor: isSelected ? '#2D6A4F' : '#1D4ED8', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
     zIndex: isSelected ? 15 : 5
   });
   var iw = new google.maps.InfoWindow({
-    content: '<div style="font-family:Inter,sans-serif;padding:4px;max-width:200px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">' + place.name + '</div>' +
-      (place.vicinity ? '<div style="font-size:11px;color:#6B6560;margin-bottom:4px;">' + place.vicinity + '</div>' : '') +
-      '<a href="https://www.justpark.com/search/?location=' + encodeURIComponent(document.getElementById('destination-input').value) + '" target="_blank" style="font-size:11px;color:#F59E0B;font-weight:600;text-decoration:none;display:block;margin-bottom:3px;">Book on JustPark →</a>' +
-      '<a href="https://www.google.com/maps/place/?q=place_id:' + place.place_id + '" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;">Open in Maps →</a>' +
-      '</div>'
+    content: '<div style="font-family:Inter,sans-serif;padding:4px;max-width:200px;"><div style="font-weight:700;font-size:13px;margin-bottom:6px;">' + name + '</div>' +
+      '<a href="' + justparkUrl + '" target="_blank" style="font-size:11px;color:#D97706;font-weight:600;text-decoration:none;display:block;margin-bottom:3px;">Book on JustPark →</a>' +
+      '<a href="' + mapsUrl + '" target="_blank" style="font-size:11px;color:#2D6A4F;font-weight:600;text-decoration:none;">Open in Maps →</a></div>'
   });
-  marker.addListener('click', function(){
-    markers.forEach(function(m){ if(m._iw) m._iw.close(); });
-    iw.open(map, marker);
-  });
+  marker.addListener('click', function(){ markers.forEach(function(m){ if(m._iw) m._iw.close(); }); iw.open(map, marker); });
   marker._iw = iw;
   markers.push(marker);
 }
