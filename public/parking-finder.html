@@ -219,25 +219,12 @@
   <div id="map"></div>
 </div>
 
-<!-- Journey builder bar -->
-<div id="journey-bar">
-  <div class="journey-bar-inner">
-    <span class="journey-label">Your journey</span>
-    <div class="journey-stops" id="journey-chips"></div>
-    <button class="export-btn" onclick="exportToMaps()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-      Open in Maps
-    </button>
-  </div>
-</div>
-
-
 <footer>
   <p>Parking data from Google Maps · Booking via JustPark · Results may not reflect real-time availability</p>
   <p style="margin-top:6px;">© 2026 Fuel<span style="color:#2D6A4F;text-decoration:underline;text-decoration-color:#2D6A4F;text-decoration-thickness:2px;text-underline-offset:3px;">Smarter</span> · <a href="/">Home</a> · <a href="/fuel-finder">Fuel & Charging Finder</a> · <a href="/service-station-planner">Service Station Planner</a> · <a href="/privacy">Privacy</a></p>
 </footer>
 
-<div id="cookie-banner" style="display:none;position:fixed;bottom:60px;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--card);border-top:1px solid var(--border);padding:1rem 1.5rem;box-shadow:0 -4px 24px rgba(0,0,0,0.08);">
   <div style="max-width:780px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
     <p style="flex:1;font-size:13px;color:var(--text-secondary);margin:0;min-width:200px;">We use cookies to see how people use Fuel Smarter. <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a>.</p>
     <div style="display:flex;gap:8px;flex-shrink:0;">
@@ -255,6 +242,7 @@ function handleConsent(d){localStorage.setItem('fs_cookie_consent',d);document.g
 var searchRadius = 0.5; // miles
 var markers = [];
 var selectedParking = null;
+try { selectedParking = JSON.parse(localStorage.getItem('fs_selected_parking')) || null; } catch(e) {}
 var destLat = null, destLng = null;
 
 // Load saved route destination
@@ -313,6 +301,7 @@ async function doSearch() {
     try {
       var route = JSON.parse(localStorage.getItem('fs_saved_route')||'{}');
       route.destination = destination;
+      route.destCoords = {lat: destLat, lng: destLng};
       localStorage.setItem('fs_saved_route', JSON.stringify(route));
     } catch(e){}
 
@@ -441,80 +430,20 @@ function toggleParking(placeId, name, lat, lng, cardId, btn) {
   updateJourneyBar();
 }
 
-// ── Journey bar ───────────────────────────────────────────────────────────────
-function updateJourneyBar() {
-  var chips = [];
+// ── Shared journey bar ────────────────────────────────────────────────────────
+function updateJourneyBar() { if (window.FSJourney) FSJourney.render(); }
 
-  // Fuel station
-  try { var f = JSON.parse(localStorage.getItem('fs_selected_fuel_station')); if(f && f.name) chips.push({type:'fuel', label:'⛽ ' + f.name, key:'fs_selected_fuel_station'}); } catch(e){}
-
-  // Service stations
-  try { var ss = JSON.parse(localStorage.getItem('fs_selected_service_stations')||'[]'); ss.forEach(function(s){ chips.push({type:'service', label:'🛣️ ' + s.name, key:null, name:s.name}); }); } catch(e){}
-
-  // Parking
-  if(selectedParking) chips.push({type:'parking', label:'🅿️ ' + selectedParking.name, key:'fs_selected_parking'});
-
-  var bar = document.getElementById('journey-bar');
-  if(!chips.length){ bar.style.display='none'; return; }
-  bar.style.display = 'block';
-
-  var html = chips.map(function(c, i){
-    return '<span class="journey-chip ' + c.type + '">' + c.label + '<span class="remove" onclick="removeChip(' + i + ')">×</span></span>';
-  }).join('');
-  document.getElementById('journey-chips').innerHTML = html;
-  window._journeyChips = chips;
-}
-
-function removeChip(index) {
-  var chip = window._journeyChips[index];
-  if(chip.key) localStorage.removeItem(chip.key);
-  if(chip.type === 'parking') selectedParking = null;
-  updateJourneyBar();
-}
-
-// ── Export to Maps ────────────────────────────────────────────────────────────
-function exportToMaps() {
-  try {
-    var route = JSON.parse(localStorage.getItem('fs_saved_route')||'{}');
-    var origin = route.origin || '';
-    var destination = route.destination || document.getElementById('destination-input').value.trim();
-    var stops = [];
-
-    // Fuel
-    try { var f = JSON.parse(localStorage.getItem('fs_selected_fuel_station')); if(f && f.name) stops.push({name: f.name + ' ' + (f.address||''), lat: f.lat, lng: f.lng}); } catch(e){}
-
-    // Service stations (from service station planner localStorage)
-    try {
-      var ss = JSON.parse(localStorage.getItem('fs_selected_service_stations')||'[]');
-      ss.forEach(function(s){ stops.push({name: s.name + ' Services ' + (s.road||''), lat: s.lat, lng: s.lng}); });
-    } catch(e){}
-
-    // Parking
-    if(selectedParking) stops.push({name: selectedParking.name, lat: selectedParking.lat, lng: selectedParking.lng});
-
-    // Sort by distance from origin (if we have coords)
-    if(origin && stops.length > 1) {
-      // Simple sort by lat/lng proximity to destination vs origin
-      stops.sort(function(a,b){ return a.lat - b.lat; });
-    }
-
-    var parts = [];
-    if(origin) parts.push(origin);
-    stops.forEach(function(s){ parts.push(s.name); });
-    parts.push(destination);
-
-    var url = 'https://www.google.com/maps/dir/' + parts.map(function(p){ return encodeURIComponent(p); }).join('/');
-    gtag('event', 'export_to_maps', {stops: stops.length});
-    window.open(url, '_blank');
-  } catch(e) {
-    alert('Please search for a route first.');
+// If parking is removed from the bar, reset the cards here
+window.addEventListener('fsjourney:change', function() {
+  try { selectedParking = JSON.parse(localStorage.getItem('fs_selected_parking')) || null; } catch(e) { selectedParking = null; }
+  if (!selectedParking) {
+    document.querySelectorAll('.parking-card.selected').forEach(function(c){ c.classList.remove('selected'); });
+    document.querySelectorAll('.btn-add.added').forEach(function(b){ b.classList.remove('added'); b.textContent = '+ Add to route'; });
   }
-}
-
-// Init journey bar on load
-updateJourneyBar();
+});
 </script>
 
 
+<script src="/journey-bar.js?v=1" defer></script>
 </body>
 </html>
