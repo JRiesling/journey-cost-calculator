@@ -352,6 +352,20 @@ var currentWaypoints = [];
 // ── Selection state ───────────────────────────────────────────────────────────
 var selectedFuelStation = null;   // {name, address, lat, lng, price}
 var selectedServiceStations = []; // [{name, road, lat, lng}]
+try { selectedFuelStation = JSON.parse(localStorage.getItem('fs_selected_fuel_station')) || null; } catch(e) {}
+try { selectedServiceStations = JSON.parse(localStorage.getItem('fs_selected_service_stations') || '[]'); } catch(e) {}
+window.addEventListener('fsjourney:change', function() {
+  try { selectedFuelStation = JSON.parse(localStorage.getItem('fs_selected_fuel_station')) || null; } catch(e) {}
+  try { selectedServiceStations = JSON.parse(localStorage.getItem('fs_selected_service_stations') || '[]'); } catch(e) {}
+  document.querySelectorAll('.service-card').forEach(function(c) {
+    var on = selectedServiceStations.some(function(s){ return 'card-' + s.name.replace(/[^a-z0-9]/gi,'-') === c.id; });
+    c.classList.toggle('selected', on);
+    var b = c.querySelector('.add-to-route-btn');
+    if (b) { b.classList.toggle('added', on); b.textContent = on ? '✓ Added to route — tap to remove' : '+ Add to route'; }
+  });
+  var fc = document.getElementById('fuel-card');
+  if (fc && !selectedFuelStation) { fc.classList.remove('selected'); var fb = fc.querySelector('.add-to-route-btn'); if (fb) { fb.classList.remove('added'); fb.textContent = '⛽ Add fuel stop to route'; } }
+});
 
 // ── Build brand pills ─────────────────────────────────────────────────────────
 function buildBrandPills() {
@@ -628,21 +642,13 @@ function toggleFuelStation(station,btn){
 
 // ── Export bar ────────────────────────────────────────────────────────────────
 function updateExportBar(){
-  var bar=document.getElementById('export-bar');
-  var chips=document.getElementById('export-chips');
-  var hasSelections=selectedFuelStation||selectedServiceStations.length>0;
-
-  if(!hasSelections){bar.style.display='none';return;}
-  bar.style.display='block';
-
-  var html='';
-  if(selectedFuelStation){
-    html+='<span class="export-chip fuel">⛽ '+selectedFuelStation.name+'<span class="remove-chip" onclick="removeFuelFromExport()">×</span></span>';
-  }
-  selectedServiceStations.forEach(function(s,i){
-    html+='<span class="export-chip service">🛣️ '+s.name+'<span class="remove-chip" onclick="removeServiceFromExport('+i+')">×</span></span>';
-  });
-  chips.innerHTML=html;
+  try{
+    if(selectedFuelStation) localStorage.setItem('fs_selected_fuel_station',JSON.stringify(selectedFuelStation));
+    else localStorage.removeItem('fs_selected_fuel_station');
+    localStorage.setItem('fs_selected_service_stations',JSON.stringify(selectedServiceStations));
+    if(currentWaypoints.length){var r=JSON.parse(localStorage.getItem('fs_saved_route')||'{}');var l=currentWaypoints[currentWaypoints.length-1];r.destCoords={lat:l.lat,lng:l.lng};localStorage.setItem('fs_saved_route',JSON.stringify(r));}
+  }catch(e){}
+  if(window.FSJourney) FSJourney.render();
 }
 
 function removeFuelFromExport(){
@@ -729,5 +735,6 @@ function loadSavedRoute(){
 buildBrandPills();
 loadSavedRoute();
 </script>
+<script src="/journey-bar.js?v=1" defer></script>
 </body>
 </html>
