@@ -649,6 +649,26 @@ function updateExportBar(){
     if(currentWaypoints.length){var r=JSON.parse(localStorage.getItem('fs_saved_route')||'{}');var l=currentWaypoints[currentWaypoints.length-1];r.destCoords={lat:l.lat,lng:l.lng};localStorage.setItem('fs_saved_route',JSON.stringify(r));}
   }catch(e){}
   if(window.FSJourney) FSJourney.render();
+
+  // Next-step button under the most recently added station
+  document.querySelectorAll('.fs-next-step').forEach(function(el){ el.remove(); });
+  if(!selectedServiceStations.length) return;
+  var last = selectedServiceStations[selectedServiceStations.length-1];
+  var card = document.getElementById('card-' + last.name.replace(/[^a-z0-9]/gi,'-'));
+  if(!card) return;
+  var hasParking = false;
+  try{ hasParking = !!JSON.parse(localStorage.getItem('fs_selected_parking')); }catch(e){}
+  var next = document.createElement(hasParking ? 'button' : 'a');
+  next.className = 'fs-next-step';
+  next.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:46px;margin:-2px 0 12px;background:#4285F4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;font-family:inherit;';
+  if(hasParking){
+    next.textContent = 'Your route\'s ready — open in Maps →';
+    next.onclick = function(){ if(window.FSJourney) FSJourney.open(); };
+  } else {
+    next.href = '/parking-finder';
+    next.textContent = '🅿️ Next: find parking at your destination →';
+  }
+  card.insertAdjacentElement('afterend', next);
 }
 
 function removeFuelFromExport(){
