@@ -358,10 +358,17 @@ async function searchCarParks(location) {
   renderResults(places);
 }
 
+// ── JustPark deep link (q + coords) ──────────────────────────────────────────
+function jpUrl(q, lat, lng) {
+  var url = 'https://www.justpark.com/search/?q=' + encodeURIComponent(q);
+  if(lat && lng) url += '&coords=' + encodeURIComponent(lat + ',' + lng);
+  return url;
+}
+
 // ── Render results ────────────────────────────────────────────────────────────
 function renderResults(places) {
   var destination = document.getElementById('destination-input').value.trim();
-  var justparkUrl = 'https://www.justpark.com/search/?location=' + encodeURIComponent(destination);
+  var justparkUrl = jpUrl(destination, destLat, destLng);
 
   var html = '<div class="results-header">' + places.length + ' car parks within ' + searchRadius + ' mile' + (searchRadius !== 1 ? 's' : '') + '</div>';
 
@@ -387,13 +394,14 @@ function renderResults(places) {
     if(p.rating) html += '<span class="parking-tag">⭐ ' + p.rating + '</span>';
     html += '</div>';
     html += '<div class="parking-actions">';
-    html += '<a href="' + justparkUrl + '" target="_blank" rel="noopener sponsored" class="btn-justpark" style="font-size:12px;">Book on JustPark</a>';
+    var cardJp = jpUrl(name, lat, lng);
+    html += '<a href="' + cardJp + '" target="_blank" rel="noopener sponsored" class="btn-justpark" style="font-size:12px;">Book on JustPark</a>';
     html += '<a href="' + mapsUrl + '" target="_blank" rel="noopener" class="btn-gmaps"><i class="ti ti-map-pin"></i> Maps</a>';
     html += '</div>';
     html += '<button class="btn-add' + (isSelected ? ' added' : '') + '" onclick="toggleParking(\'' + p.id + '\',\'' + name + '\',' + lat + ',' + lng + ',\'' + cardId + '\',this)">' + (isSelected ? '✓ Added to route — tap to remove' : '+ Add to route') + '</button>';
     html += '</div>';
 
-    addParkingMarker(name, p.location, mapsUrl, justparkUrl, isSelected);
+    addParkingMarker(name, p.location, mapsUrl, cardJp, isSelected);
   });
 
   document.getElementById('results-panel').innerHTML = html;
