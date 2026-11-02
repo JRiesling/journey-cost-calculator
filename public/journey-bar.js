@@ -17,8 +17,55 @@
       return u;
     },
     aa: 'https://www.theaa.com/breakdown-cover',
-    rac: 'https://www.rac.co.uk/breakdown-cover'
+    rac: 'https://www.rac.co.uk/breakdown-cover',
+    // Awin tracked links (publisher 3113587)
+    awin: function (mid, url) {
+      return 'https://www.awin1.com/cread.php?awinmid=' + mid + '&awinaffid=3113587&ued=' + encodeURIComponent(url);
+    },
+    compareParking: function () { return AFF.awin(118401, 'https://www.compareparkingprices.co.uk/'); },
+    arcParking: function () { return AFF.awin(121428, 'https://arcparking.co.uk/'); }
   };
+
+  // ── UK airports (for airport parking offers) ────────────────────────────────
+  var AIRPORTS = [
+    { name: 'Heathrow', keys: ['heathrow', 'lhr'], lat: 51.4700, lng: -0.4543 },
+    { name: 'Gatwick', keys: ['gatwick', 'lgw'], lat: 51.1537, lng: -0.1821 },
+    { name: 'Stansted', keys: ['stansted', 'stn'], lat: 51.8860, lng: 0.2389 },
+    { name: 'Luton', keys: ['luton airport', 'ltn'], lat: 51.8747, lng: -0.3683 },
+    { name: 'London City', keys: ['london city airport', 'lcy'], lat: 51.5048, lng: 0.0495 },
+    { name: 'Southend', keys: ['southend airport'], lat: 51.5714, lng: 0.6956 },
+    { name: 'Manchester', keys: ['manchester airport', 'man airport', 'ringway'], lat: 53.3537, lng: -2.2750 },
+    { name: 'Birmingham', keys: ['birmingham airport', 'bhx'], lat: 52.4539, lng: -1.7480 },
+    { name: 'Bristol', keys: ['bristol airport', 'brs'], lat: 51.3827, lng: -2.7191 },
+    { name: 'East Midlands', keys: ['east midlands airport', 'ema'], lat: 52.8311, lng: -1.3281 },
+    { name: 'Leeds Bradford', keys: ['leeds bradford', 'lba'], lat: 53.8659, lng: -1.6606 },
+    { name: 'Liverpool', keys: ['liverpool airport', 'john lennon airport', 'lpl'], lat: 53.3336, lng: -2.8497 },
+    { name: 'Newcastle', keys: ['newcastle airport', 'ncl'], lat: 55.0375, lng: -1.6917 },
+    { name: 'Southampton', keys: ['southampton airport', 'sou'], lat: 50.9503, lng: -1.3568 },
+    { name: 'Exeter', keys: ['exeter airport'], lat: 50.7344, lng: -3.4139 },
+    { name: 'Cardiff', keys: ['cardiff airport', 'cwl'], lat: 51.3967, lng: -3.3433 },
+    { name: 'Edinburgh', keys: ['edinburgh airport', 'edi'], lat: 55.9500, lng: -3.3725 },
+    { name: 'Glasgow', keys: ['glasgow airport', 'gla'], lat: 55.8719, lng: -4.4331 },
+    { name: 'Aberdeen', keys: ['aberdeen airport', 'abz'], lat: 57.2019, lng: -2.1978 },
+    { name: 'Belfast International', keys: ['belfast international', 'bfs'], lat: 54.6575, lng: -6.2158 },
+    { name: 'Doncaster', keys: ['doncaster airport', 'doncaster sheffield'], lat: 53.4805, lng: -1.0106 }
+  ];
+  // Returns the airport the trip ends at, or null. Matches the typed destination
+  // first, then falls back to being within 3 km of an airport.
+  function findAirport(destText, coords) {
+    var t = String(destText || '').toLowerCase();
+    for (var i = 0; i < AIRPORTS.length; i++) {
+      var a = AIRPORTS[i];
+      for (var j = 0; j < a.keys.length; j++) {
+        var k = a.keys[j];
+        if (k.length <= 3 ? new RegExp('\\b' + k + '\\b').test(t) : t.indexOf(k) !== -1) return a;
+      }
+    }
+    if (coords && coords.lat) {
+      for (var n = 0; n < AIRPORTS.length; n++) if (dist(coords, AIRPORTS[n]) < 3) return AIRPORTS[n];
+    }
+    return null;
+  }
 
   var path = location.pathname.replace(/\/$/, '') || '/';
 
@@ -171,7 +218,15 @@
       if (built.stops > 3) h += '<p class="note">Some map apps show fewer stops on mobile. Check all your stops appear.</p>';
 
       var offers = '';
-      if (s.park && s.park.lat) {
+      var endCoords = s.park && s.park.lat ? { lat: s.park.lat, lng: s.park.lng } : s.route.destCoords;
+      var airport = findAirport(dest, endCoords);
+      if (airport) {
+        offers += '<a class="offer" href="' + AFF.compareParking() + '" target="_blank" rel="noopener sponsored"><span class="ico">✈️</span><div><b>Compare ' + esc(airport.name) + ' Airport parking</b><span>Meet & greet, park & ride and on-site deals — pre-book and save</span></div></a>';
+        if (airport.name === 'Heathrow') {
+          offers += '<a class="offer" href="' + AFF.arcParking() + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Arc Parking at Heathrow</b><span>Secure park & ride or meet & greet, 24/7</span></div></a>';
+        }
+        offers += '<a class="offer" href="' + AFF.justpark(airport.name + ' Airport', airport.lat, airport.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🚗</span><div><b>Cheaper spaces near ' + esc(airport.name) + ' on JustPark</b><span>Private driveways and car parks a short drive away</span></div></a>';
+      } else if (s.park && s.park.lat) {
         offers += '<a class="offer" href="' + AFF.justpark(s.park.name, s.park.lat, s.park.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Secure your space near ' + esc(s.park.name) + '</b><span>Pre-book on JustPark so it\'s waiting when you arrive</span></div></a>';
       } else if (dest) {
         var dc = s.route.destCoords || {};
