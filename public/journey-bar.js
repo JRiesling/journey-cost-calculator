@@ -127,6 +127,9 @@
     '#fs-jm .offer span{font-size:12px;color:var(--text-secondary,#6B6560);}' +
     '#fs-jm .ico{font-size:20px;flex-shrink:0;}' +
     '#fs-jm .disc{font-size:10px;color:var(--text-tertiary,#A8A29E);margin-top:6px;}' +
+    '.fs-loc-btn{display:inline-flex;align-items:center;gap:4px;margin:6px 0 2px;padding:0;border:none;background:none;color:var(--accent,#2D6A4F);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}' +
+    '.fs-loc-btn:hover{text-decoration:underline;}' +
+    '.fs-loc-btn:disabled{opacity:0.6;cursor:default;text-decoration:none;}' +
     '#fs-jm .close{float:right;border:none;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--text-secondary,#6B6560);}';
 
   // ── Build DOM ───────────────────────────────────────────────────────────────
@@ -200,13 +203,53 @@
     return { url: url, stops: stops.length };
   }
 
-  // ── Export modal with "Before you go" ───────────────────────────────────────
-  function openModal() {
+  // ── "Before you go" offers ──────────────────────────────────────────────────
+  function buildOffers(s) {
+    var dest = s.route.destination || '';
+    var offers = '';
+    var endCoords = s.park && s.park.lat ? { lat: s.park.lat, lng: s.park.lng } : s.route.destCoords;
+    var airport = findAirport(dest, endCoords);
+    if (airport) {
+      offers += '<a class="offer" href="' + AFF.compareParking() + '" target="_blank" rel="noopener sponsored"><span class="ico">✈️</span><div><b>Compare ' + esc(airport.name) + ' Airport parking</b><span>Meet & greet, park & ride and on-site deals — pre-book and save</span></div></a>';
+      if (airport.name === 'Heathrow') {
+        offers += '<a class="offer" href="' + AFF.arcParking() + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Arc Parking at Heathrow</b><span>Secure park & ride or meet & greet, 24/7</span></div></a>';
+      }
+      offers += '<a class="offer" href="' + AFF.justpark(airport.name + ' Airport', airport.lat, airport.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🚗</span><div><b>Cheaper spaces near ' + esc(airport.name) + ' on JustPark</b><span>Private driveways and car parks a short drive away</span></div></a>';
+    } else if (s.park && s.park.lat) {
+      offers += '<a class="offer" href="' + AFF.justpark(s.park.name, s.park.lat, s.park.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Secure your space near ' + esc(s.park.name) + '</b><span>Pre-book on JustPark so it\'s waiting when you arrive</span></div></a>';
+    } else if (dest) {
+      var dc = s.route.destCoords || {};
+      offers += '<a class="offer" href="' + AFF.justpark(dest, dc.lat, dc.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Need parking in ' + esc(dest) + '?</b><span>Pre-book a space on JustPark</span></div></a>';
+    }
+    if (!s.fuel && path !== '/fuel-finder') {
+      offers += '<a class="offer" href="/fuel-finder"><span class="ico">⛽</span><div><b>Find the cheapest fuel on your route</b><span>Live prices, updated within 30 minutes</span></div></a>';
+    }
+    offers += '<a class="offer" href="' + AFF.aa + '" target="_blank" rel="noopener sponsored"><span class="ico">🔧</span><div><b>AA Breakdown Cover</b><span>Roadside help across the UK</span></div></a>';
+    offers += '<a class="offer" href="' + AFF.rac + '" target="_blank" rel="noopener sponsored"><span class="ico">🛡️</span><div><b>RAC Breakdown Cover</b><span>Get covered before you set off</span></div></a>';
+    return '<div class="byg"><div class="byg-t">Before you go</div>' + offers +
+      '<p class="disc">FuelSmarter may earn a commission from some links, at no cost to you.</p></div>';
+  }
+
+  // ── Export modal ────────────────────────────────────────────────────────────
+  // openModal()            → whole planned route
+  // openModal(url, name)   → a single place someone tapped "Open in Maps" on
+  function openModal(placeUrl, placeName) {
+    if (typeof placeUrl !== 'string') placeUrl = null;
     var s = state(), built = buildUrl(s), box = document.getElementById('fs-jm-box');
     var dest = s.route.destination || '';
     var h = '<button class="close" type="button" aria-label="Close">×</button>';
+    var trackStops = built ? built.stops : 0;
 
-    if (!built) {
+    if (placeUrl) {
+      h += '<h3>' + (placeName ? esc(placeName) : 'Open in Maps') + '</h3>' +
+        '<p class="sub">Opening just this location in your map app.</p>' +
+        '<a class="open" id="fs-jm-open" href="' + esc(placeUrl) + '" target="_blank" rel="noopener">Open in Maps</a>';
+      var n0 = (s.fuel ? 1 : 0) + s.svc.length + (s.park ? 1 : 0);
+      if (built && n0) {
+        h += '<p class="note" style="font-size:12px;">Or <a href="#" id="fs-jm-full" style="color:#4285F4;font-weight:600;">open your full route with ' + n0 + ' stop' + (n0 === 1 ? '' : 's') + ' →</a></p>';
+      }
+      trackStops = 0;
+    } else if (!built) {
       h += '<h3>Where are you heading?</h3><p class="sub">Add a destination first so we can build your route.</p>' +
         '<a class="open" href="/">Plan a journey →</a>';
     } else {
@@ -216,41 +259,86 @@
         ' · ' + n + ' stop' + (n === 1 ? '' : 's') + '</p>' +
         '<a class="open" id="fs-jm-open" href="' + built.url + '" target="_blank" rel="noopener">Open in Maps</a>';
       if (built.stops > 3) h += '<p class="note">Some map apps show fewer stops on mobile. Check all your stops appear.</p>';
-
-      var offers = '';
-      var endCoords = s.park && s.park.lat ? { lat: s.park.lat, lng: s.park.lng } : s.route.destCoords;
-      var airport = findAirport(dest, endCoords);
-      if (airport) {
-        offers += '<a class="offer" href="' + AFF.compareParking() + '" target="_blank" rel="noopener sponsored"><span class="ico">✈️</span><div><b>Compare ' + esc(airport.name) + ' Airport parking</b><span>Meet & greet, park & ride and on-site deals — pre-book and save</span></div></a>';
-        if (airport.name === 'Heathrow') {
-          offers += '<a class="offer" href="' + AFF.arcParking() + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Arc Parking at Heathrow</b><span>Secure park & ride or meet & greet, 24/7</span></div></a>';
-        }
-        offers += '<a class="offer" href="' + AFF.justpark(airport.name + ' Airport', airport.lat, airport.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🚗</span><div><b>Cheaper spaces near ' + esc(airport.name) + ' on JustPark</b><span>Private driveways and car parks a short drive away</span></div></a>';
-      } else if (s.park && s.park.lat) {
-        offers += '<a class="offer" href="' + AFF.justpark(s.park.name, s.park.lat, s.park.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Secure your space near ' + esc(s.park.name) + '</b><span>Pre-book on JustPark so it\'s waiting when you arrive</span></div></a>';
-      } else if (dest) {
-        var dc = s.route.destCoords || {};
-        offers += '<a class="offer" href="' + AFF.justpark(dest, dc.lat, dc.lng) + '" target="_blank" rel="noopener sponsored"><span class="ico">🅿️</span><div><b>Need parking in ' + esc(dest) + '?</b><span>Pre-book a space on JustPark</span></div></a>';
-      }
-      if (!s.fuel && path !== '/fuel-finder') {
-        offers += '<a class="offer" href="/fuel-finder"><span class="ico">⛽</span><div><b>Find the cheapest fuel on your route</b><span>Live prices, updated within 30 minutes</span></div></a>';
-      }
-      offers += '<a class="offer" href="' + AFF.aa + '" target="_blank" rel="noopener sponsored"><span class="ico">🔧</span><div><b>AA Breakdown Cover</b><span>Roadside help across the UK</span></div></a>';
-      offers += '<a class="offer" href="' + AFF.rac + '" target="_blank" rel="noopener sponsored"><span class="ico">🛡️</span><div><b>RAC Breakdown Cover</b><span>Get covered before you set off</span></div></a>';
-
-      h += '<div class="byg"><div class="byg-t">Before you go</div>' + offers +
-        '<p class="disc">FuelSmarter may earn a commission from some links, at no cost to you.</p></div>';
     }
+    if (placeUrl || built) h += buildOffers(s);
 
     box.innerHTML = h;
     box.querySelector('.close').addEventListener('click', closeModal);
     var op = document.getElementById('fs-jm-open');
     if (op) op.addEventListener('click', function () {
-      if (typeof gtag === 'function') gtag('event', 'export_to_maps', { stops: built.stops });
+      if (typeof gtag === 'function') gtag('event', placeUrl ? 'open_place_in_maps' : 'export_to_maps', { stops: trackStops });
     });
+    var full = document.getElementById('fs-jm-full');
+    if (full) full.addEventListener('click', function (e) { e.preventDefault(); openModal(); });
     document.getElementById('fs-jm').classList.add('on');
   }
   function closeModal() { document.getElementById('fs-jm').classList.remove('on'); }
+
+  // ── Route single-place "Open in Maps" links through the panel ───────────────
+  // Any link to Google Maps on the page (cards, map pop-ups) opens the panel
+  // first, so "Before you go" offers are shown. Ctrl/Cmd-click still goes straight.
+  function isMapsLink(a) {
+    return a && a.href && /^https:\/\/(www\.)?google\.[a-z.]+\/maps/i.test(a.href);
+  }
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest ? e.target.closest('a') : null;
+    if (!isMapsLink(a) || a.closest('#fs-jm')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    inject();
+    var card = a.closest('[class*="card"]');
+    var nameEl = card && card.querySelector('.station-name, .service-name, .parking-name');
+    var name = nameEl ? nameEl.textContent.trim() : '';
+    if (!name) {
+      var iw = a.closest('.gm-style-iw, .gm-style-iw-d');
+      var b = iw && iw.querySelector('div[style*="font-weight:700"]');
+      if (b) name = b.textContent.trim();
+    }
+    openModal(a.href, name);
+  }, true);
+
+  // ── "Use my location" on every From box ─────────────────────────────────────
+  var FROM_IDS = ['origin', 'origin-input'];
+  function addLocationButtons() {
+    if (!navigator.geolocation) return;
+    FROM_IDS.forEach(function (id) {
+      var input = document.getElementById(id);
+      if (!input || input.getAttribute('data-fs-loc')) return;
+      input.setAttribute('data-fs-loc', '1');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'fs-loc-btn';
+      btn.innerHTML = '📍 Use my current location';
+      btn.addEventListener('click', function () { useMyLocationFor(input, btn); });
+      input.insertAdjacentElement('afterend', btn);
+    });
+  }
+  function useMyLocationFor(input, btn) {
+    var label = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Finding you…';
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      var lat = pos.coords.latitude, lng = pos.coords.longitude;
+      var coordText = lat.toFixed(5) + ',' + lng.toFixed(5);
+      function done(text) {
+        input.value = text;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        btn.disabled = false;
+        btn.innerHTML = '✓ Using your location';
+        setTimeout(function () { btn.innerHTML = label; }, 3000);
+      }
+      // UK: turn coordinates into a postcode so the box reads nicely
+      fetch('https://api.postcodes.io/postcodes?lon=' + lng + '&lat=' + lat + '&limit=1')
+        .then(function (r) { return r.json(); })
+        .then(function (d) { done(d && d.result && d.result[0] ? d.result[0].postcode : coordText); })
+        .catch(function () { done(coordText); });
+    }, function (err) {
+      btn.disabled = false;
+      btn.innerHTML = err && err.code === 1 ? 'Location blocked — type it instead' : 'Couldn\'t find you — type it instead';
+      setTimeout(function () { btn.innerHTML = label; }, 4000);
+    }, { timeout: 10000, maximumAge: 60000 });
+  }
 
   // ── Public API ──────────────────────────────────────────────────────────────
   window.FSJourney = {
@@ -266,6 +354,7 @@
   // Keep in sync across tabs
   window.addEventListener('storage', function (e) { if (e.key && e.key.indexOf('fs_') === 0) { render(); changed(); } });
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
-  else render();
+  function start() { render(); addLocationButtons(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 })();
