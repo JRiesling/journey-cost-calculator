@@ -615,19 +615,19 @@
         </div>
         <div class="field" style="margin-bottom:0;">
           <label id="fuel-price-label">Fuel price</label>
-          <input type="number" id="fuel-price" value="156.98" step="0.01" />
+          <input type="number" id="fuel-price" value="174.10" step="0.01" />
         </div>
       </div>
       <p class="tip" style="margin-top:6px;">Auto-filled after lookup — edit if needed</p>
     </div>
 
     <div id="ev-energy-section" class="hidden">
-      <div class="price-badge"><i class="ti ti-bolt" aria-hidden="true"></i> <span id="ev-price-label">UK average: 24p/kWh (home charging)</span></div>
+      <div class="price-badge"><i class="ti ti-bolt" aria-hidden="true"></i> <span id="ev-price-label">UK average: 26p/kWh (home charging)</span></div>
       <div class="field-row">
         <div class="field" style="margin-bottom:0;">
           <label>Charging type</label>
           <select id="ev-charging-type" onchange="updateChargingType()">
-            <option value="home">Home charging (~24p/kWh)</option>
+            <option value="home">Home charging (~26p/kWh)</option>
             <option value="public">Public charging (~50p/kWh)</option>
             <option value="rapid">Rapid charging (~75p/kWh)</option>
             <option value="custom">Custom price</option>
@@ -635,7 +635,7 @@
         </div>
         <div class="field" style="margin-bottom:0;">
           <label id="ev-kwh-label">Electricity price (p/kWh)</label>
-          <input type="number" id="ev-kwh-price" value="24" min="1" max="200" step="0.1" />
+          <input type="number" id="ev-kwh-price" value="26.32" min="1" max="200" step="0.1" />
         </div>
       </div>
       <p class="tip" style="margin-top:6px;">Home charging is cheapest — public rapid chargers cost 2-3x more</p>
@@ -772,16 +772,16 @@
 <script>
 // ─── Country data ─────────────────────────────────────────────────────────────
 const COUNTRIES = {
-  GB:{name:'United Kingdom',flag:'🇬🇧',distUnit:'miles',speedUnit:'mph',economy:'mpg',currency:'£',currencyCode:'GBP',limitAroad:60,limitMotorway:70,litresPerUnit:1,urbanFixed:25,aroadLabel:'A-road',motorwayLabel:'Motorway',fuelNames:{petrol:'Petrol',diesel:'Diesel'},defaultPetrol:156.98,defaultDiesel:188.53,fuelPriceNote:'pence/litre',fuelDivisor:100},
-  US:{name:'United States',flag:'🇺🇸',distUnit:'miles',speedUnit:'mph',economy:'mpg',currency:'$',currencyCode:'USD',limitAroad:55,limitMotorway:65,litresPerUnit:3.785,urbanFixed:25,aroadLabel:'Highway',motorwayLabel:'Freeway/Interstate',fuelNames:{petrol:'Gasoline',diesel:'Diesel'},defaultPetrol:3.50,defaultDiesel:3.80,fuelPriceNote:'$/gallon',fuelDivisor:1},
+  GB:{name:'United Kingdom',flag:'🇬🇧',distUnit:'miles',speedUnit:'mph',economy:'mpg',currency:'£',currencyCode:'GBP',limitAroad:60,limitMotorway:70,litresPerUnit:1,urbanFixed:25,aroadLabel:'A-road',motorwayLabel:'Motorway',fuelNames:{petrol:'Petrol',diesel:'Diesel'},defaultPetrol:174.1,defaultDiesel:199.2,fuelPriceNote:'pence/litre',fuelDivisor:100},
+  US:{name:'United States',flag:'🇺🇸',distUnit:'miles',speedUnit:'mph',economy:'mpg',currency:'$',currencyCode:'USD',limitAroad:55,limitMotorway:65,litresPerUnit:3.785,urbanFixed:25,aroadLabel:'Highway',motorwayLabel:'Freeway/Interstate',fuelNames:{petrol:'Gasoline',diesel:'Diesel'},defaultPetrol:4.17,defaultDiesel:3.80,fuelPriceNote:'$/gallon',fuelDivisor:1},
   CA:{name:'Canada',flag:'🇨🇦',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'CA$',currencyCode:'CAD',limitAroad:80,limitMotorway:100,litresPerUnit:1,urbanFixed:40,aroadLabel:'Provincial highway',motorwayLabel:'Highway',fuelNames:{petrol:'Gasoline',diesel:'Diesel'},defaultPetrol:1.65,defaultDiesel:1.80,fuelPriceNote:'CA$/litre',fuelDivisor:1},
-  AU:{name:'Australia',flag:'🇦🇺',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'A$',currencyCode:'AUD',limitAroad:100,limitMotorway:110,litresPerUnit:1,urbanFixed:40,aroadLabel:'State road',motorwayLabel:'Motorway',fuelNames:{petrol:'Unleaded',diesel:'Diesel'},defaultPetrol:1.90,defaultDiesel:2.00,fuelPriceNote:'A$/litre',fuelDivisor:1},
-  DE:{name:'Germany',flag:'🇩🇪',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:100,limitMotorway:999,litresPerUnit:1,urbanFixed:40,aroadLabel:'Bundesstraße',motorwayLabel:'Autobahn',fuelNames:{petrol:'Super',diesel:'Diesel'},defaultPetrol:1.75,defaultDiesel:1.70,fuelPriceNote:'€/litre',fuelDivisor:1},
-  FR:{name:'France',flag:'🇫🇷',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:80,limitMotorway:130,litresPerUnit:1,urbanFixed:30,aroadLabel:'Route nationale',motorwayLabel:'Autoroute',fuelNames:{petrol:'SP95',diesel:'Diesel'},defaultPetrol:1.78,defaultDiesel:1.72,fuelPriceNote:'€/litre',fuelDivisor:1},
-  ES:{name:'Spain',flag:'🇪🇸',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:120,litresPerUnit:1,urbanFixed:30,aroadLabel:'Carretera',motorwayLabel:'Autopista',fuelNames:{petrol:'Gasolina',diesel:'Gasoil'},defaultPetrol:1.65,defaultDiesel:1.55,fuelPriceNote:'€/litre',fuelDivisor:1},
-  IT:{name:'Italy',flag:'🇮🇹',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:130,litresPerUnit:1,urbanFixed:30,aroadLabel:'Strada statale',motorwayLabel:'Autostrada',fuelNames:{petrol:'Benzina',diesel:'Gasolio'},defaultPetrol:1.82,defaultDiesel:1.74,fuelPriceNote:'€/litre',fuelDivisor:1},
-  NL:{name:'Netherlands',flag:'🇳🇱',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:80,limitMotorway:100,litresPerUnit:1,urbanFixed:30,aroadLabel:'N-road',motorwayLabel:'Snelweg',fuelNames:{petrol:'Benzine',diesel:'Diesel'},defaultPetrol:1.95,defaultDiesel:1.80,fuelPriceNote:'€/litre',fuelDivisor:1},
-  BE:{name:'Belgium',flag:'🇧🇪',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:120,litresPerUnit:1,urbanFixed:30,aroadLabel:'Gewestweg',motorwayLabel:'Autosnelweg',fuelNames:{petrol:'Benzine',diesel:'Diesel'},defaultPetrol:1.80,defaultDiesel:1.68,fuelPriceNote:'€/litre',fuelDivisor:1},
+  AU:{name:'Australia',flag:'🇦🇺',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'A$',currencyCode:'AUD',limitAroad:100,limitMotorway:110,litresPerUnit:1,urbanFixed:40,aroadLabel:'State road',motorwayLabel:'Motorway',fuelNames:{petrol:'Unleaded',diesel:'Diesel'},defaultPetrol:2.42,defaultDiesel:2.81,fuelPriceNote:'A$/litre',fuelDivisor:1},
+  DE:{name:'Germany',flag:'🇩🇪',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:100,limitMotorway:999,litresPerUnit:1,urbanFixed:40,aroadLabel:'Bundesstraße',motorwayLabel:'Autobahn',fuelNames:{petrol:'Super',diesel:'Diesel'},defaultPetrol:2.17,defaultDiesel:2.3,fuelPriceNote:'€/litre',fuelDivisor:1},
+  FR:{name:'France',flag:'🇫🇷',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:80,limitMotorway:130,litresPerUnit:1,urbanFixed:30,aroadLabel:'Route nationale',motorwayLabel:'Autoroute',fuelNames:{petrol:'SP95',diesel:'Diesel'},defaultPetrol:2.18,defaultDiesel:2.35,fuelPriceNote:'€/litre',fuelDivisor:1},
+  ES:{name:'Spain',flag:'🇪🇸',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:120,litresPerUnit:1,urbanFixed:30,aroadLabel:'Carretera',motorwayLabel:'Autopista',fuelNames:{petrol:'Gasolina',diesel:'Gasoil'},defaultPetrol:1.75,defaultDiesel:1.89,fuelPriceNote:'€/litre',fuelDivisor:1},
+  IT:{name:'Italy',flag:'🇮🇹',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:130,litresPerUnit:1,urbanFixed:30,aroadLabel:'Strada statale',motorwayLabel:'Autostrada',fuelNames:{petrol:'Benzina',diesel:'Gasolio'},defaultPetrol:2.01,defaultDiesel:2.25,fuelPriceNote:'€/litre',fuelDivisor:1},
+  NL:{name:'Netherlands',flag:'🇳🇱',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:80,limitMotorway:100,litresPerUnit:1,urbanFixed:30,aroadLabel:'N-road',motorwayLabel:'Snelweg',fuelNames:{petrol:'Benzine',diesel:'Diesel'},defaultPetrol:2.31,defaultDiesel:2.47,fuelPriceNote:'€/litre',fuelDivisor:1},
+  BE:{name:'Belgium',flag:'🇧🇪',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:120,litresPerUnit:1,urbanFixed:30,aroadLabel:'Gewestweg',motorwayLabel:'Autosnelweg',fuelNames:{petrol:'Benzine',diesel:'Diesel'},defaultPetrol:1.95,defaultDiesel:2.38,fuelPriceNote:'€/litre',fuelDivisor:1},
   PT:{name:'Portugal',flag:'🇵🇹',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'€',currencyCode:'EUR',limitAroad:90,limitMotorway:120,litresPerUnit:1,urbanFixed:30,aroadLabel:'Estrada nacional',motorwayLabel:'Auto-estrada',fuelNames:{petrol:'Gasolina',diesel:'Gasóleo'},defaultPetrol:1.72,defaultDiesel:1.62,fuelPriceNote:'€/litre',fuelDivisor:1},
   PL:{name:'Poland',flag:'🇵🇱',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'zł',currencyCode:'PLN',limitAroad:90,limitMotorway:140,litresPerUnit:1,urbanFixed:40,aroadLabel:'Droga krajowa',motorwayLabel:'Autostrada',fuelNames:{petrol:'Benzyna',diesel:'Diesel'},defaultPetrol:6.20,defaultDiesel:6.00,fuelPriceNote:'zł/litre',fuelDivisor:1},
   SE:{name:'Sweden',flag:'🇸🇪',distUnit:'km',speedUnit:'km/h',economy:'L/100km',currency:'kr',currencyCode:'SEK',limitAroad:90,limitMotorway:110,litresPerUnit:1,urbanFixed:30,aroadLabel:'Riksväg',motorwayLabel:'Motorväg',fuelNames:{petrol:'Bensin',diesel:'Diesel'},defaultPetrol:18.50,defaultDiesel:19.00,fuelPriceNote:'kr/litre',fuelDivisor:1},
@@ -959,11 +959,11 @@ const EV_CO2_PER_KWH = 0.233; // kg CO2 per kWh (UK grid average 2026)
 
 function updateChargingType() {
   const type = document.getElementById('ev-charging-type').value;
-  const prices = { home: 24, public: 50, rapid: 75, custom: null };
+  const prices = { home: 26.32, public: 50, rapid: 75, custom: null };
   if (prices[type] !== null) {
     document.getElementById('ev-kwh-price').value = prices[type];
     document.getElementById('ev-price-label').textContent = 
-      type === 'home' ? 'UK average: 24p/kWh (home charging)' :
+      type === 'home' ? 'UK average: 26p/kWh (home charging)' :
       type === 'public' ? 'Typical public charging: ~50p/kWh' :
       'Typical rapid charging: ~75p/kWh';
   }
@@ -1584,7 +1584,7 @@ function computeCost() {
         </div>
 
         <p style="font-size:12px;color:var(--accent-text);margin:0;">
-          Home charging (~24p/kWh) is significantly cheaper than rapid charging (~75p/kWh). 
+          Home charging (~26p/kWh) is significantly cheaper than rapid charging (~75p/kWh). 
           <a href="/ev-calculator" style="color:var(--accent);font-weight:600;text-decoration:underline;">Calculate your exact EV costs →</a>
         </p>
       </div>`;
@@ -1666,9 +1666,9 @@ async function findCheapestFuel() {
             <div class="fuel-station-price-label">per litre</div>
           </div>
         </div>`).join('')}
-      ${cheapest.price < (fuelType === 'diesel' ? 188 : 156) ?
+      ${cheapest.price < (fuelType === 'diesel' ? 199 : 174) ?
         `<div style="font-size:12px;color:var(--accent-text);margin-top:8px;padding:8px;background:var(--card);border-radius:var(--radius);">
-          💡 Filling up at ${cheapest.name} (${cheapest.price.toFixed(1)}p/L) instead of the UK average saves you approximately ${((fuelType === 'diesel' ? 188.8 : 156.8) - cheapest.price).toFixed(1)}p per litre
+          💡 Filling up at ${cheapest.name} (${cheapest.price.toFixed(1)}p/L) instead of the UK average saves you approximately ${((fuelType === 'diesel' ? 199.2 : 174.1) - cheapest.price).toFixed(1)}p per litre
         </div>` : ''}
       <p style="font-size:11px;color:var(--accent-text);margin-top:8px;">${routeSpecific ? `Stations ${radiusLabel}` : 'Cheapest UK prices — route-specific coming soon'} · UK Government Fuel Finder · updated within 30 mins</p>
       <button onclick="findCheapestFuel()" style="background:none;border:none;color:var(--accent-text);font-size:12px;cursor:pointer;margin-top:4px;text-decoration:underline;">🔄 Refresh prices</button>`;

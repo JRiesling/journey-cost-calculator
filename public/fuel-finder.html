@@ -597,7 +597,7 @@ function renderPetrolResults(fuelData, routeData, isSingle) {
   var cheapest = stations[0];
   var radiusUsed = fuelData.radiusUsed;
   var fuelLabel = fuelType==='diesel'?'Diesel':'Petrol (E10)';
-  var ukAvg = fuelType==='diesel'?188.8:156.8;
+  var ukAvg = fuelType==='diesel'?199.2:174.1;
   var saving = ukAvg - cheapest.price;
   var radiusLabel = radiusUsed===1?'1 mile':radiusUsed===3?'3 miles':'8 miles';
   var locationName = isSingle ? document.getElementById('location-input').value : (document.getElementById('origin-input').value+' → '+document.getElementById('dest-input').value);
