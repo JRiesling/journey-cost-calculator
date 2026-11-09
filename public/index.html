@@ -892,7 +892,7 @@ async function lookupFuelPrices() {
     const price = fuelType === 'petrol' ? result.petrol : result.diesel;
     document.getElementById('fuel-price').value = price.toFixed(2);
     document.getElementById('price-label').textContent =
-      `${co.fuelNames[fuelType]}: ${price.toFixed(2)} ${co.fuelPriceNote} (est. ${new Date().toLocaleString('default', {month:'long',year:'numeric'})})`;
+      `${co.fuelNames[fuelType]}: ${price.toFixed(2)} ${co.fuelPriceNote} (${result.updated ? 'updated ' + result.updated : 'est. ' + new Date().toLocaleString('default', {month:'long',year:'numeric'})})`;
   } catch {
     const price = fuelType === 'petrol' ? co.defaultPetrol : co.defaultDiesel;
     document.getElementById('fuel-price').value = price.toFixed(2);

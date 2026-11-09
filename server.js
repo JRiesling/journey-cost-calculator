@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -61,17 +62,59 @@ function rateLimit(req, res, next) {
 }
 app.use('/api', rateLimit);
 
+
+// ─── UK average fuel prices ───────────────────────────────────────────────────
+const UK_FALLBACK = { petrol: 174.1, diesel: 199.2, currency_note: 'pence/litre — UK national average late October 2026', updated: 'late October 2026' };
+let ukAverages = null;
+
+function computeUkAverages() {
+  try {
+    const petrol = [], diesel = [];
+    for (const prices of pricesCacheMap.values()) {
+      const pick = (types) => { for (const t of types) { const m = (prices || []).find(fp => fp.fuel_type === t && fp.price > 100 && fp.price < 300); if (m) return m.price; } return null; };
+      const p = pick(['E10', 'E5']); const d = pick(['B7_STANDARD', 'B7']);
+      if (p) petrol.push(p); if (d) diesel.push(d);
+    }
+    if (petrol.length < 1000 || diesel.length < 1000) return; // not enough data to trust
+    const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+    const p = Math.round(avg(petrol) * 10) / 10, d = Math.round(avg(diesel) * 10) / 10;
+    // Sanity check against the last known values: ignore anything more than 15% away
+    if (Math.abs(p / UK_FALLBACK.petrol - 1) > 0.15 || Math.abs(d / UK_FALLBACK.diesel - 1) > 0.15) { console.log(`UK averages rejected as implausible: ${p} / ${d}`); return; }
+    ukAverages = { petrol: p, diesel: d, updated: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), stations: petrol.length };
+    console.log(`UK averages updated: petrol ${p}p, diesel ${d}p (${petrol.length} stations)`);
+  } catch (e) { console.log('UK average error:', e.message); }
+}
+
+// ─── Curated prices for other countries ───────────────────────────────────────
+let globalPrices = null, globalPricesMtime = 0;
+function getGlobalPrices() {
+  try {
+    const p = path.join(__dirname, 'public', 'data', 'fuel-prices-global.json');
+    const m = fs.statSync(p).mtimeMs;
+    if (!globalPrices || m !== globalPricesMtime) { globalPrices = JSON.parse(fs.readFileSync(p, 'utf8')); globalPricesMtime = m; }
+  } catch (e) { console.log('Global prices file error:', e.message); }
+  return globalPrices;
+}
+
 app.post('/api/fuel-prices', async (req, res) => {
   try {
     const { country, currencyCode, fuelPriceNote } = req.body;
     if (!country) return res.status(400).json({ error: 'Country is required' });
 
-    // UK — use hardcoded current averages rather than AI (which returns stale data)
-    // Update these periodically to reflect RAC/AA tracked national averages
+    // UK — live national average worked out from the government Fuel Finder feed,
+    // falling back to the last known averages if the feed is unavailable or looks wrong.
     if (country === 'United Kingdom' || country === 'GB' || country === 'UK') {
-      const ukPrices = { petrol: 174.1, diesel: 199.2, currency_note: 'pence/litre — UK national average late October 2026' };
-      fuelCache.set(country, { data: ukPrices, timestamp: Date.now() });
-      return res.json(ukPrices);
+      const live = ukAverages && ukAverages.petrol && ukAverages.diesel;
+      return res.json(live
+        ? { petrol: ukAverages.petrol, diesel: ukAverages.diesel, currency_note: 'pence/litre — UK national average from live station prices', updated: ukAverages.updated, live: true }
+        : { ...UK_FALLBACK, updated: UK_FALLBACK.updated });
+    }
+
+    // Other countries — curated monthly values in public/data/fuel-prices-global.json
+    const gp = getGlobalPrices();
+    const entry = gp && gp.countries && gp.countries[country];
+    if (entry && entry.petrol && entry.diesel) {
+      return res.json({ petrol: entry.petrol, diesel: entry.diesel, currency_note: gp.note || '', updated: gp.updated });
     }
 
     const cached = fuelCache.get(country);
@@ -359,6 +402,7 @@ async function loadFuelPrices() {
       } catch (e) { console.log(`Prices batch ${batch} error:`, e.message); break; }
     }
     console.log(`Fuel prices loaded: ${pricesCacheMap.size} stations`);
+    computeUkAverages();
   } catch (e) { console.log('Fuel prices preload error:', e.message); }
 }
 
