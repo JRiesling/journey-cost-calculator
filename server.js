@@ -96,6 +96,12 @@ function getGlobalPrices() {
   return globalPrices;
 }
 
+app.get('/api/uk-prices', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300');
+  const live = ukAverages && ukAverages.petrol && ukAverages.diesel;
+  res.json(live ? { petrol: ukAverages.petrol, diesel: ukAverages.diesel, updated: ukAverages.updated, live: true } : { petrol: UK_FALLBACK.petrol, diesel: UK_FALLBACK.diesel, updated: UK_FALLBACK.updated, live: false });
+});
+
 app.post('/api/fuel-prices', async (req, res) => {
   try {
     const { country, currencyCode, fuelPriceNote } = req.body;

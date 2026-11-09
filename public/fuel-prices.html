@@ -150,12 +150,12 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
 
 <main>
   <h1>Global Fuel Prices 2026</h1>
-  <p class="meta">Last updated: November 2026 · Prices shown are approximate national averages</p>
+  <p class="meta">Last updated: November 2026 · Prices shown are approximate national averages · <span data-uk-updated>UK figures: late October 2026</span></p>
 
   <p>Fuel prices vary enormously around the world — from under 10p per litre in some oil-producing nations to well over 200p in high-tax European countries. Understanding why prices differ, and what's currently driving them up or down, can help you plan journeys, budget more accurately, and make smarter decisions at the pump.</p>
 
   <div class="highlight">
-    <p><strong>Latest update:</strong> UK petrol is averaging 174.1p/litre and diesel 199.2p/litre — diesel is now level with its July 2022 record. Brent crude has stayed around $100 per barrel through the autumn, and prices across Europe have risen too: the EU average is now about €1.95 for petrol and €2.15 for diesel.</p>
+    <p><strong>Latest update:</strong> UK petrol is averaging <span data-uk-petrol data-fmt="plitre">174.1p/litre</span> and diesel <span data-uk-diesel data-fmt="plitre">199.2p/litre</span> — diesel is now level with its July 2022 record. Brent crude has stayed around $100 per barrel through the autumn, and prices across Europe have risen too: the EU average is now about €1.95 for petrol and €2.15 for diesel.</p>
   </div>
 
   <h2>Petrol and diesel prices by country</h2>
@@ -180,7 +180,7 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
       <tr><td>🇦🇹 Austria</td><td>€1.77/L (~149p)</td><td>€2.13/L (~179p)</td><td>~15% cheaper</td></tr>
       <tr><td>🇧🇪 Belgium</td><td>€1.95/L (~164p)</td><td class="expensive">€2.38/L (~199p)</td><td>~6% cheaper</td></tr>
       <tr><td>🇮🇪 Ireland</td><td>€1.97/L (~165p)</td><td>€2.14/L (~179p)</td><td>~5% cheaper</td></tr>
-      <tr><td>🇬🇧 United Kingdom</td><td>174.1p/L</td><td>199.2p/L</td><td>—</td></tr>
+      <tr><td>🇬🇧 United Kingdom</td><td><span data-uk-petrol data-fmt="pL">174.1p/L</span></td><td><span data-uk-diesel data-fmt="pL">199.2p/L</span></td><td>—</td></tr>
       <tr><td>🇮🇹 Italy</td><td>€2.01/L (~168p)</td><td>€2.25/L (~188p)</td><td>~3% cheaper</td></tr>
       <tr><td>🇩🇪 Germany</td><td>€2.17/L (~182p)</td><td>€2.30/L (~193p)</td><td class="expensive">~4% more expensive</td></tr>
       <tr><td>🇫🇷 France</td><td>€2.18/L (~183p)</td><td>€2.35/L (~197p)</td><td class="expensive">~5% more expensive</td></tr>
@@ -296,5 +296,6 @@ header .logo .smarter { color: #2D6A4F; font-size: 20px; font-weight: 800; lette
   <!-- Skimlinks affiliate tracking -->
   
 <script src="/guide-cta.js?v=2" defer></script>
+<script src="/uk-live-prices.js?v=1" defer></script>
 </body>
 </html>
