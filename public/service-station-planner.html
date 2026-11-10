@@ -355,6 +355,7 @@ var currentWaypoints = [];
 
 // ── Selection state ───────────────────────────────────────────────────────────
 var selectedFuelStation = null;   // {name, address, lat, lng, price}
+var svcPrices={}, svcCheapest={petrol:null,diesel:null};
 var selectedServiceStations = []; // [{name, road, lat, lng}]
 try { selectedFuelStation = JSON.parse(localStorage.getItem('fs_selected_fuel_station')) || null; } catch(e) {}
 try { selectedServiceStations = JSON.parse(localStorage.getItem('fs_selected_service_stations') || '[]'); } catch(e) {}
@@ -475,6 +476,7 @@ async function doSearch(){
     var db=await dbRes.json();
     var services=db.services;
 
+    try{var pr=await fetch('/api/service-station-prices').then(function(r){return r.json();});svcPrices=pr.prices||{};}catch(e){svcPrices={};}
     var onRoute=[];
     Object.entries(services).forEach(function(entry){
       var name=entry[0],service=entry[1];
@@ -483,6 +485,11 @@ async function doSearch(){
       }
     });
 
+    svcCheapest={petrol:null,diesel:null};
+    ['petrol','diesel'].forEach(function(k){
+      var best=null;onRoute.forEach(function(sv){var p=svcPrices[sv.name]&&svcPrices[sv.name][k];if(p&&(best===null||p<best))best=p;});
+      svcCheapest[k]=best;
+    });
     if(!onRoute.length){showStatus('No motorway services found on this route. Try a longer motorway journey.');return;}
 
     var hasBrandFilter=selectedBrands.size>0;
@@ -550,6 +557,17 @@ function serviceCardHTML(item){
   });
   html+='</div>';
 
+  // Live fuel prices
+  var pp=svcPrices[s.name];
+  if(pp&&(pp.petrol||pp.diesel)){
+    html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px;font-size:12px;">';
+    [['petrol','Petrol'],['diesel','Diesel']].forEach(function(t){
+      var v=pp[t[0]];if(!v)return;
+      var cheap=svcCheapest[t[0]]===v&&Object.keys(svcPrices).length>1;
+      html+='<span style="background:'+(cheap?'#DCFCE7':'#FEF3C7')+';color:'+(cheap?'#166534':'#78350F')+';padding:3px 8px;border-radius:6px;font-weight:600;">⛽ '+t[1]+' '+v.toFixed(1)+'p'+(cheap?' · cheapest on route':'')+'</span>';
+    });
+    html+='</div>';
+  }
   // Tags
   html+='<div class="matched-brands">';
   if(item.matchedBrands&&item.matchedBrands.length){item.matchedBrands.forEach(function(b){html+='<span class="matched-tag">✓ '+b+'</span>';});}

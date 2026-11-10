@@ -96,6 +96,42 @@ function getGlobalPrices() {
   return globalPrices;
 }
 
+// Live pump prices for each motorway service area in our database.
+// Matches each service area to Fuel Finder stations flagged as motorway services within ~1.2 km
+// (both carriageways are often separate stations; the cheapest is used).
+let svcPriceCache = { at: 0, data: null };
+app.get('/api/service-station-prices', (req, res) => {
+  try {
+    if (svcPriceCache.data && Date.now() - svcPriceCache.at < 5 * 60 * 1000) {
+      res.set('Cache-Control', 'public, max-age=300');
+      return res.json(svcPriceCache.data);
+    }
+    const db = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'data', 'motorway-services-db.json'), 'utf8')).services || {};
+    const hav = (a, b, c, d) => { const R = 6371, r = Math.PI / 180, x = (c - a) * r, y = (d - b) * r; const h = Math.sin(x / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin(y / 2) ** 2; return 2 * R * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h)); };
+    const stations = [];
+    pfsInfoMap.forEach((info, id) => {
+      if (!info.is_motorway_service_station) return;
+      const loc = info.location || {};
+      const lat = parseFloat(loc.latitude || info.latitude || 0), lng = parseFloat(loc.longitude || info.longitude || 0);
+      const fp = pricesCacheMap.get(id) || [];
+      if (!lat || !lng || !fp.length) return;
+      const pick = types => { for (const t of types) { const m = fp.find(x => x.fuel_type === t && x.price > 100 && x.price < 400); if (m) return m.price; } return null; };
+      stations.push({ lat, lng, petrol: pick(['E10', 'E5']), diesel: pick(['B7_STANDARD', 'B7']), updated: fp[0].price_last_updated || '' });
+    });
+    const out = {};
+    for (const [name, sv] of Object.entries(db)) {
+      if (!sv.lat || !sv.lng) continue;
+      const near = stations.filter(st => hav(sv.lat, sv.lng, st.lat, st.lng) < 1.2);
+      if (!near.length) continue;
+      const min = k => { const v = near.map(n => n[k]).filter(Boolean); return v.length ? Math.min(...v) : null; };
+      out[name] = { petrol: min('petrol'), diesel: min('diesel'), updated: near.map(n => n.updated).sort().pop() || '' };
+    }
+    svcPriceCache = { at: Date.now(), data: { prices: out, matched: Object.keys(out).length, total: Object.keys(db).length } };
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json(svcPriceCache.data);
+  } catch (e) { res.json({ prices: {}, matched: 0, error: true }); }
+});
+
 app.get('/api/uk-prices', (req, res) => {
   res.set('Cache-Control', 'public, max-age=300');
   const live = ukAverages && ukAverages.petrol && ukAverages.diesel;
