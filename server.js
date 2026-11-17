@@ -96,6 +96,25 @@ function getGlobalPrices() {
   return globalPrices;
 }
 
+// Average pump price by forecourt type: supermarket vs motorway services vs all other stations.
+app.get('/api/forecourt-averages', (req, res) => {
+  const groups = { supermarket: { petrol: [], diesel: [] }, motorway: { petrol: [], diesel: [] }, other: { petrol: [], diesel: [] } };
+  pfsInfoMap.forEach((info, id) => {
+    const fp = pricesCacheMap.get(id) || [];
+    const pick = types => { for (const t of types) { const m = fp.find(x => x.fuel_type === t && x.price > 100 && x.price < 300); if (m) return m.price; } return null; };
+    const g = info.is_motorway_service_station ? groups.motorway : info.is_supermarket_service_station ? groups.supermarket : groups.other;
+    const p = pick(['E10', 'E5']), d = pick(['B7_STANDARD', 'B7']);
+    if (p) g.petrol.push(p); if (d) g.diesel.push(d);
+  });
+  const avg = a => a.length ? Math.round(a.reduce((x, y) => x + y, 0) / a.length * 10) / 10 : null;
+  const out = {};
+  for (const [k, g] of Object.entries(groups)) out[k] = { petrol: avg(g.petrol), diesel: avg(g.diesel), stations: g.petrol.length };
+  const diff = (a, b, f) => (out[a][f] && out[b][f]) ? Math.round((out[a][f] - out[b][f]) * 10) / 10 : null;
+  out.motorway_vs_supermarket = { petrol: diff('motorway', 'supermarket', 'petrol'), diesel: diff('motorway', 'supermarket', 'diesel') };
+  res.set('Cache-Control', 'public, max-age=300');
+  res.json(out);
+});
+
 // Live pump prices for each motorway service area in our database.
 // Matches each service area to Fuel Finder stations flagged as motorway services within ~1.2 km
 // (both carriageways are often separate stations; the cheapest is used).
