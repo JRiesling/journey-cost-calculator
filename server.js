@@ -684,6 +684,7 @@ app.get('/car-care', (req, res) => res.sendFile(path.join(__dirname, 'public', '
 app.get('/guides/most-fuel-efficient-small-cars', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-small-cars.html')));
 app.get('/guides/most-fuel-efficient-family-cars', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-family-cars.html')));
 app.get('/guides/most-fuel-efficient-suvs', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-suvs.html')));
+app.get('/guides/motorway-services-vs-supermarket-fuel-prices', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'motorway-services-vs-supermarket-fuel-prices.html')));
 app.get('/guides/cheapest-hybrid-cars-to-run-uk', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'cheapest-hybrid-cars-to-run-uk.html')));
 app.get('/guides/cheapest-electric-cars-to-run-uk', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'cheapest-electric-cars-to-run-uk.html')));
 app.get('/guides/most-fuel-efficient-used-cars', (req, res) => res.sendFile(path.join(__dirname, 'public', 'guides', 'most-fuel-efficient-used-cars.html')));
